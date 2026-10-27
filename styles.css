@@ -95,3 +95,27 @@ body:has(#login-panel:not(.hidden)) {
   transform: translateY(-1px);
 }
 .meeting-pill span { color: var(--cyan); font-size: 13px; }
+
+
+/* Coaching schedule date filter */
+.daily-schedule-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin: 18px 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(120, 210, 255, .2);
+  border-radius: 14px;
+  background: rgba(4, 24, 48, .38);
+}
+.daily-schedule-filter label { font-weight: 700; }
+.daily-schedule-filter input {
+  max-width: 220px;
+  padding: 9px 12px;
+  border: 1px solid rgba(120, 210, 255, .3);
+  border-radius: 9px;
+  color: inherit;
+  background: rgba(5, 18, 38, .72);
+}
+.daily-schedule-filter .muted { flex-basis: 100%; margin: 0; font-size: 12px; }
