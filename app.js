@@ -299,7 +299,7 @@ async function importBulkCoaching() {
   const rows = [];
   const errors = [];
   lines.forEach((line, index) => {
-    const columns = line.includes("\\t") ? line.split("\\t") : line.split("|");
+    const columns = line.includes("\t") ? line.split("\t") : line.split("|");
     if (index === 0 && /agent\s*name/i.test(columns[0] || "")) return;
     const [agent, dateText, link, statusText, notes] = columns.map((part) => (part || "").trim());
     const date = dateText ? new Date(dateText.replace(" ", "T")) : null;
