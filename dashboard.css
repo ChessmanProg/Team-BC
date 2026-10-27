@@ -149,3 +149,76 @@ body:has(#workspace:not(.hidden)) #workspace .link-card {
 @media (prefers-reduced-motion: reduce) {
   body:has(#workspace:not(.hidden)) .ocean-video { display: none; }
 }
+
+
+/* Rain-on-leaves glass treatment: let the Overview video show through the UI */
+body:has(#workspace:not(.hidden)) #workspace .sidebar {
+  background: rgba(3, 25, 20, .78);
+  border-right-color: rgba(112, 224, 174, .24);
+  backdrop-filter: blur(18px) saturate(125%);
+}
+body:has(#workspace:not(.hidden)) #workspace .nav-item {
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(238, 255, 247, .86);
+  transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+body:has(#workspace:not(.hidden)) #workspace .nav-item:hover {
+  background: rgba(61, 174, 126, .16);
+  border-color: rgba(123, 236, 184, .18);
+}
+body:has(#workspace:not(.hidden)) #workspace .nav-item.active {
+  background: linear-gradient(115deg, rgba(20, 139, 96, .78), rgba(27, 100, 75, .68));
+  border-color: rgba(139, 255, 203, .34);
+  box-shadow: inset 3px 0 #83f2bd, 0 5px 22px rgba(0, 20, 13, .16);
+  color: #f4fff9;
+}
+/* Match the sidebar accent to the selected workspace tab */
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="overview"].active) .nav-item.active {
+  background: linear-gradient(115deg, rgba(20, 139, 96, .82), rgba(27, 100, 75, .72));
+  box-shadow: inset 3px 0 #83f2bd, 0 5px 22px rgba(0, 20, 13, .16);
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .nav-item.active {
+  background: linear-gradient(115deg, rgba(47, 133, 70, .82), rgba(36, 91, 51, .72));
+  box-shadow: inset 3px 0 #a4f08d, 0 5px 22px rgba(0, 20, 13, .16);
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="coaching"].active) .nav-item.active {
+  background: linear-gradient(115deg, rgba(24, 127, 139, .82), rgba(25, 79, 91, .72));
+  box-shadow: inset 3px 0 #8eeaf0, 0 5px 22px rgba(0, 20, 13, .16);
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="ic-logs"].active) .nav-item.active {
+  background: linear-gradient(115deg, rgba(27, 110, 137, .82), rgba(22, 67, 92, .74));
+  box-shadow: inset 3px 0 #8ddcff, 0 5px 22px rgba(0, 20, 13, .16);
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-links"].active) .nav-item.active {
+  background: linear-gradient(115deg, rgba(105, 132, 52, .82), rgba(55, 91, 45, .74));
+  box-shadow: inset 3px 0 #d3f28a, 0 5px 22px rgba(0, 20, 13, .16);
+}
+/* Translucent deep-green glass panels, tuned for the rain and leaf footage */
+body:has(#workspace:not(.hidden)) #workspace .stat,
+body:has(#workspace:not(.hidden)) #workspace .content-panel,
+body:has(#workspace:not(.hidden)) #workspace .link-card {
+  background: linear-gradient(135deg, rgba(5, 35, 27, .67), rgba(4, 27, 24, .49));
+  border: 1px solid rgba(139, 231, 190, .24);
+  box-shadow: 0 12px 34px rgba(0, 13, 9, .16), inset 0 1px 0 rgba(226, 255, 241, .07);
+  backdrop-filter: blur(14px) saturate(125%);
+}
+body:has(#workspace:not(.hidden)) #workspace .content-panel:before {
+  background: linear-gradient(90deg, rgba(116, 242, 183, .82), rgba(50, 167, 128, .2));
+  opacity: .7;
+}
+body:has(#workspace:not(.hidden)) #workspace .stat small,
+body:has(#workspace:not(.hidden)) #workspace .page-head .muted,
+body:has(#workspace:not(.hidden)) #workspace .sidebar-bottom small,
+body:has(#workspace:not(.hidden)) #workspace .team-switch-label {
+  color: rgba(218, 246, 231, .76);
+}
+body:has(#workspace:not(.hidden)) #workspace .team-switch-label select {
+  background: rgba(3, 28, 22, .76);
+  border-color: rgba(139, 231, 190, .28);
+  backdrop-filter: blur(12px);
+}
+body:has(#workspace:not(.hidden)) #workspace .preview-pill {
+  background: rgba(5, 35, 27, .58);
+  border-color: rgba(139, 231, 190, .24);
+}
