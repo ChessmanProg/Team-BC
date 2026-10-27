@@ -204,6 +204,7 @@ const pageConfig = {
     {key:"log_date",label:"Date",type:"date",required:true},
     {key:"agent_name",label:"Agent name",required:true},
     {key:"category",label:"Category",type:"select",options:["Reported","Not Reported"],required:true},
+    {key:"extension_minutes",label:"IC Extension / Minutes",type:"number",required:false},
     {key:"details",label:"Details",type:"textarea",required:true}
   ]},
   coaching: { table:"team_coaching", singular:"coaching session", plural:"coaching sessions", fields:[
@@ -243,6 +244,7 @@ function recordValue(row, key) {
   const value = row[key];
   if (key === "log_date") return formatDate(value);
   if (key === "scheduled_at") return formatDate(value, true);
+  if (key === "extension_minutes") return value == null || value === "" ? "—" : escapeHtml(value + " min");
   if (key === "meet_link" && value) { const url = /^https?:\/\//i.test(value) ? value : "https://" + value; return '<a class="meeting-pill" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer" data-meeting-link="true">Join Meeting <span aria-hidden="true">↗</span></a>'; }
   if (key === "url" && value) return '<a href="' + escapeHtml(value) + '" target="_blank" rel="noopener noreferrer">Open link ↗</a>';
   return escapeHtml(value || "—");
@@ -260,6 +262,7 @@ function fieldMarkup(field, row={}) {
   }
   if (field.type === "datetime-local" && value) value = new Date(value).toISOString().slice(0,16);
   const required = field.required ? " required" : "";
+  if (field.type === "number") return '<label>' + escapeHtml(field.label) + '<input type="number" min="0" step="1" name="' + field.key + '" value="' + escapeHtml(value) + '"' + required + '></label>';
   if (field.type === "textarea") return '<label>' + escapeHtml(field.label) + '<textarea name="' + field.key + '"' + required + '>' + escapeHtml(value) + '</textarea></label>';
   if (field.type === "select") return '<label>' + escapeHtml(field.label) + '<select name="' + field.key + '"' + required + '>' + field.options.map((option) => '<option' + (value === option ? " selected" : "") + '>' + escapeHtml(option) + '</option>').join("") + '</select></label>';
   const type = field.type || "text";
@@ -269,7 +272,7 @@ function fieldMarkup(field, row={}) {
 function renderRecordList(page, rows) {
   const config = pageConfig[page];
   if (!rows.length) return '<div class="empty-state">No ' + config.plural + ' yet. Select “Add ' + config.singular + '” to create the first one.</div>';
-  const cols = config.fields.slice(0, page === "ic-logs" ? 4 : 5);
+  const cols = config.fields.slice(0, page === "ic-logs" ? 5 : 5);
   return '<div class="records-wrap"><table class="records-table"><thead><tr>' + cols.map((field) => '<th>' + escapeHtml(field.label) + '</th>').join("") + '<th>Actions</th></tr></thead><tbody>' +
     rows.map((row) => '<tr>' + cols.map((field) => '<td>' + recordValue(row, field.key) + '</td>').join("") +
     '<td class="record-actions"><button type="button" class="small-button" data-edit="' + row.id + '">Edit</button><button type="button" class="small-button danger" data-delete="' + row.id + '">Delete</button></td></tr>').join("") +
