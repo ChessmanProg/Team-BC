@@ -6,7 +6,7 @@ const loginPanel = $("#login-panel");
 const main = document.querySelector("main");
 const footer = document.querySelector("footer");
 const panels = [loginPanel, $("#signup-panel"), $("#recovery-panel")];
-const SUPABASE_URL = "https://asqyegtenygvgwwtazac.supabaseClient.co";
+const SUPABASE_URL = "https://asqyegtenygvgwwtazac.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_tTCz-II0_05GRTzjjH1HFQ_SSNt5RZr";
 const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
