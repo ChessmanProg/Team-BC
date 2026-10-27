@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#040b21">
+  <title>Team BC — Workspace</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="ocean" aria-hidden="true"><i></i><i></i><i></i><span></span></div>
+  <header class="brand"><div class="brand-mark">BC</div><div><strong>TEAM BC</strong><small>Team workspace</small></div></header>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">WELCOME BACK</p>
+      <h1>Small Steps.<br><span>Big Results.</span></h1>
+      <p class="intro">Your team's workspace for smarter calculations, clear progress, and stronger results.</p>
+      <ul class="features">
+        <li><b>✦</b><span><strong>Smart calculations</strong><small>Work with clarity and confidence</small></span></li>
+        <li><b>↗</b><span><strong>Track progress</strong><small>Keep important records in view</small></span></li>
+        <li><b>◎</b><span><strong>Team focused</strong><small>Keep each team's workspace separate</small></span></li>
+      </ul>
+    </section>
+    <section class="glass login" id="login-panel">
+      <p class="kicker">TEAM BC WORKSPACE</p>
+      <h2>Sign in</h2>
+      <p class="muted">Use your approved account to continue.</p>
+      <form id="login-form">
+        <label for="email">Email address</label>
+        <input id="email" type="email" placeholder="you@example.com" autocomplete="username" required>
+        <label for="password">Password</label>
+        <div class="password-wrap"><input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" required><button type="button" id="toggle-password" class="eye" aria-label="Show password">◉</button></div>
+        <div class="form-row"><label class="remember"><input type="checkbox" id="remember"> Remember me</label><button type="button" class="text-button" id="forgot">Forgot password?</button></div>
+        <button class="primary" type="submit">Sign in <span>→</span></button>
+        <p class="notice" id="login-notice" role="status">This is the first UI scaffold. Secure authentication will be connected before real sign-in is enabled.</p>
+      </form>
+    </section>
+  </main>
+  <footer>TEAM BC · Built for clear records and better teamwork</footer>
+
+  <section class="app-shell hidden" id="workspace">
+    <aside class="sidebar">
+      <div class="side-brand"><div class="brand-mark">BC</div><strong id="team-brand">TEAM CHENN</strong></div>
+      <p class="side-label">WORKSPACE</p>
+      <nav id="nav">
+        <button class="nav-item active" data-page="overview">⌂ <span>Overview</span></button>
+        <button class="nav-item" data-page="agents">◈ <span>Agents</span></button>
+        <button class="nav-item" data-page="coaching">▤ <span>Coaching</span></button>
+        <button class="nav-item" data-page="ic-logs">◎ <span>IC Logs</span></button>
+        <button class="nav-item" data-page="quick-links">↗ <span>Quick Links</span></button>
+      </nav>
+      <div class="sidebar-bottom"><small>Preview mode</small><button id="back-login" class="nav-item">← <span>Back to login</span></button></div>
+    </aside>
+    <div class="workspace-main">
+      <div class="topbar"><span class="muted">Team BC / <b id="crumb">Overview</b></span><span class="preview-pill">UI preview · no data connected</span></div>
+      <div class="page-head"><div><p class="eyebrow">TEAM WORKSPACE</p><h1 id="page-title">Team dashboard</h1><p class="muted" id="page-subtitle">A clear view of the work happening across your team.</p></div>
+        <label class="team-switch-label">TEAM <select id="team-switch"><option value="chenn">Team Chenn BC AI</option><option value="gemma">Team Gemma BC AI</option><option value="lev">Team Lev BC AI</option></select></label>
+      </div>
+      <div id="page-content"></div>
+    </div>
+  </section>
+  <script src="./app.js"></script>
+</body>
+</html>
