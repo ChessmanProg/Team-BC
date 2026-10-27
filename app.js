@@ -97,6 +97,10 @@ function enterTeam(teamKey) {
     return;
   }
   activeTeamKey = teamKey;
+  const selector = $("#team-switch");
+  selector.replaceChildren();
+  activeTeams.forEach((team) => { const option = document.createElement("option"); option.value = team.team_key; option.textContent = teamDisplay(team); selector.appendChild(option); });
+  selector.value = teamKey;
   $("#team-brand").textContent = teamDisplay(activeTeam()).toUpperCase();
   $("#workspace-user").textContent = activeUser?.email || "Signed in";
   $("#workspace-role").textContent = activeMemberships.find((m) => m.team_key === teamKey)?.role || "member";
