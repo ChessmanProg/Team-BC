@@ -222,3 +222,36 @@ body:has(#workspace:not(.hidden)) #workspace .preview-pill {
   background: rgba(5, 35, 27, .58);
   border-color: rgba(139, 231, 190, .24);
 }
+
+
+/* Stronger glassmorphism: keep the rain-on-leaves video as the visual focal point */
+body:has(#workspace:not(.hidden)) #workspace .sidebar {
+  background: rgba(2, 18, 15, .48);
+  border-right-color: rgba(176, 255, 220, .16);
+  backdrop-filter: blur(10px) saturate(135%);
+}
+body:has(#workspace:not(.hidden)) #workspace .workspace-main {
+  background-image: linear-gradient(135deg, rgba(1, 17, 13, .12), rgba(3, 28, 21, .06) 52%, rgba(1, 17, 13, .14)) !important;
+}
+body:has(#workspace:not(.hidden)) #workspace .stat,
+body:has(#workspace:not(.hidden)) #workspace .content-panel,
+body:has(#workspace:not(.hidden)) #workspace .link-card {
+  background: linear-gradient(135deg, rgba(9, 48, 35, .34), rgba(4, 28, 22, .24)) !important;
+  border: 1px solid rgba(190, 255, 224, .22);
+  box-shadow:
+    0 8px 28px rgba(0, 12, 8, .12),
+    inset 0 1px 0 rgba(240, 255, 247, .16),
+    inset 0 -1px 0 rgba(155, 255, 210, .06);
+  backdrop-filter: blur(7px) saturate(140%);
+}
+body:has(#workspace:not(.hidden)) #workspace .content-panel:before {
+  opacity: .32;
+}
+body:has(#workspace:not(.hidden)) #workspace .nav-item.active {
+  backdrop-filter: blur(10px) saturate(130%);
+}
+body:has(#workspace:not(.hidden)) #workspace .team-switch-label select,
+body:has(#workspace:not(.hidden)) #workspace .preview-pill {
+  background: rgba(3, 25, 19, .34);
+  backdrop-filter: blur(8px) saturate(135%);
+}
