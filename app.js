@@ -280,9 +280,14 @@ function renderRecordList(page, rows) {
 }
 async function renderRecordsPage(page, content) {
   const config = pageConfig[page];
-  content.innerHTML = '<section class="content-panel"><div class="panel-heading"><div><h2>' + escapeHtml(config.plural[0].toUpperCase()+config.plural.slice(1)) + '</h2><p class="muted">Saved for ' + escapeHtml(teamDisplay(activeTeam())) + ' only.</p></div><div class="record-toolbar"><button type="button" class="primary action-button" id="add-record">+ Add ' + escapeHtml(config.singular) + '</button>' + (page === "coaching" ? '<button type="button" class="small-button action-button" id="bulk-coaching-toggle">Bulk import schedules</button>' : '') + '</div></div><div id="bulk-coaching-host"></div><div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p><div id="records-list"><p class="muted">Loading records…</p></div></section>';
+  const today = new Date();
+  const localToday = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
+  content.innerHTML = '<section class="content-panel"><div class="panel-heading"><div><h2>' + escapeHtml(config.plural[0].toUpperCase()+config.plural.slice(1)) + '</h2><p class="muted">Saved for ' + escapeHtml(teamDisplay(activeTeam())) + ' only.</p></div><div class="record-toolbar"><button type="button" class="primary action-button" id="add-record">+ Add ' + escapeHtml(config.singular) + '</button>' + (page === "coaching" ? '<button type="button" class="small-button action-button" id="bulk-coaching-toggle">Bulk import schedules</button>' : '') + '</div></div>' + (page === "coaching" ? '<div class="daily-schedule-filter"><label for="coaching-schedule-date">Show agents scheduled on</label><input type="date" id="coaching-schedule-date" value="' + localToday + '"><p class="muted">Only coaching schedules for the selected day are shown.</p></div>' : '') + '<div id="bulk-coaching-host"></div><div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p><div id="records-list"><p class="muted">Loading records…</p></div></section>';
   $("#add-record").addEventListener("click", () => showRecordForm(page));
-  if (page === "coaching") $("#bulk-coaching-toggle").addEventListener("click", showBulkCoachingImport);
+  if (page === "coaching") {
+    $("#bulk-coaching-toggle").addEventListener("click", showBulkCoachingImport);
+    $("#coaching-schedule-date").addEventListener("change", () => refreshRecordList("coaching"));
+  }
   await refreshRecordList(page);
 }
 function showBulkCoachingImport() {
@@ -362,7 +367,18 @@ async function refreshRecordList(page) {
   host.innerHTML = '<p class="muted">Loading records…</p>';
   try {
     recordsCache = await fetchRows(pageConfig[page].table);
-    host.innerHTML = renderRecordList(page, recordsCache);
+    let visibleRows = recordsCache;
+    if (page === "coaching") {
+      const selectedDate = $("#coaching-schedule-date")?.value || "";
+      visibleRows = recordsCache.filter((row) => {
+        if (!row.scheduled_at || !selectedDate) return false;
+        const scheduledDate = new Date(row.scheduled_at);
+        if (Number.isNaN(scheduledDate.getTime())) return false;
+        const localDate = [scheduledDate.getFullYear(), String(scheduledDate.getMonth() + 1).padStart(2, "0"), String(scheduledDate.getDate()).padStart(2, "0")].join("-");
+        return localDate === selectedDate;
+      });
+    }
+    host.innerHTML = visibleRows.length ? renderRecordList(page, visibleRows) : (page === "coaching" ? '<div class="empty-state">No coaching schedules for the selected date.</div>' : renderRecordList(page, visibleRows));
     host.querySelectorAll("[data-edit]").forEach((button) => button.addEventListener("click", () => {
       const row = recordsCache.find((item) => String(item.id) === button.dataset.edit);
       if (row) showRecordForm(page, row);
