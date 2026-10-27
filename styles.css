@@ -70,3 +70,28 @@ body:has(#login-panel:not(.hidden)) {
 @media (prefers-reduced-motion: reduce) {
   body:has(#login-panel:not(.hidden)) .ocean-video { display: none; }
 }
+
+
+/* Compact pill-style coaching meeting links */
+.meeting-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  padding: 8px 12px;
+  border: 1px solid rgba(31, 212, 255, .42);
+  border-radius: 999px;
+  color: #d8f8ff;
+  background: linear-gradient(135deg, rgba(10, 160, 210, .24), rgba(35, 137, 255, .2));
+  box-shadow: inset 0 1px rgba(255,255,255,.07), 0 3px 12px rgba(0, 160, 255, .08);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+}
+.meeting-pill:hover {
+  border-color: rgba(31, 212, 255, .8);
+  background: linear-gradient(135deg, rgba(10, 180, 220, .36), rgba(35, 137, 255, .34));
+  transform: translateY(-1px);
+}
+.meeting-pill span { color: var(--cyan); font-size: 13px; }
