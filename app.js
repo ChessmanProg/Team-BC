@@ -168,7 +168,7 @@ const pageInfo = {
 };
 function renderPage(page) {
   if (!workspace.classList.contains("hidden")) {
-    setBackgroundVideo(page === "overview" ? "overview-background.mp4" : page === "agents" ? "agents-background.mp4" : "ocean-background.mp4");
+    setBackgroundVideo(page === "overview" ? "overview-background.mp4" : page === "agents" ? "agents-background.mp4" : page === "ic-logs" ? "ic-logs-background.mp4" : "ocean-background.mp4");
   }
   const [title, subtitle] = pageInfo[page] || pageInfo.overview;
   $("#crumb").textContent = title;
