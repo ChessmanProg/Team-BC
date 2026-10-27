@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#040b21">
   <title>Team BC — Workspace</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -33,7 +34,7 @@
         <div class="form-row"><label class="remember"><input type="checkbox" id="remember"> Remember me</label><button type="button" class="text-button" id="forgot">Forgot password?</button></div>
         <button class="primary" type="submit">Sign in <span>→</span></button>
         <p class="notice" id="login-notice" role="status">This is the first UI scaffold. Secure authentication will be connected before real sign-in is enabled.</p>
-        <div class="form-row auth-switch"><span class="muted">New to Team BC?</span><button type="button" class="text-button" id="show-signup" onclick="document.getElementById(\'signup-email\').value=document.getElementById(\'email\').value.trim();document.getElementById(\'login-panel\').classList.add(\'hidden\');document.getElementById(\'recovery-panel\').classList.add(\'hidden\');document.getElementById(\'signup-panel\').classList.remove(\'hidden\');">Create account</button></div>
+        <div class="form-row auth-switch"><span class="muted">New to Team BC?</span><button type="button" class="text-button" id="show-signup" onclick="document.getElementById('signup-email').value=document.getElementById('email').value.trim();document.getElementById('login-panel').classList.add('hidden');document.getElementById('recovery-panel').classList.add('hidden');document.getElementById('signup-panel').classList.remove('hidden');">Create account</button></div>
       </form>
     </section>
     <section class="glass login hidden" id="signup-panel">
@@ -82,6 +83,6 @@
     </div>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./app.js?v=signup-fix-2"></script>
+  <script src="./app.js?v=signup-fix-3"></script>
 </body>
 </html>
