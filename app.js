@@ -73,8 +73,17 @@ loginForm.addEventListener("submit", async (event) => {
       message(loginNotice, "Your account is valid, but it has no team access yet. Ask a Team BC owner/admin to grant membership.");
       return;
     }
-    await supabaseClient.auth.signOut();
-    message(loginNotice, "Sign-in verified. Your team membership is recorded, but the workspace data pages are not connected yet. Nothing has been published.");
+    const { data: teams, error: teamsError } = await supabaseClient
+      .from("teams").select("team_key, display_name")
+      .in("team_key", memberships.map((membership) => membership.team_key))
+      .eq("is_enabled", true);
+    if (teamsError) throw teamsError;
+    if (!teams?.length) {
+      await supabaseClient.auth.signOut();
+      message(loginNotice, "Your memberships exist, but none of those teams is currently enabled. Contact the site owner.");
+      return;
+    }
+    openAuthenticatedWorkspace(data.user, memberships, teams);
   } catch (error) {
     message(loginNotice, friendlyError(error));
   } finally {
@@ -126,23 +135,10 @@ $("#recovery-form").addEventListener("submit", async (event) => {
   }
 });
 
-const previewButton = document.createElement("button");
-previewButton.type = "button";
-previewButton.className = "primary preview-button";
-previewButton.style.marginTop = "12px";
-previewButton.textContent = "Preview workspace (no sign-in)";
-previewButton.addEventListener("click", openPreview);
-loginForm.appendChild(previewButton);
-
-function openPreview() {
-  main.classList.add("hidden");
-  document.querySelector(".brand").classList.add("hidden");
-  footer.classList.add("hidden");
-  workspace.classList.remove("hidden");
-  workspace.style.display = "grid";
-  renderPage("overview");
-}
-$("#back-login").addEventListener("click", () => {
+$("#back-login").addEventListener("click", async () => {
+  if (supabaseClient) await supabaseClient.auth.signOut();
+  activeUser = null;
+  activeMemberships = [];
   workspace.classList.add("hidden");
   workspace.style.display = "";
   main.classList.remove("hidden");
@@ -160,6 +156,7 @@ const pageInfo = {
 function renderPage(page) {
   const [title, subtitle] = pageInfo[page] || pageInfo.overview;
   $("#crumb").textContent = title;
+  $("#crumb").dataset.page = page;
   $("#page-title").textContent = title;
   $("#page-subtitle").textContent = subtitle;
   document.querySelectorAll(".nav-item[data-page]").forEach((button) => button.classList.toggle("active", button.dataset.page === page));
@@ -177,6 +174,41 @@ $("#nav").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-page]");
   if (button) renderPage(button.dataset.page);
 });
+let activeUser = null;
+let activeMemberships = [];
+function openAuthenticatedWorkspace(user, memberships, teams) {
+  activeUser = user;
+  activeMemberships = memberships;
+  const selector = $("#team-switch");
+  selector.replaceChildren();
+  teams.forEach((team) => {
+    const option = document.createElement("option");
+    option.value = team.team_key;
+    option.textContent = team.display_name;
+    selector.appendChild(option);
+  });
+  const currentTeam = teams[0];
+  selector.value = currentTeam.team_key;
+  $("#team-brand").textContent = teamNames[currentTeam.team_key] || currentTeam.display_name;
+  $("#workspace-user").textContent = user.email || "Signed in";
+  $("#workspace-role").textContent = memberships.find((item) => item.team_key === currentTeam.team_key)?.role || "member";
+  main.classList.add("hidden");
+  document.querySelector(".brand").classList.add("hidden");
+  footer.classList.add("hidden");
+  workspace.classList.remove("hidden");
+  workspace.style.display = "grid";
+  renderPage("overview");
+  message(loginNotice, "");
+}
 $("#team-switch").addEventListener("change", (event) => {
-  $("#team-brand").textContent = teamNames[event.target.value];
+  const teamKey = event.target.value;
+  const allowed = activeMemberships.some((membership) => membership.team_key === teamKey);
+  if (!allowed) {
+    message($("#workspace-notice"), "You don't have access to that team.");
+    return;
+  }
+  $("#team-brand").textContent = teamNames[teamKey] || teamKey;
+  $("#workspace-role").textContent = activeMemberships.find((item) => item.team_key === teamKey)?.role || "member";
+  message($("#workspace-notice"), "");
+  renderPage($("#crumb").dataset.page || "overview");
 });

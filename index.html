@@ -75,14 +75,15 @@
       <div class="sidebar-bottom"><small>Preview mode</small><button id="back-login" class="nav-item">← <span>Back to login</span></button></div>
     </aside>
     <div class="workspace-main">
-      <div class="topbar"><span class="muted">Team BC / <b id="crumb">Overview</b></span><span class="preview-pill">UI preview · no data connected</span></div>
+      <div class="topbar"><span class="muted">Team BC / <b id="crumb">Overview</b></span><span class="preview-pill" id="workspace-role">member</span></div>
       <div class="page-head"><div><p class="eyebrow">TEAM WORKSPACE</p><h1 id="page-title">Team dashboard</h1><p class="muted" id="page-subtitle">A clear view of the work happening across your team.</p></div>
-        <label class="team-switch-label">TEAM <select id="team-switch"><option value="chenn">Team Chenn BC AI</option><option value="gemma">Team Gemma BC AI</option><option value="lev">Team Lev BC AI</option></select></label>
+        <div class="workspace-account"><span id="workspace-user"></span><label class="team-switch-label">TEAM <select id="team-switch"><option value="chenn">Team Chenn BC AI</option><option value="gemma">Team Gemma BC AI</option><option value="lev">Team Lev BC AI</option></select></label></div>
       </div>
+      <p class="notice" id="workspace-notice" role="status"></p>
       <div id="page-content"></div>
     </div>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./app.js?v=fix-membership-client-1"></script>
+  <script src="./app.js?v=secure-team-workspace-1"></script>
 </body>
 </html>
