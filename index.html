@@ -7,7 +7,7 @@
   <title>Team BC — Workspace</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./dashboard.css?v=figma-dashboard-1">
+  <link rel="stylesheet" href="./dashboard.css?v=team-features-1">
 </head>
 <body>
   <video class="ocean-video" aria-hidden="true" autoplay muted loop playsinline poster="./ocean-background.png"><source src="./ocean-background.mp4" type="video/mp4"></video>
@@ -81,13 +81,13 @@
     <div class="workspace-main">
       <div class="topbar"><span class="muted">Team BC / <b id="crumb">Overview</b></span><span class="preview-pill" id="workspace-role">member</span></div>
       <div class="page-head"><div><p class="eyebrow">TEAM WORKSPACE</p><h1 id="page-title">Team dashboard</h1><p class="muted" id="page-subtitle">A clear view of the work happening across your team.</p></div>
-        <div class="workspace-account"><span id="workspace-user"></span><label class="team-switch-label">TEAM <select id="team-switch"><option value="chenn">Team Chenn BC AI</option><option value="gemma">Team Gemma BC AI</option><option value="lev">Team Lev BC AI</option></select></label></div>
+        <div class="workspace-account"><span id="workspace-user"></span><select id="team-switch" class="hidden" aria-hidden="true" tabindex="-1"></select></div>
       </div>
       <p class="notice" id="workspace-notice" role="status"></p>
       <div id="page-content"></div>
     </div>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./app.js?v=secure-team-workspace-1"></script>
+  <script src="./app.js?v=team-features-1"></script>
 </body>
 </html>
