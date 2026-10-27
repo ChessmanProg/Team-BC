@@ -33,6 +33,28 @@
         <div class="form-row"><label class="remember"><input type="checkbox" id="remember"> Remember me</label><button type="button" class="text-button" id="forgot">Forgot password?</button></div>
         <button class="primary" type="submit">Sign in <span>→</span></button>
         <p class="notice" id="login-notice" role="status">This is the first UI scaffold. Secure authentication will be connected before real sign-in is enabled.</p>
+        <div class="form-row auth-switch"><span class="muted">New to Team BC?</span><button type="button" class="text-button" id="show-signup">Create account</button></div>
+      </form>
+    </section>
+    <section class="glass login hidden" id="signup-panel">
+      <p class="kicker">TEAM BC WORKSPACE</p><h2>Create account</h2>
+      <p class="muted">Registration creates an account only. A team admin must grant workspace access.</p>
+      <form id="signup-form">
+        <label for="signup-email">Email address</label><input id="signup-email" type="email" autocomplete="email" required>
+        <label for="signup-password">Create password</label><input id="signup-password" type="password" minlength="8" autocomplete="new-password" required>
+        <button class="primary" type="submit">Create account <span>→</span></button>
+        <p class="notice" id="signup-notice" role="status"></p>
+        <div class="form-row"><button type="button" class="text-button" id="show-login">Back to sign in</button></div>
+      </form>
+    </section>
+    <section class="glass login hidden" id="recovery-panel">
+      <p class="kicker">ACCOUNT HELP</p><h2>Reset password</h2>
+      <p class="muted">We'll email you a secure password-reset link.</p>
+      <form id="recovery-form">
+        <label for="recovery-email">Email address</label><input id="recovery-email" type="email" autocomplete="email" required>
+        <button class="primary" type="submit">Send reset link <span>→</span></button>
+        <p class="notice" id="recovery-notice" role="status"></p>
+        <div class="form-row"><button type="button" class="text-button" id="recovery-back">Back to sign in</button></div>
       </form>
     </section>
   </main>
@@ -59,6 +81,7 @@
       <div id="page-content"></div>
     </div>
   </section>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./app.js"></script>
 </body>
 </html>
