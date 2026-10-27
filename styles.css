@@ -17,3 +17,34 @@ body:has(#login-panel:not(.hidden)) .login {padding:32px}
 body:has(#login-panel:not(.hidden)) main::after {content:"Same team.\A New possibilities.\A\A PLAN  •  TRACK  •  ACHIEVE";white-space:pre-wrap;justify-self:start;align-self:center;color:#d4f5ff;font-size:clamp(18px,2vw,27px);font-weight:500;line-height:1.5;max-width:270px;text-shadow:0 0 24px rgba(31,201,255,.08)}
 @media(max-width:1100px) {body:has(#login-panel:not(.hidden)) main {grid-template-columns:minmax(0,1fr) minmax(340px,430px);max-width:920px;gap:32px}body:has(#login-panel:not(.hidden)) .hero {display:block}body:has(#login-panel:not(.hidden)) main::after {display:none}}
 @media(max-width:760px) {body:has(#login-panel:not(.hidden)) main {display:grid;grid-template-columns:minmax(0,1fr);max-width:520px;padding:100px 20px 30px}body:has(#login-panel:not(.hidden)) .hero {display:block}body:has(#login-panel:not(.hidden)) .hero h1 {font-size:38px}body:has(#login-panel:not(.hidden)) .features {display:none}body:has(#login-panel:not(.hidden)) .login {padding:26px}}
+
+
+/* Subtle live ocean motion on the login screen */
+@keyframes ocean-drift {
+  0% { background-position: center, 48% 50%, center, center, center, center; }
+  50% { background-position: center, 53% 47%, center, center, center, center; }
+  100% { background-position: center, 48% 50%, center, center, center, center; }
+}
+@keyframes ocean-glow {
+  0%, 100% { opacity: .28; }
+  50% { opacity: .55; }
+}
+body:has(#login-panel:not(.hidden)) {
+  animation: ocean-drift 36s ease-in-out infinite;
+}
+body:has(#login-panel:not(.hidden))::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(ellipse at 20% 75%, rgba(0, 183, 255, .16), transparent 38%),
+              radial-gradient(ellipse at 78% 22%, rgba(0, 105, 255, .18), transparent 34%);
+  animation: ocean-glow 9s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(#login-panel:not(.hidden)),
+  body:has(#login-panel:not(.hidden))::before {
+    animation: none !important;
+  }
+}
