@@ -243,7 +243,7 @@ function recordValue(row, key) {
   const value = row[key];
   if (key === "log_date") return formatDate(value);
   if (key === "scheduled_at") return formatDate(value, true);
-  if (key === "meet_link" && value) return '<a href="' + escapeHtml(value) + '" target="_blank" rel="noopener noreferrer">Open meeting</a>';
+  if (key === "meet_link" && value) { const url = /^https?:\/\//i.test(value) ? value : "https://" + value; return '<a class="meeting-pill" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer" data-meeting-link="true">Join Meeting <span aria-hidden="true">↗</span></a>'; }
   if (key === "url" && value) return '<a href="' + escapeHtml(value) + '" target="_blank" rel="noopener noreferrer">Open link ↗</a>';
   return escapeHtml(value || "—");
 }
@@ -365,6 +365,12 @@ async function refreshRecordList(page) {
       if (row) showRecordForm(page, row);
     }));
     host.querySelectorAll("[data-delete]").forEach((button) => button.addEventListener("click", () => deleteRecord(page, button.dataset.delete)));
+    host.querySelectorAll("[data-meeting-link]").forEach((link) => link.addEventListener("click", (event) => {
+      event.preventDefault();
+      const meetingUrl = link.href;
+      window.open(meetingUrl, "_blank", "noopener,noreferrer");
+      window.alert("Don't Forget IC and Zoho Tagging");
+    }));
   } catch (error) { host.innerHTML = '<p class="notice">' + escapeHtml(friendlyError(error)) + '</p>'; }
 }
 function showRecordForm(page, row=null) {
