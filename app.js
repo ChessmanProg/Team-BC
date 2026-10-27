@@ -285,29 +285,59 @@ async function renderRecordsPage(page, content) {
 function showBulkCoachingImport() {
   const host = $("#bulk-coaching-host");
   if (host.innerHTML) { host.innerHTML = ""; return; }
-  host.innerHTML = '<section class="record-form bulk-import"><h3>Paste coaching schedules</h3><p class="muted">Paste one schedule per line. Separate columns with tabs or | in this order: Agent name, Date and time, Meeting link, Status, Coaching notes. Date/time can be like 2026-10-30 14:30. Status may be Scheduled, Completed, or Cancelled; leave it blank for Scheduled.</p><textarea id="bulk-coaching-text" rows="7" placeholder="Raphael Santiago Reyes | 2026-10-30 14:30 | https://meet.google.com/... | Scheduled | Weekly coaching"></textarea><div class="form-actions"><button type="button" class="primary action-button" id="bulk-coaching-save">Import schedules</button><button type="button" class="small-button" id="bulk-coaching-cancel">Cancel</button></div><p class="notice" id="bulk-coaching-notice" role="status"></p></section>';
+  const today = new Date();
+  const localToday = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
+  host.innerHTML = '<section class="record-form bulk-import"><h3>Paste coaching schedules</h3><p class="muted">You can paste a row directly from Google Sheets with 3 columns in this order: Time range, Agent name, Meeting link. Choose the date that applies to these rows. The start time will be saved as the schedule time, and the full time range will be kept in Coaching notes. You can also use the older 5-column format: Agent name, Date and time, Meeting link, Status, Coaching notes.</p><label>Schedule date for 3-column Google Sheets rows<input type="date" id="bulk-coaching-date" value="' + localToday + '" required></label><textarea id="bulk-coaching-text" rows="7" placeholder="12:30 – 13:00&#9;Neil Andre Tuballa&#9;meet.google.com/nji-pabi-cwm"></textarea><div class="form-actions"><button type="button" class="primary action-button" id="bulk-coaching-save">Import schedules</button><button type="button" class="small-button" id="bulk-coaching-cancel">Cancel</button></div><p class="notice" id="bulk-coaching-notice" role="status"></p></section>';
   $("#bulk-coaching-cancel").addEventListener("click", () => { host.innerHTML = ""; });
   $("#bulk-coaching-save").addEventListener("click", importBulkCoaching);
+}
+function parseSheetTimeRange(value) {
+  const match = String(value || "").trim().match(/^(\d{1,2}):(\d{2})\s*(?:-|–|—|to)\s*(\d{1,2}):(\d{2})$/i);
+  if (!match) return null;
+  const startHour = Number(match[1]), startMinute = Number(match[2]);
+  const endHour = Number(match[3]), endMinute = Number(match[4]);
+  if (startHour > 23 || endHour > 23 || startMinute > 59 || endMinute > 59) return null;
+  return {start: String(startHour).padStart(2, "0") + ":" + String(startMinute).padStart(2, "0"), range: match[1].padStart(2, "0") + ":" + match[2] + "–" + match[3].padStart(2, "0") + ":" + match[4]};
 }
 async function importBulkCoaching() {
   const input = $("#bulk-coaching-text");
   const notice = $("#bulk-coaching-notice");
   const button = $("#bulk-coaching-save");
+  const selectedDate = $("#bulk-coaching-date")?.value || "";
   const lines = input.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   if (!lines.length) return message(notice, "Paste at least one schedule first.");
   const validStatuses = ["Scheduled","Completed","Cancelled"];
   const rows = [];
   const errors = [];
   lines.forEach((line, index) => {
-    const columns = line.includes("\t") ? line.split("\t") : line.split("|");
-    if (index === 0 && /agent\s*name/i.test(columns[0] || "")) return;
-    const [agent, dateText, link, statusText, notes] = columns.map((part) => (part || "").trim());
-    const date = dateText ? new Date(dateText.replace(" ", "T")) : null;
-    const status = statusText ? validStatuses.find((item) => item.toLowerCase() === statusText.toLowerCase()) : "Scheduled";
-    if (!agent || !dateText || !date || Number.isNaN(date.getTime())) { errors.push("Line " + (index + 1) + ": agent name and a valid date/time are required."); return; }
+    const columns = line.split("\t").map((part) => (part || "").trim());
+    const pipeColumns = line.split("|").map((part) => (part || "").trim());
+    const parts = columns.length > 1 ? columns : pipeColumns;
+    if (index === 0 && /agent\s*name/i.test(parts[0] || "")) return;
+    let agent, date, link, status, notes;
+    if (parts.length === 3 && parseSheetTimeRange(parts[0])) {
+      const time = parseSheetTimeRange(parts[0]);
+      agent = parts[1];
+      link = parts[2];
+      if (!selectedDate) { errors.push("Line " + (index + 1) + ": choose the schedule date above."); return; }
+      if (!agent) { errors.push("Line " + (index + 1) + ": agent name is required."); return; }
+      date = new Date(selectedDate + "T" + time.start + ":00");
+      status = "Scheduled";
+      notes = "Time slot: " + time.range;
+    } else {
+      const [oldAgent, dateText, oldLink, statusText, oldNotes] = parts;
+      agent = oldAgent;
+      link = oldLink;
+      const dateTextNormalized = dateText ? dateText.replace(" ", "T") : "";
+      date = dateTextNormalized ? new Date(dateTextNormalized) : null;
+      status = statusText ? validStatuses.find((item) => item.toLowerCase() === statusText.toLowerCase()) : "Scheduled";
+      notes = oldNotes || null;
+      if (!agent || !dateText || !date || Number.isNaN(date.getTime())) { errors.push("Line " + (index + 1) + ": agent name and a valid date/time are required. For a Google Sheets row, use Time range, Agent name, Meeting link."); return; }
+      if (statusText && !status) { errors.push("Line " + (index + 1) + ": status must be Scheduled, Completed, or Cancelled."); return; }
+    }
+    if (Number.isNaN(date.getTime())) { errors.push("Line " + (index + 1) + ": date or time is invalid."); return; }
     if (activeTeamKey === "chenn" && !CHENN_AGENTS.includes(agent)) { errors.push("Line " + (index + 1) + ": agent name isn't in the Team Chenn list."); return; }
-    if (link && !/^https?:\/\//i.test(link)) { errors.push("Line " + (index + 1) + ": meeting links must start with http:// or https://."); return; }
-    if (statusText && !status) { errors.push("Line " + (index + 1) + ": status must be Scheduled, Completed, or Cancelled."); return; }
+    if (link && !/^https?:\/\//i.test(link)) link = "https://" + link;
     rows.push({team_key:activeTeamKey,agent_name:agent,scheduled_at:date.toISOString(),meet_link:link||null,status,notes:notes||null,created_by:activeUser.id});
   });
   if (errors.length) return message(notice, errors.slice(0,5).join(" ") + (errors.length > 5 ? " And " + (errors.length - 5) + " more issue(s)." : ""));
