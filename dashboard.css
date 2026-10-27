@@ -1,0 +1,35 @@
+/* Figma 03 — Team Dashboard: responsive implementation */
+#workspace{background:#0b1f38; color:#f4f8fc; min-height:100vh}
+#workspace .sidebar{background:#132e49;border-right:1px solid #24415c;width:240px;padding:30px 12px}
+#workspace .side-brand{padding:0 12px;color:#1fc9ff;font-size:15px;letter-spacing:.06em}
+#workspace .side-brand .brand-mark{display:none}
+#workspace .side-label{margin:42px 12px 14px;color:#a9c4da}
+#workspace .nav-item{height:48px;padding:0 12px;margin:0 0 4px;border-radius:10px;font-size:15px;gap:12px}
+#workspace .nav-item.active{background:#123b59;box-shadow:inset 3px 0 #1fc9ff}
+#workspace .sidebar-bottom small{color:#a9c4da}
+#workspace .workspace-main{padding:30px clamp(22px,3vw,44px);max-width:none}
+#workspace .topbar{border:0;padding:0 0 12px}
+#workspace .topbar>.muted{display:none}
+#workspace .preview-pill{color:#a9c4da;border-color:#24415c;background:#102b49}
+#workspace .page-head{padding:0 0 18px;border-bottom:1px solid #24415c;align-items:center;gap:20px}
+#workspace .page-head>div:first-child{flex:1}
+#workspace .page-head .eyebrow{display:none}
+#workspace .page-head h1{font-size:20px;letter-spacing:0;margin:0 0 8px;text-transform:none}
+#workspace .page-head .muted{color:#a9c4da;font-size:14px;margin:0}
+#workspace .workspace-account{display:flex;align-items:center;gap:18px}
+#workspace-user{font-size:13px;color:#fff}
+#workspace .team-switch-label{font-size:9px;color:#a9c4da}
+#workspace .team-switch-label select{background:#102b49;border:1px solid #24415c;color:#f4f8fc;min-width:190px}
+#workspace .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:28px}
+#workspace .stat{height:150px;border:1px solid #24415c;border-radius:16px;background:rgba(36,65,92,.6);padding:24px}
+#workspace .stat small{font-size:13px;color:#a9c4da;letter-spacing:0}
+#workspace .stat strong{font-size:36px;margin-top:24px;font-weight:700}
+#workspace .content-panel{margin-top:30px;min-height:300px;border:1px solid #24415c;border-radius:16px;background:#102b49;padding:24px;position:relative}
+#workspace .content-panel:before{content:"";position:absolute;top:-16px;left:0;right:0;height:3px;border-radius:2px;background:#1fc9ff}
+#workspace .content-panel h2{font-size:22px;margin:0 0 12px}
+#workspace .content-panel>.muted{font-size:14px;color:#a9c4da}
+#workspace .empty-state{padding:34px 0;color:#a9c4da;font-size:15px}
+#workspace .link-card{background:rgba(36,65,92,.6);border-color:#24415c;border-radius:16px}
+@media(max-width:1100px){#workspace .stat-grid{gap:14px}#workspace .stat{padding:18px}}
+@media(max-width:900px){#workspace .sidebar{width:190px}#workspace .app-shell{grid-template-columns:190px minmax(0,1fr)}#workspace .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){#workspace .sidebar{width:100%;padding:12px}#workspace .workspace-main{padding:16px}#workspace .page-head{align-items:flex-start;flex-direction:column}#workspace .workspace-account{width:100%;align-items:flex-start;flex-direction:column;gap:10px}#workspace .team-switch-label,#workspace .team-switch-label select{width:100%}#workspace .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#workspace .stat{height:auto;min-height:120px;padding:16px}#workspace .stat strong{font-size:30px;margin-top:18px}}
