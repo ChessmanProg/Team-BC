@@ -212,3 +212,44 @@ $("#team-switch").addEventListener("change", (event) => {
   message($("#workspace-notice"), "");
   renderPage($("#crumb").dataset.page || "overview");
 });
+
+
+// Restore the existing Supabase session when the page is refreshed.
+// Supabase persists sessions in browser storage by default; this restores the workspace UI.
+async function restoreSavedSession() {
+  if (!supabaseClient) return;
+  try {
+    const { data, error } = await supabaseClient.auth.getSession();
+    if (error) throw error;
+    const user = data?.session?.user;
+    if (!user) return;
+
+    const { data: memberships, error: membershipError } = await supabaseClient
+      .from("team_memberships")
+      .select("team_key, role")
+      .eq("user_id", user.id);
+    if (membershipError) throw membershipError;
+    if (!memberships?.length) {
+      message(loginNotice, "Your account has no team access yet. Ask a Team BC owner/admin to grant membership.");
+      return;
+    }
+
+    const { data: teams, error: teamsError } = await supabaseClient
+      .from("teams")
+      .select("team_key, display_name")
+      .in("team_key", memberships.map((membership) => membership.team_key))
+      .eq("is_enabled", true);
+    if (teamsError) throw teamsError;
+    if (!teams?.length) {
+      message(loginNotice, "Your teams are currently disabled. Contact the site owner.");
+      return;
+    }
+    openAuthenticatedWorkspace(user, memberships, teams);
+  } catch (error) {
+    // Keep the saved session intact if a temporary network or database error occurs.
+    message(loginNotice, "Couldn't restore your workspace right now. Check your connection and refresh again.");
+    console.error("Session restore failed:", error);
+  }
+}
+restoreSavedSession();
+
