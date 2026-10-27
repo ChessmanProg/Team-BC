@@ -8,7 +8,7 @@ const footer = document.querySelector("footer");
 const panels = [loginPanel, $("#signup-panel"), $("#recovery-panel")];
 const SUPABASE_URL = "https://asqyegtenygvgwwtazac.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_tTCz-II0_05GRTzjjH1HFQ_SSNt5RZr";
-const supabase = window.supabase?.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 function showPanel(panel) {
   panels.forEach((item) => item.classList.toggle("hidden", item !== panel));
@@ -52,12 +52,12 @@ $("#recovery-back").addEventListener("click", () => showPanel(loginPanel));
 
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!supabase) return message(loginNotice, "Authentication library did not load. Check your internet connection and refresh.");
+  if (!supabaseClient) return message(loginNotice, "Authentication library did not load. Check your internet connection and refresh.");
   const submit = loginForm.querySelector('button[type="submit"]');
   submit.disabled = true;
   message(loginNotice, "Signing in securely…");
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
       email: $("#email").value.trim(),
       password: $("#password").value
     });
@@ -65,15 +65,15 @@ loginForm.addEventListener("submit", async (event) => {
     const { data: memberships, error: membershipError } = await supabase
       .from("team_memberships").select("team_key, role").eq("user_id", data.user.id);
     if (membershipError) {
-      await supabase.auth.signOut();
+      await supabaseClient.auth.signOut();
       throw membershipError;
     }
     if (!memberships?.length) {
-      await supabase.auth.signOut();
+      await supabaseClient.auth.signOut();
       message(loginNotice, "Your account is valid, but it has no team access yet. Ask a Team BC owner/admin to grant membership.");
       return;
     }
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
     message(loginNotice, "Sign-in verified. Your team membership is recorded, but the workspace data pages are not connected yet. Nothing has been published.");
   } catch (error) {
     message(loginNotice, friendlyError(error));
@@ -85,12 +85,12 @@ loginForm.addEventListener("submit", async (event) => {
 $("#signup-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const notice = $("#signup-notice");
-  if (!supabase) return message(notice, "Authentication library did not load. Refresh and try again.");
+  if (!supabaseClient) return message(notice, "Authentication library did not load. Refresh and try again.");
   const submit = event.currentTarget.querySelector('button[type="submit"]');
   submit.disabled = true;
   message(notice, "Creating your account…");
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabaseClient.auth.signUp({
       email: $("#signup-email").value.trim(),
       password: $("#signup-password").value,
       options: { emailRedirectTo: "https://chessmanprog.github.io/Team-BC/" }
@@ -109,12 +109,12 @@ $("#signup-form").addEventListener("submit", async (event) => {
 $("#recovery-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const notice = $("#recovery-notice");
-  if (!supabase) return message(notice, "Authentication library did not load. Refresh and try again.");
+  if (!supabaseClient) return message(notice, "Authentication library did not load. Refresh and try again.");
   const submit = event.currentTarget.querySelector('button[type="submit"]');
   submit.disabled = true;
   message(notice, "Requesting reset link…");
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail($("#recovery-email").value.trim(), {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail($("#recovery-email").value.trim(), {
       redirectTo: "https://chessmanprog.github.io/Team-BC/"
     });
     if (error) throw error;
