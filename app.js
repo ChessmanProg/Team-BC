@@ -10,6 +10,18 @@ const SUPABASE_URL = "https://asqyegtenygvgwwtazac.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_tTCz-II0_05GRTzjjH1HFQ_SSNt5RZr";
 const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
+function setBackgroundVideo(fileName) {
+  const video = document.querySelector(".ocean-video");
+  const source = video?.querySelector("source");
+  if (!video || !source) return;
+  const nextSource = "./" + fileName;
+  if (source.getAttribute("src") === nextSource) return;
+  source.setAttribute("src", nextSource);
+  video.load();
+  const playAttempt = video.play();
+  if (playAttempt?.catch) playAttempt.catch(() => {});
+}
+
 function showPanel(panel) {
   panels.forEach((item) => item.classList.toggle("hidden", item !== panel));
 }
@@ -136,6 +148,7 @@ $("#recovery-form").addEventListener("submit", async (event) => {
 });
 
 $("#back-login").addEventListener("click", async () => {
+  setBackgroundVideo("ocean-background.mp4");
   if (supabaseClient) await supabaseClient.auth.signOut();
   activeUser = null;
   activeMemberships = [];
@@ -154,6 +167,9 @@ const pageInfo = {
   "quick-links": ["Quick Links", "Your team's useful destinations in one place."]
 };
 function renderPage(page) {
+  if (!workspace.classList.contains("hidden")) {
+    setBackgroundVideo(page === "overview" ? "overview-background.mp4" : "ocean-background.mp4");
+  }
   const [title, subtitle] = pageInfo[page] || pageInfo.overview;
   $("#crumb").textContent = title;
   $("#crumb").dataset.page = page;
