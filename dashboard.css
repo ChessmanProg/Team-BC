@@ -33,3 +33,63 @@
 @media(max-width:1100px){#workspace .stat-grid{gap:14px}#workspace .stat{padding:18px}}
 @media(max-width:900px){#workspace .sidebar{width:190px}#workspace .app-shell{grid-template-columns:190px minmax(0,1fr)}#workspace .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){#workspace .sidebar{width:100%;padding:12px}#workspace .workspace-main{padding:16px}#workspace .page-head{align-items:flex-start;flex-direction:column}#workspace .workspace-account{width:100%;align-items:flex-start;flex-direction:column;gap:10px}#workspace .team-switch-label,#workspace .team-switch-label select{width:100%}#workspace .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#workspace .stat{height:auto;min-height:120px;padding:16px}#workspace .stat strong{font-size:30px;margin-top:18px}}
+
+
+/* Distinct forest-inspired atmospheres for each logged-in workspace tab */
+#workspace .workspace-main {
+  position: relative;
+  isolation: isolate;
+  background-color: #0b1f38;
+  background-image:
+    radial-gradient(ellipse at 84% 5%, rgba(34, 112, 76, .22), transparent 34%),
+    radial-gradient(ellipse at 8% 86%, rgba(19, 77, 61, .16), transparent 38%),
+    linear-gradient(145deg, #0b1f38, #0a2032 58%, #0b1f38);
+  transition: background-image .6s ease, background-color .6s ease;
+}
+#workspace .workspace-main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .65;
+  background: radial-gradient(ellipse at 55% 0%, rgba(69, 146, 100, .08), transparent 55%);
+}
+#workspace:has(.nav-item[data-page="overview"].active) .workspace-main {
+  background-image:
+    radial-gradient(ellipse at 85% 4%, rgba(42, 139, 88, .28), transparent 34%),
+    radial-gradient(ellipse at 4% 80%, rgba(18, 91, 67, .2), transparent 40%),
+    linear-gradient(145deg, #0b1f38, #0a2a2b 58%, #0b1f38);
+}
+#workspace:has(.nav-item[data-page="agents"].active) .workspace-main {
+  background-image:
+    radial-gradient(ellipse at 88% 10%, rgba(28, 133, 79, .25), transparent 34%),
+    radial-gradient(ellipse at 10% 74%, rgba(66, 103, 51, .18), transparent 38%),
+    linear-gradient(145deg, #0b1f38, #102a2b 58%, #0b1f38);
+}
+#workspace:has(.nav-item[data-page="coaching"].active) .workspace-main {
+  background-image:
+    radial-gradient(ellipse at 78% 8%, rgba(69, 145, 118, .23), transparent 36%),
+    radial-gradient(ellipse at 14% 80%, rgba(36, 91, 89, .2), transparent 40%),
+    linear-gradient(145deg, #0b1f38, #102a38 58%, #0b1f38);
+}
+#workspace:has(.nav-item[data-page="ic-logs"].active) .workspace-main {
+  background-image:
+    radial-gradient(ellipse at 86% 6%, rgba(34, 115, 111, .23), transparent 34%),
+    radial-gradient(ellipse at 12% 78%, rgba(28, 72, 93, .2), transparent 40%),
+    linear-gradient(145deg, #091c31, #0b2733 58%, #0b1f38);
+}
+#workspace:has(.nav-item[data-page="quick-links"].active) .workspace-main {
+  background-image:
+    radial-gradient(ellipse at 85% 8%, rgba(95, 142, 72, .24), transparent 34%),
+    radial-gradient(ellipse at 8% 78%, rgba(23, 103, 83, .2), transparent 40%),
+    linear-gradient(145deg, #0b1f38, #102b2a 58%, #0b1f38);
+}
+#workspace .stat,
+#workspace .content-panel,
+#workspace .link-card {
+  backdrop-filter: blur(8px);
+}
+@media (prefers-reduced-motion: reduce) {
+  #workspace .workspace-main { transition: none; }
+}
