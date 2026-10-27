@@ -93,3 +93,59 @@
 @media (prefers-reduced-motion: reduce) {
   #workspace .workspace-main { transition: none; }
 }
+
+
+/* Reuse the login page's real ocean video throughout the logged-in workspace */
+body:has(#workspace:not(.hidden)) {
+  position: relative;
+  isolation: isolate;
+  background: #06172a;
+}
+body:has(#workspace:not(.hidden)) .ocean-video {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  pointer-events: none;
+}
+body:has(#workspace:not(.hidden)) #workspace {
+  background: transparent !important;
+}
+body:has(#workspace:not(.hidden)) #workspace .sidebar {
+  background: rgba(7, 25, 43, .84);
+  border-right-color: rgba(123, 205, 222, .2);
+  backdrop-filter: blur(14px);
+}
+body:has(#workspace:not(.hidden)) #workspace .workspace-main {
+  background-color: transparent;
+  background-image: linear-gradient(135deg, rgba(3, 16, 32, .48), rgba(4, 24, 39, .28) 58%, rgba(3, 16, 32, .5));
+  transition: background-image .5s ease;
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="overview"].active) .workspace-main {
+  background-image: linear-gradient(135deg, rgba(3, 16, 32, .42), rgba(3, 45, 40, .22) 58%, rgba(3, 16, 32, .48));
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .workspace-main {
+  background-image: linear-gradient(135deg, rgba(3, 16, 32, .45), rgba(12, 52, 32, .24) 58%, rgba(3, 16, 32, .5));
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="coaching"].active) .workspace-main {
+  background-image: linear-gradient(135deg, rgba(3, 16, 32, .42), rgba(15, 48, 58, .25) 58%, rgba(3, 16, 32, .48));
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="ic-logs"].active) .workspace-main {
+  background-image: linear-gradient(135deg, rgba(3, 16, 32, .48), rgba(5, 36, 53, .28) 58%, rgba(3, 16, 32, .52));
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-links"].active) .workspace-main {
+  background-image: linear-gradient(135deg, rgba(3, 16, 32, .42), rgba(26, 49, 29, .25) 58%, rgba(3, 16, 32, .48));
+}
+body:has(#workspace:not(.hidden)) #workspace .stat,
+body:has(#workspace:not(.hidden)) #workspace .content-panel,
+body:has(#workspace:not(.hidden)) #workspace .link-card {
+  background-color: rgba(7, 26, 43, .76);
+  border-color: rgba(143, 211, 224, .22);
+  backdrop-filter: blur(12px);
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(#workspace:not(.hidden)) .ocean-video { display: none; }
+}
