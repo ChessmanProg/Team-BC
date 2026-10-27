@@ -269,3 +269,42 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].a
 body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .content-panel:before {
   opacity: .22;
 }
+
+
+/* Functional records and team chooser */
+.team-selection{min-height:100vh;padding:clamp(28px,7vw,84px) 22px;position:relative;z-index:1}
+.team-selection-inner{width:min(980px,100%);margin:0 auto;padding:clamp(24px,5vw,54px);border:1px solid rgba(175,239,229,.25);border-radius:26px;background:rgba(4,22,34,.48);backdrop-filter:blur(12px);box-shadow:0 22px 70px rgba(0,0,0,.2)}
+.team-selection h1{font-size:clamp(32px,5vw,54px);margin:8px 0 12px}
+.team-selection .muted{color:#c1d9e6}
+.team-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:34px 0 22px}
+.team-card{display:flex;flex-direction:column;align-items:flex-start;gap:18px;min-height:190px;padding:24px;text-align:left;color:#f4fffb;border:1px solid rgba(151,230,210,.3);border-radius:18px;background:linear-gradient(145deg,rgba(9,65,52,.52),rgba(4,26,36,.55));cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease}
+.team-card:hover{transform:translateY(-3px);border-color:rgba(156,255,220,.75);background:linear-gradient(145deg,rgba(13,103,75,.62),rgba(4,35,45,.62))}
+.team-card-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:rgba(123,238,196,.14);color:#a5f7d6;font-size:22px}
+.team-card strong{font-size:18px}
+.team-card small{margin-top:auto;color:#c1d9e6;font-size:12px}
+.team-card small span{color:#a5f7d6;margin-left:6px}
+.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:20px}
+.panel-heading h2{margin:0 0 7px}
+.panel-heading p{margin:0}
+.action-button{width:auto!important;min-width:unset!important;padding:11px 16px!important;white-space:nowrap}
+.record-form{padding:20px;margin:8px 0 24px;border:1px solid rgba(190,255,224,.2);border-radius:14px;background:rgba(1,18,17,.26)}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.form-grid label{display:flex;flex-direction:column;gap:7px;font-size:12px;color:#e0f6ed}
+.form-grid input,.form-grid select,.form-grid textarea{width:100%;min-height:42px;padding:10px 12px;border-radius:9px;border:1px solid rgba(190,255,224,.25);background:rgba(2,20,22,.66);color:#f5fffb;font:inherit}
+.form-grid textarea{min-height:88px;resize:vertical}
+.form-grid label:has(textarea){grid-column:1/-1}
+.form-actions{display:flex;gap:10px;margin-top:16px}
+.small-button{border:1px solid rgba(180,239,224,.28);border-radius:8px;background:rgba(3,28,27,.5);color:#effff9;padding:8px 11px;cursor:pointer;font:inherit;font-size:12px}
+.small-button:hover{background:rgba(28,104,80,.65)}
+.small-button.danger{border-color:rgba(255,148,148,.3);color:#ffd1d1}
+.records-wrap{overflow:auto;max-width:100%}
+.records-table{width:100%;border-collapse:collapse;font-size:13px}
+.records-table th,.records-table td{padding:13px 12px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(190,255,224,.12)}
+.records-table th{color:#c7e8dc;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.records-table td{color:#f2fff8;max-width:320px;overflow-wrap:anywhere}
+.records-table a{color:#9cebd0;text-decoration:none}
+.record-actions{white-space:nowrap}
+.record-actions .small-button{margin:0 5px 5px 0}
+#workspace .notice{color:#c4f5e0}
+#workspace .content-panel .empty-state{padding:26px 0}
+@media(max-width:760px){.team-card-grid{grid-template-columns:1fr}.team-card{min-height:140px}.team-selection-inner{padding:22px}.form-grid{grid-template-columns:1fr}.panel-heading{align-items:flex-start;flex-direction:column}.records-table{min-width:720px}}
