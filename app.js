@@ -62,7 +62,7 @@ loginForm.addEventListener("submit", async (event) => {
       password: $("#password").value
     });
     if (error) throw error;
-    const { data: memberships, error: membershipError } = await supabase
+    const { data: memberships, error: membershipError } = await supabaseClient
       .from("team_memberships").select("team_key, role").eq("user_id", data.user.id);
     if (membershipError) {
       await supabaseClient.auth.signOut();
