@@ -19,6 +19,24 @@ let currentPage = "overview";
 let editingRecordId = null;
 let recordsCache = [];
 
+const CHENN_AGENTS = [
+  "Raphael Santiago Reyes",
+  "Maria Kristelle Cambronero De Leon",
+  "Chito Canuto Quintela Delvo",
+  "John Anthony Reyes Villaflores",
+  "Phoebe Albufuera Almacen",
+  "Bryson Blando Lasam",
+  "Harold Ferdie Pulgan Orbina",
+  "Amalkene John Calalo Ligaya",
+  "Jessa Marie Marantal Albos",
+  "Neil Andre Tuballa",
+  "Phoebe Regio Sarmiento",
+  "Allia Cabuena Aguilar",
+  "Romeo Jr. Villaviray Perez",
+  "Florame Trumata Caspe",
+  "Enrique Banzal Calvez"
+];
+
 function setBackgroundVideo(fileName) {
   const video = document.querySelector(".ocean-video");
   const source = video?.querySelector("source");
@@ -179,20 +197,17 @@ const pageInfo = {
 const pageConfig = {
   agents: { table:"team_agents", singular:"agent", plural:"agents", fields:[
     {key:"agent_name",label:"Agent name",required:true},
-    {key:"agent_id",label:"Agent ID",required:false},
     {key:"status",label:"Status",type:"select",options:["Active","Inactive","On Leave"],required:true},
     {key:"notes",label:"Notes",type:"textarea",required:false}
   ]},
   "ic-logs": { table:"team_ic_logs", singular:"IC log", plural:"IC logs", fields:[
     {key:"log_date",label:"Date",type:"date",required:true},
     {key:"agent_name",label:"Agent name",required:true},
-    {key:"category",label:"Category",required:true},
-    {key:"details",label:"Details",type:"textarea",required:true},
-    {key:"outcome",label:"Outcome / follow-up",type:"textarea",required:false}
+    {key:"category",label:"Category",type:"select",options:["Reported","Not Reported"],required:true},
+    {key:"details",label:"Details",type:"textarea",required:true}
   ]},
   coaching: { table:"team_coaching", singular:"coaching session", plural:"coaching sessions", fields:[
     {key:"agent_name",label:"Agent name",required:true},
-    {key:"coach_name",label:"Coach name",required:false},
     {key:"scheduled_at",label:"Date and time",type:"datetime-local",required:false},
     {key:"meet_link",label:"Meeting link",type:"url",required:false},
     {key:"status",label:"Status",type:"select",options:["Scheduled","Completed","Cancelled"],required:true},
@@ -240,6 +255,9 @@ async function renderOverview(content) {
 }
 function fieldMarkup(field, row={}) {
   let value = row[field.key] ?? "";
+  if (field.key === "agent_name" && activeTeamKey === "chenn") {
+    return '<label>' + escapeHtml(field.label) + '<select name="agent_name" required><option value="">Choose an agent</option>' + CHENN_AGENTS.map((name) => '<option value="' + escapeHtml(name) + '"' + (value === name ? " selected" : "") + '>' + escapeHtml(name) + '</option>').join("") + '</select></label>';
+  }
   if (field.type === "datetime-local" && value) value = new Date(value).toISOString().slice(0,16);
   const required = field.required ? " required" : "";
   if (field.type === "textarea") return '<label>' + escapeHtml(field.label) + '<textarea name="' + field.key + '"' + required + '>' + escapeHtml(value) + '</textarea></label>';
@@ -259,9 +277,51 @@ function renderRecordList(page, rows) {
 }
 async function renderRecordsPage(page, content) {
   const config = pageConfig[page];
-  content.innerHTML = '<section class="content-panel"><div class="panel-heading"><div><h2>' + escapeHtml(config.plural[0].toUpperCase()+config.plural.slice(1)) + '</h2><p class="muted">Saved for ' + escapeHtml(teamDisplay(activeTeam())) + ' only.</p></div><button type="button" class="primary action-button" id="add-record">+ Add ' + escapeHtml(config.singular) + '</button></div><div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p><div id="records-list"><p class="muted">Loading records…</p></div></section>';
+  content.innerHTML = '<section class="content-panel"><div class="panel-heading"><div><h2>' + escapeHtml(config.plural[0].toUpperCase()+config.plural.slice(1)) + '</h2><p class="muted">Saved for ' + escapeHtml(teamDisplay(activeTeam())) + ' only.</p></div><div class="record-toolbar"><button type="button" class="primary action-button" id="add-record">+ Add ' + escapeHtml(config.singular) + '</button>' + (page === "coaching" ? '<button type="button" class="small-button action-button" id="bulk-coaching-toggle">Bulk import schedules</button>' : '') + '</div></div><div id="bulk-coaching-host"></div><div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p><div id="records-list"><p class="muted">Loading records…</p></div></section>';
   $("#add-record").addEventListener("click", () => showRecordForm(page));
+  if (page === "coaching") $("#bulk-coaching-toggle").addEventListener("click", showBulkCoachingImport);
   await refreshRecordList(page);
+}
+function showBulkCoachingImport() {
+  const host = $("#bulk-coaching-host");
+  if (host.innerHTML) { host.innerHTML = ""; return; }
+  host.innerHTML = '<section class="record-form bulk-import"><h3>Paste coaching schedules</h3><p class="muted">Paste one schedule per line. Separate columns with tabs or | in this order: Agent name, Date and time, Meeting link, Status, Coaching notes. Date/time can be like 2026-10-30 14:30. Status may be Scheduled, Completed, or Cancelled; leave it blank for Scheduled.</p><textarea id="bulk-coaching-text" rows="7" placeholder="Raphael Santiago Reyes | 2026-10-30 14:30 | https://meet.google.com/... | Scheduled | Weekly coaching"></textarea><div class="form-actions"><button type="button" class="primary action-button" id="bulk-coaching-save">Import schedules</button><button type="button" class="small-button" id="bulk-coaching-cancel">Cancel</button></div><p class="notice" id="bulk-coaching-notice" role="status"></p></section>';
+  $("#bulk-coaching-cancel").addEventListener("click", () => { host.innerHTML = ""; });
+  $("#bulk-coaching-save").addEventListener("click", importBulkCoaching);
+}
+async function importBulkCoaching() {
+  const input = $("#bulk-coaching-text");
+  const notice = $("#bulk-coaching-notice");
+  const button = $("#bulk-coaching-save");
+  const lines = input.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  if (!lines.length) return message(notice, "Paste at least one schedule first.");
+  const validStatuses = ["Scheduled","Completed","Cancelled"];
+  const rows = [];
+  const errors = [];
+  lines.forEach((line, index) => {
+    const columns = line.includes("\\t") ? line.split("\\t") : line.split("|");
+    if (index === 0 && /agent\s*name/i.test(columns[0] || "")) return;
+    const [agent, dateText, link, statusText, notes] = columns.map((part) => (part || "").trim());
+    const date = dateText ? new Date(dateText.replace(" ", "T")) : null;
+    const status = statusText ? validStatuses.find((item) => item.toLowerCase() === statusText.toLowerCase()) : "Scheduled";
+    if (!agent || !dateText || !date || Number.isNaN(date.getTime())) { errors.push("Line " + (index + 1) + ": agent name and a valid date/time are required."); return; }
+    if (activeTeamKey === "chenn" && !CHENN_AGENTS.includes(agent)) { errors.push("Line " + (index + 1) + ": agent name isn't in the Team Chenn list."); return; }
+    if (link && !/^https?:\/\//i.test(link)) { errors.push("Line " + (index + 1) + ": meeting links must start with http:// or https://."); return; }
+    if (statusText && !status) { errors.push("Line " + (index + 1) + ": status must be Scheduled, Completed, or Cancelled."); return; }
+    rows.push({team_key:activeTeamKey,agent_name:agent,scheduled_at:date.toISOString(),meet_link:link||null,status,notes:notes||null,created_by:activeUser.id});
+  });
+  if (errors.length) return message(notice, errors.slice(0,5).join(" ") + (errors.length > 5 ? " And " + (errors.length - 5) + " more issue(s)." : ""));
+  button.disabled = true;
+  message(notice, "Importing " + rows.length + " schedule(s)…");
+  try {
+    const {error} = await supabaseClient.from("team_coaching").insert(rows);
+    if (error) throw error;
+    $("#bulk-coaching-host").innerHTML = "";
+    message($("#record-notice"), rows.length + " coaching schedule(s) imported.");
+    await refreshRecordList("coaching");
+  } catch (error) {
+    message(notice, friendlyError(error));
+  } finally { button.disabled = false; }
 }
 async function refreshRecordList(page) {
   const host = $("#records-list");
