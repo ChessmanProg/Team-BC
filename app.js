@@ -33,10 +33,19 @@ $("#forgot").addEventListener("click", () => {
   message($("#recovery-notice"), "");
   showPanel($("#recovery-panel"));
 });
-$("#show-signup").addEventListener("click", () => {
+function openSignup() {
   $("#signup-email").value = $("#email").value.trim();
   message($("#signup-notice"), "");
   showPanel($("#signup-panel"));
+  $("#signup-email").focus();
+}
+$("#show-signup").addEventListener("click", openSignup);
+document.addEventListener("click", (event) => {
+  const trigger = event.target.closest("#show-signup");
+  if (trigger) {
+    event.preventDefault();
+    openSignup();
+  }
 });
 $("#show-login").addEventListener("click", () => showPanel(loginPanel));
 $("#recovery-back").addEventListener("click", () => showPanel(loginPanel));
