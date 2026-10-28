@@ -69,6 +69,64 @@ let activeTeamKey = null;
 let currentPage = "overview";
 let editingRecordId = null;
 let recordsCache = [];
+const PROFILE_PHOTO_PREFIX = "teamBCProfilePhoto:";
+function profilePhotoKey(user) { return PROFILE_PHOTO_PREFIX + (user?.id || user?.email || "guest"); }
+function profileInitials(user) {
+  const name = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split("@")[0] || "Team member";
+  const words = name.replace(/[._-]+/g, " ").trim().split(/\s+/).filter(Boolean);
+  return (words.length > 1 ? words[0][0] + words[words.length - 1][0] : (words[0] || "U").slice(0, 2)).toUpperCase();
+}
+function updateProfilePhoto(user = activeUser) {
+  const initials = profileInitials(user);
+  let photo = "";
+  try { photo = localStorage.getItem(profilePhotoKey(user)) || ""; } catch (_) {}
+  document.querySelectorAll("[data-profile-initials]").forEach((node) => { node.textContent = initials; node.style.display = photo ? "none" : "grid"; });
+  document.querySelectorAll("[data-profile-image]").forEach((node) => {
+    if (photo) { node.src = photo; node.style.display = "block"; }
+    else { node.removeAttribute("src"); node.style.display = "none"; }
+  });
+}
+function chooseProfilePhoto() {
+  if (!activeUser) return;
+  const picker = $("#profile-photo-file");
+  if (picker) { picker.value = ""; picker.click(); }
+}
+async function handleProfilePhotoSelected(event) {
+  const file = event.target.files?.[0];
+  if (!file || !activeUser) return;
+  if (!file.type.startsWith("image/")) { alert("Please choose an image file."); return; }
+  if (file.size > 8 * 1024 * 1024) { alert("Please choose an image smaller than 8 MB."); return; }
+  try {
+    const source = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("Could not read that image."));
+      reader.readAsDataURL(file);
+    });
+    const image = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("Could not open that image."));
+      img.src = source;
+    });
+    const scale = Math.min(1, 320 / Math.max(image.naturalWidth, image.naturalHeight));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+    canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+    const compressed = canvas.toDataURL("image/jpeg", 0.78);
+    try { localStorage.setItem(profilePhotoKey(activeUser), compressed); }
+    catch (_) { throw new Error("Your browser storage is full. Remove some site data or choose a smaller photo."); }
+    updateProfilePhoto(activeUser);
+  } catch (error) {
+    alert(error.message || "Could not save that photo. Please try another image.");
+  } finally { event.target.value = ""; }
+}
+document.addEventListener("click", (event) => {
+  if (event.target.closest("[data-profile-photo-trigger]")) chooseProfilePhoto();
+});
+$("#profile-photo-file")?.addEventListener("change", handleProfilePhotoSelected);
+
 
 const CHENN_AGENTS = [
   "Raphael Santiago Reyes",
@@ -155,11 +213,12 @@ function showTeamSelection() {
   workspace.classList.add("hidden");
   workspace.style.display = "none";
   teamSelection.classList.remove("hidden");
-  teamSelection.innerHTML = '<div class="team-selection-inner"><p class="eyebrow">WELCOME TO TEAM BC</p><h1>Choose your team</h1><p class="muted">Only teams assigned to your account are shown.</p><div class="team-card-grid">' +
+  teamSelection.innerHTML = '<div class="team-selection-inner"><div class="team-selection-profile"><div class="profile-avatar" aria-hidden="true"><img data-profile-image alt=""><span data-profile-initials>U</span></div><div class="team-profile-copy"><p class="eyebrow">SIGNED IN AS</p><strong>' + escapeHtml(activeUser?.user_metadata?.full_name || activeUser?.user_metadata?.name || activeUser?.email || "Team member") + '</strong><button type="button" class="text-button" data-profile-photo-trigger>Change profile photo</button></div></div><p class="eyebrow">WELCOME TO TEAM BC</p><h1>Choose your team</h1><p class="muted">Only teams assigned to your account are shown.</p><div class="team-card-grid">' +
     activeTeams.map((team) => '<button type="button" class="team-card" data-team-key="' + escapeHtml(team.team_key) + '"><span class="team-card-icon">✦</span><strong>' + escapeHtml(teamDisplay(team)) + '</strong><small>Open team workspace <span>→</span></small></button>').join("") +
     '</div><p class="notice" id="team-selection-notice" role="status"></p><button type="button" class="text-button" id="selection-signout">Sign out</button></div>';
   teamSelection.querySelectorAll("[data-team-key]").forEach((button) => button.addEventListener("click", () => enterTeam(button.dataset.teamKey)));
   $("#selection-signout").addEventListener("click", signOut);
+  updateProfilePhoto(activeUser);
   main.classList.add("hidden");
   document.querySelector(".brand").classList.add("hidden");
   footer.classList.add("hidden");
@@ -177,6 +236,7 @@ function enterTeam(teamKey) {
   $("#team-brand").textContent = "Team BC";
   const displayName = activeUser?.user_metadata?.full_name || activeUser?.user_metadata?.name || activeUser?.email?.split("@")[0] || "Team member";
   $("#workspace-user").textContent = "Hello, " + displayName;
+  updateProfilePhoto(activeUser);
   $("#workspace-role").textContent = teamDisplay(activeTeam());
   teamSelection.classList.add("hidden");
   workspace.classList.remove("hidden");
