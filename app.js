@@ -301,7 +301,7 @@ function recordValue(row, key) {
   if (key === "scheduled_at") return formatDate(value, true);
   if (key === "extension_minutes") return value == null || value === "" ? "—" : escapeHtml(value + " min");
   if (key === "meet_link" && value) { const url = /^https?:\/\//i.test(value) ? value : "https://" + value; return '<a class="meeting-pill" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer" data-meeting-link="true">Join Meeting <span aria-hidden="true">↗</span></a>'; }
-  if (key === "url" && value) return '<a class="quick-link-title" href="' + escapeHtml(/^https?:\\/\\//i.test(value) ? value : "https://" + value) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(row.title || "Open link") + '</a>';
+  if (key === "url" && value) return '<a class="quick-link-title" href="' + escapeHtml(/^https?:\/\//i.test(value) ? value : "https://" + value) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(row.title || "Open link") + '</a>';
   return escapeHtml(value || "—");
 }
 const DAILY_MOTIVATIONAL_QUOTES = [
