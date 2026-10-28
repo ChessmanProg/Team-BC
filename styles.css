@@ -381,3 +381,30 @@ body:has(#login-panel:not(.hidden)) #recovery-panel {
     grid-row: auto;
   }
 }
+
+/* Team BC lamp light: originate the beam at the shade, with a narrower realistic spread. */
+body:has(main .login:not(.hidden)) .lamp-container { z-index: 2; }
+body:has(main .login:not(.hidden)) .lamp-light-cone {
+  top: 169px;
+  left: calc(clamp(90px, 22%, 360px) + 65px);
+  width: min(440px, 42vw);
+  height: calc(100svh - 169px);
+  clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, rgba(255, 215, 126, .19), rgba(255, 193, 83, .075) 48%, rgba(255, 177, 55, .015) 82%, transparent);
+  filter: blur(7px);
+  pointer-events: none;
+}
+body:has(main .login:not(.hidden)) .lamp-glow {
+  top: 148px;
+  width: 150px;
+  height: 125px;
+  background: radial-gradient(ellipse at 50% 8%, rgba(255, 225, 142, .78), rgba(255, 183, 64, .2) 48%, transparent 76%);
+}
+@media (max-width: 700px) {
+  body:has(main .login:not(.hidden)) .lamp-light-cone {
+    top: 169px;
+    left: calc(clamp(90px, 22%, 360px) + 65px);
+    width: min(330px, 70vw);
+    height: calc(100svh - 169px);
+  }
+}
