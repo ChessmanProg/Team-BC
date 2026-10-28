@@ -560,3 +560,26 @@ body:has(#login-panel:not(.hidden)) #login-panel {
   position: relative;
   z-index: 6;
 }
+
+
+/* Emergency visibility correction: the auth panel must appear when the lamp is lit. */
+body.lamp-light-on:has(#login-panel:not(.hidden)) #login-panel {
+  display: block !important;
+  position: relative !important;
+  z-index: 20 !important;
+  grid-column: 2;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+}
+body:not(.lamp-light-on):has(#login-panel:not(.hidden)) #login-panel {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+@media (max-width: 760px) {
+  body.lamp-light-on:has(#login-panel:not(.hidden)) #login-panel {
+    grid-column: 1;
+  }
+}
