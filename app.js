@@ -32,21 +32,30 @@ if (lampSwitch) {
     if (!chainPointerStart || event.pointerId !== chainPointerStart.id) return;
     const dx = event.clientX - chainPointerStart.x;
     const dy = event.clientY - chainPointerStart.y;
-    if (Math.abs(dy) > 12 || Math.abs(dx) > 18) chainWasDragged = true;
+    if (Math.abs(dy) > 8 || Math.abs(dx) > 18) chainWasDragged = true;
+    if (dy > 0) lampSwitch.classList.add("pulling");
   });
-  lampSwitch.addEventListener("pointerup", (event) => {
+  const finishChainPull = (event) => {
     if (!chainPointerStart || event.pointerId !== chainPointerStart.id) return;
     const dy = event.clientY - chainPointerStart.y;
     const dx = event.clientX - chainPointerStart.x;
-    const pulledDown = dy >= 18 && dy > Math.abs(dx) * 0.8;
-    if (pulledDown) {
-      toggleLamp();
-      suppressChainClick = true;
-    }
+    const pulledDown = dy >= 12 && dy > Math.abs(dx) * 0.65;
+    const wasDragged = chainWasDragged;
+    if (pulledDown) toggleLamp();
     chainPointerStart = null;
-    if (suppressChainClick) window.setTimeout(() => { suppressChainClick = false; }, 350);
+    chainWasDragged = false;
+    if (wasDragged) {
+      suppressChainClick = true;
+      window.setTimeout(() => { suppressChainClick = false; }, 350);
+    }
+    window.setTimeout(() => lampSwitch.classList.remove("pulling"), 220);
+  };
+  lampSwitch.addEventListener("pointerup", finishChainPull);
+  lampSwitch.addEventListener("pointercancel", () => {
+    chainPointerStart = null;
+    chainWasDragged = false;
+    lampSwitch.classList.remove("pulling");
   });
-  lampSwitch.addEventListener("pointercancel", () => { chainPointerStart = null; chainWasDragged = false; });
   lampSwitch.addEventListener("click", (event) => {
     if (suppressChainClick || chainWasDragged) {
       event.preventDefault();
@@ -221,6 +230,7 @@ function showTeamSelection() {
   $("#selection-signout").addEventListener("click", signOut);
   updateProfilePhoto(activeUser);
   main.classList.add("hidden");
+  main.style.display = "none";
   document.querySelector(".brand").classList.add("hidden");
   footer.classList.add("hidden");
 }
@@ -251,7 +261,7 @@ async function signOut() {
   activeUser = null; activeMemberships = []; activeTeams = []; activeTeamKey = null;
   teamSelection.classList.add("hidden");
   workspace.classList.add("hidden"); workspace.style.display = "";
-  main.classList.remove("hidden"); document.querySelector(".brand").classList.remove("hidden"); footer.classList.remove("hidden");
+  main.classList.remove("hidden"); main.style.display = ""; document.querySelector(".brand").classList.remove("hidden"); footer.classList.remove("hidden");
   setBackgroundVideo("ocean-background.mp4");
 }
 async function openAuthenticatedWorkspace(user, memberships, teams) {
