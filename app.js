@@ -93,12 +93,43 @@ async function getUserTeams(user) {
   const { data: memberships, error: membershipError } = await supabaseClient
     .from("team_memberships").select("team_key, role").eq("user_id", user.id);
   if (membershipError) throw membershipError;
-  if (!memberships?.length) throw new Error("Your account has no team access yet. Ask a Team BC owner/admin to grant membership.");
+  if (!memberships?.length) return { memberships: [], teams: [] };
   const { data: teams, error: teamsError } = await supabaseClient
     .from("teams").select("team_key, display_name").in("team_key", memberships.map((m) => m.team_key)).eq("is_enabled", true);
   if (teamsError) throw teamsError;
   if (!teams?.length) throw new Error("Your teams are currently disabled. Contact the site owner.");
   return { memberships, teams };
+}
+async function showTeamRequestChoice(user) {
+  activeUser = user; activeMemberships = []; activeTeams = []; activeTeamKey = null;
+  sessionStorage.removeItem("teamBcSelectedTeam");
+  workspace.classList.add("hidden"); workspace.style.display = "none";
+  teamSelection.classList.remove("hidden");
+  main.classList.add("hidden"); document.querySelector(".brand").classList.add("hidden"); footer.classList.add("hidden");
+  const { data: request, error } = await supabaseClient.from("team_join_requests").select("team_key,status,created_at").eq("user_id", user.id).maybeSingle();
+  if (error) throw error;
+  if (request) {
+    const statusText = request.status === "pending" ? "Your request for " + teamDisplay({team_key:request.team_key}) + " is waiting for an admin's approval." :
+      request.status === "approved" ? "Your team is approved. Please sign in again to continue." :
+      "Your request was declined. Contact a team admin for help.";
+    teamSelection.innerHTML = '<div class="team-selection-inner"><p class="eyebrow">TEAM BC ACCESS</p><h1>Team request</h1><p class="muted">' + escapeHtml(statusText) + '</p><button type="button" class="text-button" id="request-signout">Sign out</button></div>';
+    $("#request-signout").addEventListener("click", signOut);
+    return;
+  }
+  teamSelection.innerHTML = '<div class="team-selection-inner"><p class="eyebrow">WELCOME TO TEAM BC</p><h1>Choose your team</h1><p class="muted">Your choice will be sent to that team’s admin for approval. You cannot change it yourself after submitting.</p><div class="team-card-grid">' +
+    [{team_key:"chenn",display_name:"Team Chenn BC AI"},{team_key:"gemma",display_name:"Team Gemma BC AI"},{team_key:"lev",display_name:"Team Lev BC AI"}].map((team) => '<button type="button" class="team-card" data-request-team="' + team.team_key + '"><span class="team-card-icon">' + ({chenn:"☀",gemma:"〰",lev:"♥"}[team.team_key]) + '</span><strong>' + escapeHtml(team.display_name) + '</strong><small>Request access <span>→</span></small></button>').join("") +
+    '</div><p class="notice" id="team-selection-notice" role="status"></p><button type="button" class="text-button" id="request-signout">Sign out</button></div>';
+  teamSelection.querySelectorAll("[data-request-team]").forEach((button) => button.addEventListener("click", async () => {
+    teamSelection.querySelectorAll("[data-request-team]").forEach((item) => item.disabled = true);
+    const { error: insertError } = await supabaseClient.from("team_join_requests").insert({user_id:user.id,requester_email:user.email,team_key:button.dataset.requestTeam,status:"pending"});
+    if (insertError) {
+      message($("#team-selection-notice"), friendlyError(insertError));
+      teamSelection.querySelectorAll("[data-request-team]").forEach((item) => item.disabled = false);
+      return;
+    }
+    await showTeamRequestChoice(user);
+  }));
+  $("#request-signout").addEventListener("click", signOut);
 }
 function showTeamSelection() {
   sessionStorage.removeItem("teamBcSelectedTeam");
@@ -157,6 +188,7 @@ async function openAuthenticatedWorkspace(user, memberships, teams) {
   const savedPage = sessionStorage.getItem("teamBcCurrentPage") || "overview";
   const canRestoreTeam = teams.some((team) => team.team_key === savedTeamKey) && memberships.some((membership) => membership.team_key === savedTeamKey);
   if (canRestoreTeam) enterTeam(savedTeamKey, savedPage);
+  else if (!memberships.length) await showTeamRequestChoice(user);
   else showTeamSelection();
 }
 loginForm.addEventListener("submit", async (event) => {
@@ -170,7 +202,7 @@ loginForm.addEventListener("submit", async (event) => {
     const { memberships, teams } = await getUserTeams(data.user);
     await openAuthenticatedWorkspace(data.user, memberships, teams);
   } catch (error) {
-    if (/no team access|currently disabled/i.test(error.message || "")) await supabaseClient.auth.signOut();
+    if (/currently disabled/i.test(error.message || "")) await supabaseClient.auth.signOut();
     message(loginNotice, friendlyError(error));
   } finally { submit.disabled = false; }
 });
@@ -186,7 +218,12 @@ $("#signup-form").addEventListener("submit", async (event) => {
       options: { emailRedirectTo: "https://chessmanprog.github.io/Team-BC/" }
     });
     if (error) throw error;
-    message(notice, data.session ? "Account created. A team admin must grant team access separately." : "Account created if this email is eligible. Check your inbox for a confirmation link. Registration does not grant team access.");
+    if (data.session) {
+      const { memberships, teams } = await getUserTeams(data.user);
+      await openAuthenticatedWorkspace(data.user, memberships, teams);
+    } else {
+      message(notice, "Account created. Check your email to confirm your account, then sign in to choose a team and request approval.");
+    }
   } catch (error) { message(notice, friendlyError(error)); }
   finally { submit.disabled = false; }
 });
@@ -247,7 +284,8 @@ const pageInfo = {
   coaching: ["Coaching", "Create and manage coaching sessions and meeting links."],
   "ic-logs": ["IC Logs", "Record and review incidents and interactions."],
   "quick-links": ["Quick Links", "Save useful team links in one place."],
-  "bc-ai": ["BC AI", "Shoot your photo into the hoop to upload it."]
+  "bc-ai": ["BC AI", "Shoot your photo into the hoop to upload it."],
+  "team-requests": ["Team requests", "Review requests to join this team."]
 };
 const pageConfig = {
   agents: { table:"team_agents", singular:"agent", plural:"agents", fields:[
@@ -735,6 +773,26 @@ async function renderBCAIPage(content) {
   $("#bc-ai-refresh").addEventListener("click", loadBCAIGallery);
   await loadBCAIGallery();
 }
+async function renderTeamRequests(content) {
+  if (!canManageActiveTeam()) throw new Error("Only this team's admins can review requests.");
+  const { data: requests, error } = await supabaseClient.from("team_join_requests")
+    .select("user_id,requester_email,team_key,status,created_at").eq("team_key", activeTeamKey).eq("status", "pending").order("created_at", {ascending:true});
+  if (error) throw error;
+  content.innerHTML = '<section class="content-panel"><h2>Pending requests for ' + escapeHtml(teamDisplay(activeTeam())) + '</h2><p class="muted">Approving grants member access only. Existing owner/admin roles are not changed.</p><div id="team-request-list"></div><p class="notice" id="team-request-notice" role="status"></p></section>';
+  const list = $("#team-request-list");
+  if (!requests?.length) { list.innerHTML = '<p class="muted">No pending requests.</p>'; return; }
+  for (const request of requests) {
+    const item = document.createElement("div"); item.className = "request-row";
+    item.innerHTML = '<div><strong>' + escapeHtml(request.requester_email || request.user_id) + '</strong><p class="muted">Requested ' + escapeHtml(new Date(request.created_at).toLocaleString()) + '</p></div><div class="form-actions"><button type="button" class="primary" data-decision="approved">Approve member</button><button type="button" class="small-button" data-decision="rejected">Reject</button></div>';
+    item.querySelectorAll("[data-decision]").forEach((button) => button.addEventListener("click", async () => {
+      button.disabled = true;
+      const { error: updateError } = await supabaseClient.from("team_join_requests").update({status:button.dataset.decision,reviewed_at:new Date().toISOString(),reviewed_by:activeUser.id}).eq("user_id",request.user_id).eq("team_key",activeTeamKey).eq("status","pending");
+      if (updateError) { message($("#team-request-notice"), friendlyError(updateError)); button.disabled = false; return; }
+      await renderTeamRequests(content);
+    }));
+    list.appendChild(item);
+  }
+}
 async function renderPage(page) {
   if (!activeTeamKey) return showTeamSelection();
   currentPage = page;
@@ -747,11 +805,14 @@ async function renderPage(page) {
   $("#crumb").textContent = title; $("#crumb").dataset.page = page;
   $("#page-title").textContent = title; $("#page-subtitle").textContent = subtitle;
   document.querySelectorAll(".nav-item[data-page]").forEach((button) => button.classList.toggle("active", button.dataset.page === page));
+  const requestNav = $("#team-requests-nav");
+  if (requestNav) requestNav.classList.toggle("hidden", !canManageActiveTeam());
   const content = $("#page-content");
   content.innerHTML = '<section class="content-panel"><p class="muted">Loading…</p></section>';
   try {
     if (page === "overview") await renderOverview(content);
     else if (page === "bc-ai") await renderBCAIPage(content);
+    else if (page === "team-requests") await renderTeamRequests(content);
     else await renderRecordsPage(page, content);
   } catch (error) {
     content.innerHTML = '<section class="content-panel"><p class="notice">' + escapeHtml(friendlyError(error)) + '</p><button class="small-button" id="retry-load">Try again</button></section>';
