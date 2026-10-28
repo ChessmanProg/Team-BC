@@ -776,3 +776,41 @@ body:has(#workspace:not(.hidden)) footer {
 }
 /* The login page uses explicit display rules, so hidden must win over those rules. */
 main.hidden { display: none !important; }
+
+
+/* Final interaction correction: keep the chain's hit area above all login layers. */
+body:has(#login-panel:not(.hidden)) .lamp-scene {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 100 !important;
+}
+body:has(#login-panel:not(.hidden)) .lamp-scene .pull-chain {
+  position: fixed !important;
+  left: clamp(100px, 24vw, 330px) !important;
+  top: calc(clamp(70px, 17vh, 155px) + 145px) !important;
+  width: 72px !important;
+  height: 145px !important;
+  margin: 0 !important;
+  transform: translateX(-36px) !important;
+  pointer-events: auto !important;
+  z-index: 101 !important;
+  cursor: grab !important;
+  touch-action: none !important;
+}
+body:has(#login-panel:not(.hidden)) .lamp-scene .pull-chain:active,
+body:has(#login-panel:not(.hidden)) .lamp-scene .pull-chain.pulling {
+  transform: translate(-36px, 13px) !important;
+  cursor: grabbing !important;
+}
+@media (max-width: 760px) {
+  body:has(#login-panel:not(.hidden)) .lamp-scene .pull-chain {
+    left: 50% !important;
+    top: 144px !important;
+    transform: translateX(-36px) !important;
+  }
+  body:has(#login-panel:not(.hidden)) .lamp-scene .pull-chain:active,
+  body:has(#login-panel:not(.hidden)) .lamp-scene .pull-chain.pulling {
+    transform: translate(-36px, 13px) !important;
+  }
+}
