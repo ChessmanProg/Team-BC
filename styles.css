@@ -347,3 +347,37 @@ body:has(main .login:not(.hidden)) .pull-chain {
   pointer-events: auto;
   touch-action: manipulation;
 }
+
+
+/* Keep the decorative lamp exclusive to authentication screens and place auth card on the right. */
+body:has(#workspace:not(.hidden)) .lamp-scene,
+body:has(#team-selection:not(.hidden)) .lamp-scene {
+  display: none !important;
+}
+body:has(#login-panel:not(.hidden)) main {
+  grid-template-columns: minmax(220px, 1fr) minmax(190px, .8fr) minmax(360px, 430px);
+}
+body:has(#login-panel:not(.hidden)) #login-panel,
+body:has(#login-panel:not(.hidden)) #signup-panel,
+body:has(#login-panel:not(.hidden)) #recovery-panel {
+  grid-column: 3;
+  grid-row: 1;
+}
+@media (max-width: 1100px) {
+  body:has(#login-panel:not(.hidden)) main {
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 430px);
+  }
+  body:has(#login-panel:not(.hidden)) #login-panel,
+  body:has(#login-panel:not(.hidden)) #signup-panel,
+  body:has(#login-panel:not(.hidden)) #recovery-panel {
+    grid-column: 2;
+  }
+}
+@media (max-width: 760px) {
+  body:has(#login-panel:not(.hidden)) #login-panel,
+  body:has(#login-panel:not(.hidden)) #signup-panel,
+  body:has(#login-panel:not(.hidden)) #recovery-panel {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
