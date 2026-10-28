@@ -1014,3 +1014,30 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].a
   background: linear-gradient(115deg, rgba(27, 110, 137, .82), rgba(22, 67, 92, .74));
   box-shadow: inset 3px 0 #8ddcff, 0 5px 22px rgba(0, 20, 13, .16);
 }
+
+
+/* Make Coaching and Quick Links match IC Logs; leave Overview and the login page untouched. */
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="coaching"].active) .workspace-main,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-links"].active) .workspace-main {
+  background-image: linear-gradient(135deg, rgba(3, 16, 32, .48), rgba(5, 36, 53, .28) 58%, rgba(3, 16, 32, .52)) !important;
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="coaching"].active) .stat,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="coaching"].active) .content-panel,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="coaching"].active) .link-card,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-links"].active) .stat,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-links"].active) .content-panel,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-links"].active) .link-card {
+  background: linear-gradient(135deg, rgba(9, 48, 35, .34), rgba(4, 28, 22, .24)) !important;
+  border: 1px solid rgba(190, 255, 224, .22);
+  box-shadow: 0 8px 28px rgba(0, 12, 8, .12), inset 0 1px 0 rgba(240, 255, 247, .16), inset 0 -1px 0 rgba(155, 255, 210, .06);
+  backdrop-filter: blur(7px) saturate(140%);
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="coaching"].active) .content-panel:before,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-links"].active) .content-panel:before {
+  opacity: .32;
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="coaching"].active) .nav-item.active,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-links"].active) .nav-item.active {
+  background: linear-gradient(115deg, rgba(27, 110, 137, .82), rgba(22, 67, 92, .74));
+  box-shadow: inset 3px 0 #8ddcff, 0 5px 22px rgba(0, 20, 13, .16);
+}
