@@ -62,6 +62,10 @@ function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 }
 function activeTeam() { return activeTeams.find((team) => team.team_key === activeTeamKey); }
+function canManageActiveTeam() {
+  const role = activeMemberships.find((membership) => membership.team_key === activeTeamKey)?.role;
+  return role === "owner" || role === "admin";
+}
 function teamDisplay(team) { return team?.display_name || ({chenn:"Team Chenn BC AI",gemma:"Team Gemma BC AI",lev:"Team Lev BC AI"}[team?.team_key]) || team?.team_key || "Team"; }
 
 $("#toggle-password").addEventListener("click", () => {
@@ -253,7 +257,7 @@ async function renderOverview(content) {
   const counts = await loadCounts();
   content.innerHTML = '<div class="stat-grid">' +
     [["TOTAL AGENTS",counts[0]],["COACHING SESSIONS",counts[1]],["TOTAL IC LOGS",counts[2]],["QUICK LINKS",counts[3]]].map(([label,count]) => '<article class="stat"><small>' + label + '</small><strong>' + count + '</strong></article>').join("") +
-    '</div><section class="content-panel"><h2>Welcome to ' + escapeHtml(teamDisplay(activeTeam())) + '</h2><p class="muted">Your records are saved to this team only.</p><div class="empty-state">Choose a section from the left menu to add or manage records.</div></section>';
+    '</div><section class="content-panel"><h2>Welcome to ' + escapeHtml(teamDisplay(activeTeam())) + '</h2><p class="muted">Your records are saved to this team only.</p><div class="empty-state">' + (canManageActiveTeam() ? "Choose a section from the left menu to add or manage records." : "Choose a section from the left menu to view records and open links.") + '</div></section>';
 }
 function fieldMarkup(field, row={}) {
   let value = row[field.key] ?? "";
@@ -271,26 +275,29 @@ function fieldMarkup(field, row={}) {
 }
 function renderRecordList(page, rows) {
   const config = pageConfig[page];
-  if (!rows.length) return '<div class="empty-state">No ' + config.plural + ' yet. Select “Add ' + config.singular + '” to create the first one.</div>';
+  const canManage = canManageActiveTeam();
+  if (!rows.length) return '<div class="empty-state">' + (canManage ? 'No ' + config.plural + ' yet. Select “Add ' + config.singular + '” to create the first one.' : 'No ' + config.plural + ' to display.') + '</div>';
   const cols = config.fields.slice(0, page === "ic-logs" ? 5 : 5);
-  return '<div class="records-wrap"><table class="records-table"><thead><tr>' + cols.map((field) => '<th>' + escapeHtml(field.label) + '</th>').join("") + '<th>Actions</th></tr></thead><tbody>' +
+  return '<div class="records-wrap"><table class="records-table"><thead><tr>' + cols.map((field) => '<th>' + escapeHtml(field.label) + '</th>').join("") + (canManage ? '<th>Actions</th>' : '') + '</tr></thead><tbody>' +
     rows.map((row) => '<tr>' + cols.map((field) => '<td>' + recordValue(row, field.key) + '</td>').join("") +
-    '<td class="record-actions"><button type="button" class="small-button" data-edit="' + row.id + '">Edit</button><button type="button" class="small-button danger" data-delete="' + row.id + '">Delete</button></td></tr>').join("") +
+    (canManage ? '<td class="record-actions"><button type="button" class="small-button" data-edit="' + row.id + '">Edit</button><button type="button" class="small-button danger" data-delete="' + row.id + '">Delete</button></td>' : '') + '</tr>').join("") +
     '</tbody></table></div>';
 }
 async function renderRecordsPage(page, content) {
   const config = pageConfig[page];
   const today = new Date();
   const localToday = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
-  content.innerHTML = '<section class="content-panel"><div class="panel-heading"><div><h2>' + escapeHtml(config.plural[0].toUpperCase()+config.plural.slice(1)) + '</h2><p class="muted">Saved for ' + escapeHtml(teamDisplay(activeTeam())) + ' only.</p></div><div class="record-toolbar"><button type="button" class="primary action-button" id="add-record">+ Add ' + escapeHtml(config.singular) + '</button>' + (page === "coaching" ? '<button type="button" class="small-button action-button" id="bulk-coaching-toggle">Bulk import schedules</button>' : '') + '</div></div>' + (page === "coaching" ? '<div class="daily-schedule-filter"><label for="coaching-schedule-date">Show agents scheduled on</label><input type="date" id="coaching-schedule-date" value="' + localToday + '"><p class="muted">Only coaching schedules for the selected day are shown.</p></div>' : '') + '<div id="bulk-coaching-host"></div><div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p><div id="records-list"><p class="muted">Loading records…</p></div></section>';
-  $("#add-record").addEventListener("click", () => showRecordForm(page));
+  const canManage = canManageActiveTeam();
+  content.innerHTML = '<section class="content-panel"><div class="panel-heading"><div><h2>' + escapeHtml(config.plural[0].toUpperCase()+config.plural.slice(1)) + '</h2><p class="muted">Saved for ' + escapeHtml(teamDisplay(activeTeam())) + ' only.</p></div>' + (canManage ? '<div class="record-toolbar"><button type="button" class="primary action-button" id="add-record">+ Add ' + escapeHtml(config.singular) + '</button>' + (page === "coaching" ? '<button type="button" class="small-button action-button" id="bulk-coaching-toggle">Bulk import schedules</button>' : '') + '</div>' : '') + '</div>' + (page === "coaching" ? '<div class="daily-schedule-filter"><label for="coaching-schedule-date">Show agents scheduled on</label><input type="date" id="coaching-schedule-date" value="' + localToday + '"><p class="muted">Only coaching schedules for the selected day are shown.</p></div>' : '') + '<div id="bulk-coaching-host"></div><div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p><div id="records-list"><p class="muted">Loading records…</p></div></section>';
+  if (canManage) $("#add-record").addEventListener("click", () => showRecordForm(page));
   if (page === "coaching") {
-    $("#bulk-coaching-toggle").addEventListener("click", showBulkCoachingImport);
+    if (canManage) $("#bulk-coaching-toggle").addEventListener("click", showBulkCoachingImport);
     $("#coaching-schedule-date").addEventListener("change", () => refreshRecordList("coaching"));
   }
   await refreshRecordList(page);
 }
 function showBulkCoachingImport() {
+  if (!canManageActiveTeam()) return;
   const host = $("#bulk-coaching-host");
   if (host.innerHTML) { host.innerHTML = ""; return; }
   const today = new Date();
@@ -308,6 +315,7 @@ function parseSheetTimeRange(value) {
   return {start: String(startHour).padStart(2, "0") + ":" + String(startMinute).padStart(2, "0"), range: match[1].padStart(2, "0") + ":" + match[2] + "–" + match[3].padStart(2, "0") + ":" + match[4]};
 }
 async function importBulkCoaching() {
+  if (!canManageActiveTeam()) return;
   const input = $("#bulk-coaching-text");
   const notice = $("#bulk-coaching-notice");
   const button = $("#bulk-coaching-save");
@@ -393,6 +401,7 @@ async function refreshRecordList(page) {
   } catch (error) { host.innerHTML = '<p class="notice">' + escapeHtml(friendlyError(error)) + '</p>'; }
 }
 function showRecordForm(page, row=null) {
+  if (!canManageActiveTeam()) return;
   editingRecordId = row?.id ?? null;
   const config = pageConfig[page];
   const host = $("#record-form-host");
@@ -431,6 +440,7 @@ function showRecordForm(page, row=null) {
   });
 }
 async function deleteRecord(page, id) {
+  if (!canManageActiveTeam()) return;
   const config = pageConfig[page];
   const row = recordsCache.find((item) => String(item.id) === String(id));
   const label = row?.[config.fields[0].key] || config.singular;
