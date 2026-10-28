@@ -1001,3 +1001,16 @@ body:has(main .login:not(.hidden)) .lamp-scene .pull-chain * {
     top: 145px !important;
   }
 }
+
+
+/* Emergency usability fix: never leave the sign-in form invisible. */
+body:has(main .login:not(.hidden)) #login-panel {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+}
+body:has(main .login:not(.hidden)) main {
+  display: grid !important;
+}
