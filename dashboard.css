@@ -446,3 +446,74 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].a
     transition: none !important;
   }
 }
+
+
+/* Enchanted quote card: a tiny green-gold constellation */
+#workspace .daily-quote-card {
+  min-height: 178px;
+  border-color: rgba(173, 255, 214, .42);
+  background:
+    radial-gradient(ellipse at 82% 22%, rgba(120, 255, 199, .18), transparent 34%),
+    radial-gradient(ellipse at 92% 90%, rgba(238, 255, 169, .11), transparent 30%),
+    linear-gradient(125deg, rgba(5, 48, 39, .78), rgba(7, 35, 37, .62) 48%, rgba(14, 65, 48, .7));
+  box-shadow: 0 14px 40px rgba(0, 18, 12, .18), inset 0 1px 0 rgba(235, 255, 244, .18), 0 0 0 1px rgba(183, 255, 219, .04);
+}
+#workspace .daily-quote-card::before {
+  width: 300px; height: 300px; right: -80px; top: -145px;
+  background: radial-gradient(circle, rgba(142, 255, 206, .25), rgba(95, 238, 179, .09) 35%, transparent 70%);
+  animation: quote-nebula 8s ease-in-out infinite alternate;
+}
+#workspace .daily-quote-card::after {
+  width: 240px; height: 240px; right: 8%; bottom: -180px;
+  background: radial-gradient(circle, rgba(226, 255, 150, .2), transparent 68%);
+  animation: quote-nebula 11s ease-in-out infinite alternate-reverse;
+}
+#workspace .daily-quote-magic {
+  position: absolute; inset: 0; overflow: hidden; border-radius: inherit;
+  pointer-events: none; z-index: 0;
+}
+#workspace .daily-quote-copy, #workspace .daily-quote-mark { z-index: 1; }
+#workspace .daily-quote-copy { position: relative; }
+#workspace .daily-quote-mark { z-index: 1; }
+#workspace .quote-orbit {
+  position: absolute; width: 230px; height: 230px; right: 4%; top: 50%;
+  border: 1px solid rgba(177, 255, 221, .14); border-radius: 50%;
+  transform: translateY(-50%) rotate(-24deg) scaleY(.38);
+  box-shadow: 0 0 24px rgba(126, 255, 203, .07), inset 0 0 18px rgba(126, 255, 203, .04);
+  animation: quote-ring 16s linear infinite;
+}
+#workspace .quote-orb {
+  position: absolute; width: 9px; height: 9px; border-radius: 50%;
+  background: #d7ffbb; box-shadow: 0 0 8px 3px rgba(196, 255, 182, .35), 0 0 24px 7px rgba(118, 255, 204, .18);
+}
+#workspace .quote-orb-one { right: 15%; top: 20%; animation: quote-wisp 5.4s ease-in-out infinite; }
+#workspace .quote-orb-two { right: 35%; bottom: 18%; width: 5px; height: 5px; animation: quote-wisp 7s 1.3s ease-in-out infinite reverse; }
+#workspace .quote-sparkle {
+  position: absolute; color: #e6ffd0; font-size: 18px; line-height: 1;
+  text-shadow: 0 0 8px rgba(211, 255, 178, .9), 0 0 22px rgba(130, 255, 205, .5);
+  animation: quote-twinkle 3.4s ease-in-out infinite;
+}
+#workspace .quote-sparkle:nth-of-type(4) { right: 12%; top: 18%; font-size: 21px; }
+#workspace .quote-sparkle:nth-of-type(5) { right: 27%; top: 64%; animation-delay: -.9s; font-size: 13px; }
+#workspace .quote-sparkle:nth-of-type(6) { right: 43%; top: 22%; animation-delay: -1.7s; font-size: 11px; }
+#workspace .quote-sparkle:nth-of-type(7) { right: 8%; top: 72%; animation-delay: -2.2s; font-size: 14px; }
+#workspace .quote-sparkle:nth-of-type(8) { right: 38%; top: 78%; animation-delay: -.5s; font-size: 19px; }
+#workspace .quote-sparkle:nth-of-type(9) { right: 20%; top: 42%; animation-delay: -2.7s; font-size: 10px; }
+#workspace .daily-quote-label { text-shadow: 0 0 18px rgba(148, 255, 203, .18); }
+#workspace .daily-quote-label span { color: #eaffb8; text-shadow: 0 0 12px rgba(231, 255, 168, .8); }
+#workspace .daily-quote-card:hover .quote-orbit { border-color: rgba(205, 255, 224, .32); }
+#workspace .daily-quote-card:hover .quote-sparkle { animation-duration: 1.7s; }
+@keyframes quote-nebula { from { transform: translate3d(-12px, 8px, 0) scale(.9); opacity: .65; } to { transform: translate3d(13px, -12px, 0) scale(1.1); opacity: 1; } }
+@keyframes quote-ring { from { transform: translateY(-50%) rotate(-24deg) scaleY(.38); } to { transform: translateY(-50%) rotate(336deg) scaleY(.38); } }
+@keyframes quote-wisp { 0%,100% { transform: translate(0,0) scale(.8); opacity: .55; } 50% { transform: translate(-22px,12px) scale(1.35); opacity: 1; } }
+@keyframes quote-twinkle { 0%,100% { transform: scale(.55) rotate(-12deg); opacity: .25; } 45% { transform: scale(1.15) rotate(12deg); opacity: 1; } 60% { transform: scale(.8) rotate(0); opacity: .7; } }
+@media (max-width: 640px) {
+  #workspace .quote-orbit { right: -12%; width: 180px; height: 180px; }
+  #workspace .quote-sparkle:nth-of-type(6) { right: 10%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #workspace .quote-orbit, #workspace .quote-orb, #workspace .quote-sparkle,
+  #workspace .daily-quote-card::before, #workspace .daily-quote-card::after {
+    animation: none !important;
+  }
+}
