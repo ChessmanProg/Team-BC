@@ -1185,3 +1185,12 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-ai-ball { cursor: grab; touch-action: none; user-select: none; -webkit-user-select:none; transition:filter .15s ease; }
 #workspace .bc-ai-ball.is-grabbed { cursor: grabbing; z-index:8; transform:scale(1.12); filter:drop-shadow(0 0 14px rgba(255,174,76,.75)); transition:none; }
 #workspace .bc-ai-ball.is-uploading { opacity:.35; pointer-events:none; }
+
+
+/* BC AI gallery photo management */
+#workspace .bc-ai-photo-card { display:flex; flex-direction:column; }
+#workspace .bc-ai-photo-preview { display:block; min-width:0; color:inherit; text-decoration:none; }
+#workspace .bc-ai-photo-actions { display:flex; gap:8px; padding:0 10px 10px; }
+#workspace .bc-ai-photo-actions button { flex:1; min-width:0; }
+#workspace .bc-ai-delete-button { border-color:rgba(255,110,110,.42); color:#ffd2d2; }
+#workspace .bc-ai-delete-button:hover { background:rgba(190,45,55,.2); border-color:rgba(255,110,110,.8); }
