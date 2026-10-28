@@ -967,3 +967,18 @@ body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:hover .quote-spar
   #workspace .quote-sparkle { animation: none !important; }
   #workspace .nav-item { transition: none; }
 }
+
+#workspace .side-brand strong { font-size: 0; }
+#workspace .side-brand strong::after { content: "Team BC"; font-size: 27px; font-family: "Segoe Script", "Brush Script MT", cursive; font-style: italic; letter-spacing: -.05em; color: #c8f7f0; }
+#workspace .topbar > .muted { opacity: .5; font-size: 11px; }
+#workspace .page-head { position: absolute; top: 20px; right: clamp(20px, 3vw, 48px); min-height: 46px; padding: 0; margin: 0; z-index: 10; }
+#workspace .workspace-account { gap: 9px; }
+#workspace #workspace-user { font-size: 14px; font-weight: 500; }
+#workspace #workspace-role { color: rgba(236,255,246,.9); font-size: 11px; border: 0; background: transparent; padding: 0; }
+#workspace .quote-pagination { display: flex; align-items: center; justify-content: center; gap: 11px; margin: 40px auto -18px; }
+#workspace .quote-pagination i { display: block; width: 9px; height: 9px; border-radius: 50%; background: rgba(210,255,232,.38); box-shadow: 0 0 0 1px rgba(210,255,232,.08); }
+#workspace .quote-pagination i.is-active { background: #a9f8cf; box-shadow: 0 0 12px rgba(133,255,199,.95), 0 0 24px rgba(133,255,199,.48); animation: quote-dot-pulse 2.4s ease-in-out infinite; }
+@keyframes quote-dot-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.28); } }
+@media (max-width: 900px) { #workspace .workspace-main::before { left: 220px; } }
+@media (max-width: 640px) { #workspace .page-head { position: relative; inset: auto; min-height: 42px; } #workspace .quote-pagination { margin-top: 28px; } }
+@media (prefers-reduced-motion: reduce) { #workspace .quote-pagination i.is-active { animation: none; } }
