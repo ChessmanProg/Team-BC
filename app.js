@@ -530,7 +530,7 @@ async function renderPage(page) {
   sessionStorage.setItem("teamBcSelectedTeam", activeTeamKey);
   sessionStorage.setItem("teamBcCurrentPage", pageInfo[page] ? page : "overview");
   if (!workspace.classList.contains("hidden")) {
-    setBackgroundVideo(page === "overview" ? "overview-background.mp4" : page === "ic-logs" ? "ic-logs-background.mp4" : page === "agents" ? "ic-logs-background.mp4" : "ocean-background.mp4");
+    setBackgroundVideo(page === "overview" ? "overview-background.mp4" : ["agents", "coaching", "ic-logs", "quick-links"].includes(page) ? "ic-logs-background.mp4" : "ocean-background.mp4");
   }
   const [title, subtitle] = pageInfo[page] || pageInfo.overview;
   $("#crumb").textContent = title; $("#crumb").dataset.page = page;
