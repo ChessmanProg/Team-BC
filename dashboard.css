@@ -1004,3 +1004,35 @@ body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:hover .quote-spar
 @media (prefers-reduced-motion: reduce) {
   #workspace .daily-quote-card:hover { transform: none; }
 }
+
+
+/* Compact workspace layout: reduce oversized cards while keeping all features intact. */
+#workspace .workspace-main { padding: 22px clamp(18px, 2.4vw, 34px); }
+#workspace .page-head { gap: 14px; padding-bottom: 12px; }
+#workspace .stat-grid { gap: 14px; margin-top: 20px; }
+#workspace .stat {
+  height: 112px;
+  min-height: 0;
+  padding: 17px 18px;
+  border-radius: 13px;
+}
+#workspace .stat strong { font-size: 30px; margin-top: 13px; }
+#workspace .content-panel {
+  margin-top: 20px;
+  min-height: 220px;
+  padding: 19px;
+  border-radius: 13px;
+}
+#workspace .content-panel h2 { font-size: 20px; margin-bottom: 8px; }
+#workspace .empty-state { padding: 22px 0; }
+#workspace .link-card { border-radius: 12px; }
+#workspace .sidebar { padding-top: 22px; }
+#workspace .side-label { margin-top: 30px; margin-bottom: 10px; }
+#workspace .nav-item { height: 42px; margin-bottom: 3px; }
+#workspace .quote-pagination { margin-top: 24px; }
+@media (max-width: 640px) {
+  #workspace .workspace-main { padding: 14px; }
+  #workspace .stat { padding: 13px; min-height: 98px; }
+  #workspace .stat strong { font-size: 26px; margin-top: 12px; }
+  #workspace .content-panel { padding: 15px; margin-top: 16px; min-height: 180px; }
+}
