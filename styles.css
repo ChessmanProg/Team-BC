@@ -1045,3 +1045,14 @@ body:has(#login-panel:not(.hidden)) #login-panel input:not([type=checkbox]) {
 body:has(#login-panel:not(.hidden)) #login-panel input::placeholder {
   color: #b7bdc8 !important;
 }
+
+
+/* Align the draggable chain with the lamp's actual hanging point. */
+body:has(main .login:not(.hidden)) .lamp-scene .pull-chain {
+  left: clamp(123px, calc(22vw + 33px), 333px) !important;
+}
+@media (max-width: 760px) {
+  body:has(main .login:not(.hidden)) .lamp-scene .pull-chain {
+    left: calc(50% - 32px) !important;
+  }
+}
