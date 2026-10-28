@@ -541,3 +541,22 @@ body:has(#login-panel:not(.hidden)) .login .muted {
     padding: 26px 22px;
   }
 }
+
+
+/* Fix lamp interaction: keep the pull-chain above the main layout hit-area. */
+body:has(#login-panel:not(.hidden)) .lamp-scene {
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+body:has(#login-panel:not(.hidden)) main {
+  z-index: auto !important;
+}
+body:has(#login-panel:not(.hidden)) .lamp-scene .pull-chain {
+  z-index: 7 !important;
+  pointer-events: auto !important;
+  touch-action: none;
+}
+body:has(#login-panel:not(.hidden)) #login-panel {
+  position: relative;
+  z-index: 6;
+}
