@@ -41,7 +41,7 @@
     </section>
     <section class="glass login hidden" id="signup-panel">
       <p class="kicker">TEAM BC WORKSPACE</p><h2>Create account</h2>
-      <p class="muted">Registration creates an account only. A team admin must grant workspace access.</p>
+      <p class="muted">Create your account, choose your team, then wait for that team’s admin to approve your request.</p>
       <form id="signup-form">
         <label for="signup-email">Email address</label><input id="signup-email" type="email" autocomplete="email" required>
         <label for="signup-password">Create password</label><input id="signup-password" type="password" minlength="8" autocomplete="new-password" required>
@@ -76,6 +76,7 @@
         <button class="nav-item" data-page="ic-logs">◎ <span>IC Logs</span></button>
         <button class="nav-item" data-page="quick-links">↗ <span>Quick Links</span></button>
         <button class="nav-item" data-page="bc-ai">🏀 <span>BC AI</span></button>
+        <button class="nav-item hidden" id="team-requests-nav" data-page="team-requests">✉ <span>Team requests</span></button>
       </nav>
       <div class="sidebar-bottom"><button id="back-teams" class="nav-item">⇄ <span>Change team</span></button><button id="back-login" class="nav-item">← <span>Sign out</span></button></div>
     </aside>
@@ -90,6 +91,6 @@
     </div>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./app.js?v=bc-ai-photo-manage-1"></script>
+  <script src="./app.js?v=team-request-approval-1"></script>
 </body>
 </html>
