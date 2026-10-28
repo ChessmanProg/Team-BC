@@ -1060,3 +1060,36 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
   border-color: rgba(255, 145, 160, .9);
   background: linear-gradient(145deg, rgba(151, 27, 52, .82), rgba(61, 13, 34, .82));
 }
+
+
+/* Team-specific colors and symbols on the Choose Your Team screen */
+#team-selection .team-card[data-team-key="chenn"] {
+  border-color: rgba(255, 218, 92, .55);
+  background: linear-gradient(145deg, rgba(104, 75, 13, .72), rgba(40, 29, 10, .74));
+}
+#team-selection .team-card[data-team-key="chenn"] .team-card-icon {
+  background: rgba(255, 205, 62, .2);
+  color: #ffdf70;
+}
+#team-selection .team-card[data-team-key="chenn"] small span { color: #ffdf70; }
+#team-selection .team-card[data-team-key="chenn"]:hover {
+  border-color: rgba(255, 228, 132, .92);
+  background: linear-gradient(145deg, rgba(139, 99, 15, .84), rgba(56, 39, 10, .84));
+}
+#team-selection .team-card[data-team-key="gemma"] {
+  border-color: rgba(95, 176, 255, .55);
+  background: linear-gradient(145deg, rgba(16, 67, 130, .74), rgba(7, 28, 66, .76));
+}
+#team-selection .team-card[data-team-key="gemma"] .team-card-icon {
+  background: rgba(76, 158, 255, .2);
+  color: #80c3ff;
+}
+#team-selection .team-card[data-team-key="gemma"] small span { color: #80c3ff; }
+#team-selection .team-card[data-team-key="gemma"]:hover {
+  border-color: rgba(135, 199, 255, .92);
+  background: linear-gradient(145deg, rgba(20, 87, 163, .84), rgba(8, 39, 86, .86));
+}
+/* Team Lev keeps its red styling; only its symbol changes to a heart */
+#team-selection .team-card[data-team-key="lev"] .team-card-icon {
+  color: #ff9cab;
+}
