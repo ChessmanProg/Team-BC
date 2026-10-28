@@ -1093,3 +1093,88 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #team-selection .team-card[data-team-key="lev"] .team-card-icon {
   color: #ff9cab;
 }
+
+
+/* BC AI basketball photo upload court */
+#workspace .bc-ai-panel { overflow: hidden; }
+#workspace .bc-ai-panel .panel-heading { margin-bottom: 18px; }
+#workspace .bc-ai-court {
+  position: relative; isolation: isolate; min-height: 360px; overflow: hidden; cursor: pointer;
+  border: 1px solid rgba(126,208,255,.34); border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 80% 8%, rgba(84,164,255,.28), transparent 35%),
+    linear-gradient(180deg, rgba(5,29,61,.88), rgba(7,42,65,.9) 62%, rgba(14,67,77,.94));
+  box-shadow: inset 0 0 55px rgba(66,160,255,.09), 0 16px 45px rgba(0,0,0,.2);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+#workspace .bc-ai-court::before {
+  content:""; position:absolute; left:-10%; right:-10%; bottom:-95px; height:190px; z-index:-1;
+  border:2px solid rgba(174,224,255,.3); border-radius:50% 50% 0 0;
+  background:linear-gradient(180deg,rgba(46,132,164,.2),rgba(12,45,72,.12));
+}
+#workspace .bc-ai-court::after {
+  content:""; position:absolute; left:50%; bottom:-55px; width:280px; height:180px;
+  transform:translateX(-50%); border:2px solid rgba(174,224,255,.22); border-radius:50%;
+}
+#workspace .bc-ai-court.is-dragging { border-color:#8ee8ff; box-shadow:0 0 0 3px rgba(91,209,255,.18), inset 0 0 65px rgba(66,190,255,.18); }
+#workspace .bc-ai-court-lines { position:absolute; inset:0; pointer-events:none; opacity:.5;
+  background:linear-gradient(90deg,transparent 49.8%,rgba(183,225,255,.12) 50%,transparent 50.2%); }
+#workspace .bc-ai-backboard { position:absolute; top:44px; right:clamp(44px,12%,140px); width:88px; height:66px;
+  border:4px solid rgba(221,246,255,.86); border-radius:5px; background:rgba(145,213,255,.08);
+  box-shadow:0 0 22px rgba(94,201,255,.18); }
+#workspace .bc-ai-hoop { position:absolute; top:111px; right:clamp(52px,13%,148px); width:82px; height:17px;
+  border:5px solid #ff9d55; border-top-width:4px; border-radius:50%; transform:perspective(80px) rotateX(8deg);
+  box-shadow:0 0 14px rgba(255,127,59,.45); z-index:4; }
+#workspace .bc-ai-net { position:absolute; left:7px; right:7px; top:7px; height:48px; border-left:1px solid rgba(245,249,255,.7); border-right:1px solid rgba(245,249,255,.7);
+  background:repeating-linear-gradient(75deg,transparent 0 10px,rgba(245,249,255,.55) 10px 11px,transparent 11px 20px);
+  clip-path:polygon(0 0,100% 0,75% 100%,25% 100%); transform-origin:top; }
+#workspace .bc-ai-instructions { position:absolute; left:clamp(18px,5%,64px); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:8px; max-width:55%; color:#eaf8ff; pointer-events:none; }
+#workspace .bc-ai-instructions strong { font-size:clamp(24px,3vw,36px); letter-spacing:-.04em; }
+#workspace .bc-ai-instructions span { color:#b7d9f1; font-size:14px; }
+#workspace .bc-ai-instructions small { color:#89b5d2; font-size:11px; }
+#workspace .bc-ai-ball { position:absolute; right:clamp(72px,17%,190px); bottom:42px; z-index:5; font-size:58px; line-height:1; filter:drop-shadow(0 8px 8px rgba(0,0,0,.35)); transition:transform .3s ease; }
+#workspace .bc-ai-selected { position:absolute; left:clamp(18px,5%,64px); bottom:26px; max-width:52%; overflow-wrap:anywhere; padding:10px 13px; border:1px solid rgba(149,226,255,.34); border-radius:12px; background:rgba(2,18,38,.72); color:#e6f7ff; font-size:12px; backdrop-filter:blur(8px); }
+#workspace .bc-ai-selected[hidden] { display:none; }
+#workspace .bc-ai-controls { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin:18px 0 8px; }
+#workspace .bc-ai-controls button { min-height:42px; }
+#workspace #bc-ai-shoot:disabled { opacity:.45; cursor:not-allowed; }
+#workspace .bc-ai-score-flash { position:absolute; z-index:7; left:50%; top:24px; transform:translate(-50%,-8px) scale(.9); opacity:0; width:max-content; max-width:90%; text-align:center; color:#aaffd0; font-weight:900; letter-spacing:.08em; text-shadow:0 0 18px rgba(88,255,171,.65); transition:opacity .2s ease,transform .2s ease; }
+#workspace .bc-ai-court.shot-made .bc-ai-score-flash { opacity:1; transform:translate(-50%,0) scale(1); }
+#workspace .bc-ai-court.shooting .bc-ai-ball { animation:bc-ai-shot 950ms cubic-bezier(.18,.72,.26,1) forwards; }
+#workspace .bc-ai-court.shooting .bc-ai-net { animation:bc-ai-net 500ms ease-out 650ms; }
+#workspace .bc-ai-court.shot-made .bc-ai-hoop { animation:bc-ai-score 650ms ease-out; }
+#workspace .bc-ai-court.shot-missed .bc-ai-ball { animation:bc-ai-rebound .5s ease-out; }
+#workspace .bc-ai-court.has-photo .bc-ai-ball { filter:drop-shadow(0 0 12px rgba(255,164,75,.45)); }
+#workspace .bc-ai-gallery-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:28px; }
+#workspace .bc-ai-gallery-heading h3 { margin:0; font-size:17px; }
+#workspace .bc-ai-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; margin-top:14px; }
+#workspace .bc-ai-photo-card { min-width:0; overflow:hidden; border:1px solid rgba(143,211,224,.22); border-radius:13px; background:rgba(5,27,45,.7); color:#e8f6ff; text-decoration:none; transition:transform .2s ease,border-color .2s ease; }
+#workspace .bc-ai-photo-card:hover { transform:translateY(-3px); border-color:rgba(126,208,255,.7); }
+#workspace .bc-ai-photo-card img { display:block; width:100%; height:145px; object-fit:cover; background:rgba(255,255,255,.04); }
+#workspace .bc-ai-photo-card span { display:block; padding:9px 10px; font-size:11px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+@keyframes bc-ai-shot {
+  0% { transform:translate(0,0) rotate(0) scale(1); }
+  28% { transform:translate(-45px,-135px) rotate(150deg) scale(.9); }
+  58% { transform:translate(-85px,-205px) rotate(320deg) scale(.75); }
+  78% { transform:translate(-42px,-175px) rotate(490deg) scale(.65); }
+  100% { transform:translate(-34px,-155px) rotate(620deg) scale(.4); opacity:.15; }
+}
+@keyframes bc-ai-net { 0%,100% { transform:scaleX(1) skewX(0); } 35% { transform:scaleX(.82) skewX(8deg); } 70% { transform:scaleX(1.08) skewX(-5deg); } }
+@keyframes bc-ai-score { 0%,100% { filter:brightness(1); } 45% { filter:brightness(1.8); } }
+@keyframes bc-ai-rebound { 0% { transform:translateY(0); } 55% { transform:translate(-25px,-28px) rotate(90deg); } 100% { transform:translate(0,0) rotate(180deg); } }
+@media(max-width:640px) {
+  #workspace .bc-ai-court { min-height:330px; }
+  #workspace .bc-ai-backboard { top:35px; right:24px; transform:scale(.82); transform-origin:top right; }
+  #workspace .bc-ai-hoop { top:97px; right:28px; transform:scale(.82); transform-origin:top right; }
+  #workspace .bc-ai-instructions { top:45%; max-width:65%; }
+  #workspace .bc-ai-instructions strong { font-size:24px; }
+  #workspace .bc-ai-instructions span { font-size:12px; }
+  #workspace .bc-ai-ball { right:36px; bottom:38px; font-size:48px; }
+  #workspace .bc-ai-selected { bottom:16px; max-width:65%; }
+}
+@media(prefers-reduced-motion:reduce) {
+  #workspace .bc-ai-court.shooting .bc-ai-ball,
+  #workspace .bc-ai-court.shooting .bc-ai-net,
+  #workspace .bc-ai-court.shot-made .bc-ai-hoop,
+  #workspace .bc-ai-court.shot-missed .bc-ai-ball { animation:none; }
+}
