@@ -210,6 +210,7 @@ async function getUserTeams(user) {
   return { memberships, teams };
 }
 function showTeamSelection() {
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   workspace.classList.add("hidden");
   workspace.style.display = "none";
   teamSelection.classList.remove("hidden");
