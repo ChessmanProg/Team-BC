@@ -527,7 +527,7 @@ async function deleteRecord(page, id) {
 }
 async function renderBCAIPage(content) {
   content.innerHTML = '<section class="content-panel bc-ai-panel"><div class="panel-heading"><div><h2>🏀 BC AI Photo Court</h2><p class="muted">Choose a photo, pull the ball back, then release to shoot toward the hoop.</p></div></div>' +
-    '<input id="bc-ai-photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>' +
+    '<input id="bc-ai-photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden><input id="bc-ai-replace-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>' +
     '<div class="bc-ai-court" id="bc-ai-court" tabindex="0" aria-label="Basketball court. Pull the ball back and release to shoot toward the hoop.">' +
       '<div class="bc-ai-court-lines" aria-hidden="true"></div><div class="bc-ai-backboard"></div><div class="bc-ai-hoop"><span class="bc-ai-net"></span></div>' +
       '<div class="bc-ai-instructions"><strong>Pull. Aim. Release!</strong><span>Drag the ball back, then let go</span><small>Choose a JPG, PNG, WEBP or GIF · Max 10 MB</small></div>' +
@@ -537,9 +537,9 @@ async function renderBCAIPage(content) {
     '</div><div class="bc-ai-controls"><button type="button" class="small-button" id="bc-ai-browse">Choose photo</button></div>' +
     '<p class="notice" id="bc-ai-notice" role="status">Choose a photo, pull the basketball back, then release. Photos are private to ' + escapeHtml(teamDisplay(activeTeam())) + '.</p>' +
     '<div class="bc-ai-gallery-heading"><h3>Uploaded photos</h3><button type="button" class="small-button" id="bc-ai-refresh">Refresh</button></div><div class="bc-ai-gallery" id="bc-ai-gallery"><p class="muted">Loading photos…</p></div></section>';
-  const input = $("#bc-ai-photo-input"), court = $("#bc-ai-court"), ball = $("#bc-ai-ball");
+  const input = $("#bc-ai-photo-input"), replaceInput = $("#bc-ai-replace-input"), court = $("#bc-ai-court"), ball = $("#bc-ai-ball");
   const hoop = court.querySelector(".bc-ai-hoop"), selected = $("#bc-ai-selected"), notice = $("#bc-ai-notice");
-  let chosenFile = null, busy = false, pointerOffset = {x:0,y:0}, draggingBall = false, dragStart = {x:0,y:0}, ballStart = {x:0,y:0};
+  let chosenFile = null, busy = false, pendingReplacePath = null, pointerOffset = {x:0,y:0}, draggingBall = false, dragStart = {x:0,y:0}, ballStart = {x:0,y:0};
   function chooseFile(file) {
     if (!file) return;
     if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) { message(notice, "Please choose a JPG, PNG, WEBP, or GIF photo."); return; }
@@ -552,6 +552,35 @@ async function renderBCAIPage(content) {
     message(notice, "Photo ready! Pull the ball back and release to shoot.");
   }
   input.addEventListener("change", () => chooseFile(input.files?.[0]));
+  replaceInput.addEventListener("change", async () => {
+    const file = replaceInput.files?.[0], oldPath = pendingReplacePath;
+    replaceInput.value = ""; pendingReplacePath = null;
+    if (!file || !oldPath) return;
+    if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) { message(notice, "Please choose a JPG, PNG, WEBP, or GIF photo."); return; }
+    if (file.size > 10 * 1024 * 1024) { message(notice, "That photo is over 10 MB. Choose a smaller image."); return; }
+    if (!isEditablePhotoPath(oldPath)) { message(notice, "You can only replace photos you uploaded."); return; }
+    const safeName = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(-90) || "photo";
+    const newPath = activeTeamKey + "/" + activeUser.id + "/" + Date.now() + "-" + safeName;
+    replaceInput.disabled = true;
+    message(notice, "Uploading replacement photo…");
+    try {
+      const { error: uploadError } = await supabaseClient.storage.from("bc-ai-photos").upload(newPath, file, {contentType:file.type, upsert:false});
+      if (uploadError) throw uploadError;
+      const { error: removeError } = await supabaseClient.storage.from("bc-ai-photos").remove([oldPath]);
+      if (removeError) {
+        message(notice, "Replacement uploaded, but the old photo could not be removed due to storage permissions. Both copies may appear.");
+      } else {
+        message(notice, "Photo replaced successfully.");
+      }
+      await loadBCAIGallery();
+    } catch (error) {
+      message(notice, "Could not replace photo: " + friendlyError(error));
+    } finally { replaceInput.disabled = false; }
+  });
+  function isEditablePhotoPath(path) {
+    const parts = String(path || "").split("/");
+    return parts.length >= 3 && parts[0] === activeTeamKey && parts[1] === activeUser?.id;
+  }
   $("#bc-ai-browse").addEventListener("click", () => { if (!busy) input.click(); });
   ["dragenter","dragover"].forEach((name) => court.addEventListener(name, (event) => { event.preventDefault(); if (!draggingBall) court.classList.add("is-dragging"); }));
   ["dragleave","drop"].forEach((name) => court.addEventListener(name, (event) => { event.preventDefault(); court.classList.remove("is-dragging"); }));
@@ -671,11 +700,34 @@ async function renderBCAIPage(content) {
       for (const item of allFiles) {
         const { data: signed, error: signError } = await supabaseClient.storage.from("bc-ai-photos").createSignedUrl(item.path, 3600);
         if (signError || !signed?.signedUrl) continue;
-        const card = document.createElement("a");
-        card.className = "bc-ai-photo-card"; card.href = signed.signedUrl; card.target = "_blank"; card.rel = "noopener noreferrer";
+        const card = document.createElement("div");
+        card.className = "bc-ai-photo-card";
+        const preview = document.createElement("a");
+        preview.className = "bc-ai-photo-preview"; preview.href = signed.signedUrl; preview.target = "_blank"; preview.rel = "noopener noreferrer"; preview.setAttribute("aria-label", "Open " + item.name);
         const img = document.createElement("img"); img.src = signed.signedUrl; img.alt = item.name; img.loading = "lazy";
         const caption = document.createElement("span"); caption.textContent = item.name;
-        card.append(img, caption); gallery.appendChild(card);
+        preview.append(img, caption); card.appendChild(preview);
+        if (isEditablePhotoPath(item.path)) {
+          const actions = document.createElement("div"); actions.className = "bc-ai-photo-actions";
+          const replaceButton = document.createElement("button"); replaceButton.type = "button"; replaceButton.className = "small-button"; replaceButton.textContent = "Replace"; replaceButton.addEventListener("click", () => { pendingReplacePath = item.path; replaceInput.click(); });
+          const deleteButton = document.createElement("button"); deleteButton.type = "button"; deleteButton.className = "small-button bc-ai-delete-button"; deleteButton.textContent = "Delete";
+          deleteButton.addEventListener("click", async () => {
+            if (!isEditablePhotoPath(item.path) || !confirm("Delete this photo permanently? This cannot be undone.")) return;
+            deleteButton.disabled = true;
+            message(notice, "Deleting photo…");
+            try {
+              const { error } = await supabaseClient.storage.from("bc-ai-photos").remove([item.path]);
+              if (error) throw error;
+              message(notice, "Photo deleted.");
+              await loadBCAIGallery();
+            } catch (error) {
+              message(notice, "Could not delete photo: " + friendlyError(error));
+              deleteButton.disabled = false;
+            }
+          });
+          actions.append(replaceButton, deleteButton); card.appendChild(actions);
+        }
+        gallery.appendChild(card);
       }
       if (!gallery.children.length) gallery.innerHTML = '<p class="muted">Photos are saved, but previews could not be loaded. Try refreshing.</p>';
     } catch (error) { gallery.innerHTML = '<p class="notice">' + escapeHtml(friendlyError(error)) + '</p>'; }
