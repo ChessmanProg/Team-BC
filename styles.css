@@ -338,3 +338,12 @@ body:has(main .login:not(.hidden)) footer { position: relative; z-index: 2; colo
   body:has(main .login:not(.hidden)) *, body:has(main .login:not(.hidden))::before,
   body:has(main .login:not(.hidden))::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* Keep the interactive chain above the login layout's stacking layer. */
+body:has(main .login:not(.hidden)) .lamp-scene { z-index: 3; }
+body:has(main .login:not(.hidden)) main { z-index: 2; }
+body:has(main .login:not(.hidden)) .pull-chain {
+  z-index: 5;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
