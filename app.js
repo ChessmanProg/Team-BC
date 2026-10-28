@@ -229,6 +229,9 @@ function showTeamSelection() {
   teamSelection.querySelectorAll("[data-team-key]").forEach((button) => button.addEventListener("click", () => enterTeam(button.dataset.teamKey)));
   $("#selection-signout").addEventListener("click", signOut);
   updateProfilePhoto(activeUser);
+  // Leave login-only CSS mode before showing the authenticated team picker.
+  panels.forEach((panel) => panel.classList.add("hidden"));
+  document.body.classList.remove("lamp-light-on");
   main.classList.add("hidden");
   main.style.display = "none";
   document.querySelector(".brand").classList.add("hidden");
@@ -261,7 +264,18 @@ async function signOut() {
   activeUser = null; activeMemberships = []; activeTeams = []; activeTeamKey = null;
   teamSelection.classList.add("hidden");
   workspace.classList.add("hidden"); workspace.style.display = "";
+  panels.forEach((panel) => panel.classList.add("hidden"));
+  loginPanel.classList.remove("hidden");
+  document.body.classList.remove("lamp-light-on");
+  const lampSwitch = $("#lampSwitch");
+  if (lampSwitch) {
+    lampSwitch.setAttribute("aria-pressed", "false");
+    lampSwitch.setAttribute("aria-label", "Turn on the lamp");
+    const hint = lampSwitch.querySelector(".chain-hint");
+    if (hint) hint.textContent = "Pull to turn on the light";
+  }
   main.classList.remove("hidden"); main.style.display = ""; document.querySelector(".brand").classList.remove("hidden"); footer.classList.remove("hidden");
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   setBackgroundVideo("ocean-background.mp4");
 }
 async function openAuthenticatedWorkspace(user, memberships, teams) {
