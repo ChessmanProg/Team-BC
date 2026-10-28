@@ -132,6 +132,9 @@ function enterTeam(teamKey, requestedPage = "overview") {
   $("#workspace-user").textContent = "Hello, " + displayName;
   $("#workspace-role").textContent = teamDisplay(activeTeam());
   teamSelection.classList.add("hidden");
+  main.classList.add("hidden");
+  document.querySelector(".brand").classList.add("hidden");
+  footer.classList.add("hidden");
   workspace.classList.remove("hidden");
   workspace.style.display = "grid";
   const savedPage = pageInfo[requestedPage] ? requestedPage : "overview";
