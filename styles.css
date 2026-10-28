@@ -839,3 +839,134 @@ body:has(#team-selection:not(.hidden)),
 body:has(#workspace:not(.hidden)) {
   overflow-y: auto;
 }
+
+
+/* === Stable screen states: lamp login, team picker, and normal workspace === */
+/* Login is a single viewport: the pull-chain opens the panel; no page scrolling. */
+body:has(main .login:not(.hidden)) {
+  height: 100svh !important;
+  min-height: 100svh !important;
+  overflow: hidden !important;
+  animation: none !important;
+}
+body:has(main .login:not(.hidden)) main {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 1440px !important;
+  height: 100svh !important;
+  min-height: 100svh !important;
+  margin: 0 auto !important;
+  padding: 0 clamp(24px, 7vw, 110px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(320px, 410px) !important;
+  justify-content: end !important;
+  align-items: center !important;
+  overflow: visible !important;
+}
+body:has(main .login:not(.hidden)) #login-panel {
+  display: block !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(12px) scale(.985) !important;
+  transition: opacity .55s ease, transform .55s ease, visibility .55s ease !important;
+  position: relative !important;
+  z-index: 120 !important;
+}
+body.lamp-light-on:has(main .login:not(.hidden)) #login-panel {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateY(0) scale(1) !important;
+}
+body:has(main .login:not(.hidden)) .lamp-scene {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 100 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+body:has(main .login:not(.hidden)) .lamp-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: clamp(90px, 22vw, 300px) !important;
+}
+body:has(main .login:not(.hidden)) .lamp-scene .pull-chain {
+  position: fixed !important;
+  top: 145px !important;
+  left: clamp(155px, calc(22vw + 65px), 365px) !important;
+  width: 44px !important;
+  height: 115px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 130 !important;
+  pointer-events: auto !important;
+  touch-action: none !important;
+  cursor: grab !important;
+  transform: none !important;
+}
+body:has(main .login:not(.hidden)) .lamp-scene .pull-chain:active,
+body:has(main .login:not(.hidden)) .lamp-scene .pull-chain.pulling {
+  transform: translateY(12px) !important;
+  cursor: grabbing !important;
+}
+body:has(main .login:not(.hidden)) .lamp-scene .chain-cord {
+  height: 82px !important;
+}
+body:has(main .login:not(.hidden)) .lamp-scene .chain-hint {
+  left: 25px !important;
+  top: 95px !important;
+  width: 150px !important;
+  pointer-events: none !important;
+}
+body:has(main .login:not(.hidden)) .lamp-light-cone {
+  z-index: 1 !important;
+}
+body:has(main .login:not(.hidden)) .lamp-fireflies {
+  z-index: 2 !important;
+}
+@media (max-width: 760px) {
+  body:has(main .login:not(.hidden)) main {
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-content: center !important;
+    padding: 0 20px !important;
+  }
+  body:has(main .login:not(.hidden)) #login-panel {
+    width: 100% !important;
+    max-width: 430px !important;
+    justify-self: center !important;
+  }
+  body:has(main .login:not(.hidden)) .lamp-container {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  body:has(main .login:not(.hidden)) .lamp-scene .pull-chain {
+    left: calc(50% + 22px) !important;
+    top: 145px !important;
+  }
+}
+/* Authenticated screens must not inherit login layout, lamp effects, or empty top space. */
+body:has(#team-selection:not(.hidden)),
+body:has(#workspace:not(.hidden)) {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  animation: none !important;
+}
+body:has(#team-selection:not(.hidden)) main,
+body:has(#team-selection:not(.hidden)) footer,
+body:has(#workspace:not(.hidden)) main,
+body:has(#workspace:not(.hidden)) footer,
+body:has(#team-selection:not(.hidden)) .lamp-scene {
+  display: none !important;
+}
+body:has(#team-selection:not(.hidden)) #team-selection {
+  display: block !important;
+  margin: 0 !important;
+  padding-top: 0 !important;
+}
+body:has(#workspace:not(.hidden)) #workspace {
+  display: grid !important;
+  min-height: 100vh !important;
+}
