@@ -288,11 +288,33 @@ function recordValue(row, key) {
   if (key === "url" && value) return '<a href="' + escapeHtml(value) + '" target="_blank" rel="noopener noreferrer">Open link ↗</a>';
   return escapeHtml(value || "—");
 }
+const DAILY_MOTIVATIONAL_QUOTES = [
+  { text: "Progress is built one small step at a time.", author: "Team BC" },
+  { text: "Your effort today creates the opportunities of tomorrow.", author: "Team BC" },
+  { text: "Consistency turns small actions into meaningful results.", author: "Team BC" },
+  { text: "Challenges are chances to learn, adapt, and grow.", author: "Team BC" },
+  { text: "Focus on what you can do today; let tomorrow build from it.", author: "Team BC" },
+  { text: "A strong team grows when each person chooses to improve.", author: "Team BC" },
+  { text: "You do not need to be perfect to make progress.", author: "Team BC" },
+  { text: "Keep showing up. The little things add up.", author: "Team BC" },
+  { text: "Turn setbacks into lessons and lessons into better actions.", author: "Team BC" },
+  { text: "Good results begin with clear goals and steady effort.", author: "Team BC" },
+  { text: "Believe in the work you are putting in, even before the results appear.", author: "Team BC" },
+  { text: "Every day is another chance to take one step forward.", author: "Team BC" },
+  { text: "The way forward is made by the actions you take now.", author: "Team BC" },
+  { text: "Small improvements, repeated daily, create lasting change.", author: "Team BC" }
+];
+function getDailyQuote() {
+  const now = new Date();
+  const dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+  return DAILY_MOTIVATIONAL_QUOTES[((dayNumber % DAILY_MOTIVATIONAL_QUOTES.length) + DAILY_MOTIVATIONAL_QUOTES.length) % DAILY_MOTIVATIONAL_QUOTES.length];
+}
 async function renderOverview(content) {
   const counts = await loadCounts();
+  const quote = getDailyQuote();
   content.innerHTML = '<div class="stat-grid">' +
     [["TOTAL AGENTS",counts[0]],["COACHING SESSIONS",counts[1]],["TOTAL IC LOGS",counts[2]],["QUICK LINKS",counts[3]]].map(([label,count]) => '<article class="stat"><small>' + label + '</small><strong>' + count + '</strong></article>').join("") +
-    '</div><section class="content-panel"><h2>Welcome to ' + escapeHtml(teamDisplay(activeTeam())) + '</h2><p class="muted">Your records are saved to this team only.</p><div class="empty-state">' + (canManageActiveTeam() ? "Choose a section from the left menu to add or manage records." : "Choose a section from the left menu to view records and open links.") + '</div></section>';
+    '</div><section class="daily-quote-card" aria-labelledby="daily-quote-title"><div class="daily-quote-mark" aria-hidden="true">“</div><div class="daily-quote-copy"><p class="daily-quote-label" id="daily-quote-title">QUOTE OF THE DAY <span>✦</span></p><blockquote>' + escapeHtml(quote.text) + '</blockquote><p class="daily-quote-author">— ' + escapeHtml(quote.author) + '</p></div></section><section class="content-panel"><h2>Welcome to ' + escapeHtml(teamDisplay(activeTeam())) + '</h2><p class="muted">Your records are saved to this team only.</p><div class="empty-state">' + (canManageActiveTeam() ? "Choose a section from the left menu to add or manage records." : "Choose a section from the left menu to view records and open links.") + '</div></section>';
 }
 function fieldMarkup(field, row={}) {
   let value = row[field.key] ?? "";
