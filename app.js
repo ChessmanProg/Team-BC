@@ -8,7 +8,6 @@ const footer = document.querySelector("footer");
 const lampSwitch = $("#lampSwitch");
 if (lampSwitch) {
   let chainPointerStart = null;
-  let chainWasDragged = false;
   let suppressChainClick = false;
   const toggleLamp = () => {
     const isOn = document.body.classList.toggle("lamp-light-on");
@@ -20,46 +19,30 @@ if (lampSwitch) {
     if (hint) hint.textContent = isOn ? "Pull to turn off the light" : "Pull to turn on the light";
   };
 
-  // Keep click/tap support, while also letting users physically pull the chain down.
+  // Track the pull globally so pointer capture/layout styles cannot swallow pointerup.
   lampSwitch.addEventListener("pointerdown", (event) => {
     if (event.button !== undefined && event.button !== 0) return;
     chainPointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY };
-    chainWasDragged = false;
     suppressChainClick = false;
-    try { lampSwitch.setPointerCapture(event.pointerId); } catch (_) {}
+    event.preventDefault();
   });
-  lampSwitch.addEventListener("pointermove", (event) => {
+  window.addEventListener("pointerup", (event) => {
     if (!chainPointerStart || event.pointerId !== chainPointerStart.id) return;
     const dx = event.clientX - chainPointerStart.x;
     const dy = event.clientY - chainPointerStart.y;
-    if (Math.abs(dy) > 8 || Math.abs(dx) > 18) chainWasDragged = true;
-    if (dy > 0) lampSwitch.classList.add("pulling");
-  });
-  const finishChainPull = (event) => {
-    if (!chainPointerStart || event.pointerId !== chainPointerStart.id) return;
-    const dy = event.clientY - chainPointerStart.y;
-    const dx = event.clientX - chainPointerStart.x;
-    const pulledDown = dy >= 12 && dy > Math.abs(dx) * 0.65;
-    const wasDragged = chainWasDragged;
-    if (pulledDown) toggleLamp();
+    const pulledDown = dy >= 10 && dy > Math.abs(dx) * 0.55;
     chainPointerStart = null;
-    chainWasDragged = false;
-    if (wasDragged) {
+    if (pulledDown) {
       suppressChainClick = true;
-      window.setTimeout(() => { suppressChainClick = false; }, 350);
+      toggleLamp();
+      window.setTimeout(() => { suppressChainClick = false; }, 500);
     }
-    window.setTimeout(() => lampSwitch.classList.remove("pulling"), 220);
-  };
-  lampSwitch.addEventListener("pointerup", finishChainPull);
-  lampSwitch.addEventListener("pointercancel", () => {
-    chainPointerStart = null;
-    chainWasDragged = false;
-    lampSwitch.classList.remove("pulling");
-  });
+  }, true);
+  window.addEventListener("pointercancel", () => { chainPointerStart = null; }, true);
   lampSwitch.addEventListener("click", (event) => {
-    if (suppressChainClick || chainWasDragged) {
+    if (suppressChainClick) {
       event.preventDefault();
-      chainWasDragged = false;
+      event.stopPropagation();
       return;
     }
     toggleLamp();
