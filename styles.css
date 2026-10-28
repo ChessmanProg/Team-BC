@@ -119,3 +119,222 @@ body:has(#login-panel:not(.hidden)) {
   background: rgba(5, 18, 38, .72);
 }
 .daily-schedule-filter .muted { flex-basis: 100%; margin: 0; font-size: 12px; }
+
+
+/* Lamp-pull login experience — layered on the existing authenticated app */
+body:has(main .login:not(.hidden)) {
+  isolation: isolate;
+  min-height: 100svh;
+  overflow-x: hidden;
+  background: #0b0b0e;
+  color: #f7f4ec;
+  font-family: "Outfit", Inter, system-ui, sans-serif;
+  transition: background-color .8s ease;
+}
+body:has(main .login:not(.hidden))::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 23% 20%, rgba(255,195,75,.13), transparent 34%),
+    radial-gradient(ellipse at 52% 78%, rgba(255,177,47,.06), transparent 42%);
+  opacity: 0;
+  transition: opacity .9s ease;
+}
+body.lamp-light-on:has(main .login:not(.hidden)) { background: #1e1b18; }
+body.lamp-light-on:has(main .login:not(.hidden))::after { opacity: 1; }
+body:has(main .login:not(.hidden)) .ocean-video,
+body:has(main .login:not(.hidden)) .ocean { opacity: 0 !important; visibility: hidden; }
+body:has(main .login:not(.hidden)) .brand {
+  position: fixed; z-index: 25; top: 28px; left: 34px; gap: 12px;
+  color: #f5ead0; letter-spacing: .08em;
+}
+body:has(main .login:not(.hidden)) .brand-mark {
+  width: 42px; height: 42px; border-radius: 50%;
+  border-color: rgba(255,214,127,.5); color: #ffda82;
+  background: rgba(30,24,15,.5);
+  box-shadow: 0 0 28px rgba(255,196,72,.12);
+}
+body:has(main .login:not(.hidden)) .brand small { color: rgba(255,236,197,.58); }
+body:has(main .login:not(.hidden)) main {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: minmax(320px, 410px);
+  justify-content: end; align-items: center;
+  width: min(100%, 1440px); max-width: 1440px;
+  min-height: 100svh; margin: 0 auto;
+  padding: 105px clamp(28px, 9vw, 145px) 70px;
+  gap: 0;
+}
+body:has(main .login:not(.hidden)) main .hero,
+body:has(main .login:not(.hidden)) main::after { display: none !important; }
+body:has(main .login:not(.hidden)) .lamp-scene {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden;
+  pointer-events: none;
+}
+body:has(main .login:not(.hidden)) .lamp-scene::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 22% 30%, rgba(255,190,67,.035), transparent 36%),
+    linear-gradient(110deg, rgba(0,0,0,.1), transparent 45%, rgba(0,0,0,.2));
+  transition: background .8s ease;
+}
+body.lamp-light-on:has(main .login:not(.hidden)) .lamp-scene::before {
+  background:
+    radial-gradient(ellipse at 24% 26%, rgba(255,206,104,.14), transparent 42%),
+    linear-gradient(110deg, rgba(45,33,18,.06), transparent 48%, rgba(0,0,0,.12));
+}
+.lamp-container {
+  position: absolute; top: 0; left: clamp(90px, 22%, 360px);
+  width: 130px; height: 255px; display: flex; flex-direction: column;
+  align-items: center; filter: drop-shadow(0 7px 14px rgba(0,0,0,.5));
+}
+.lamp-stand {
+  position: absolute; top: 0; left: calc(50% - 2px); width: 4px; height: 118px;
+  background: linear-gradient(90deg,#18191b,#4b4740,#171719);
+}
+.lamp-shade {
+  position: absolute; top: 112px; width: 104px; height: 61px;
+  background: linear-gradient(100deg,#18191c,#2a2926 52%,#171719);
+  clip-path: polygon(18% 0,82% 0,100% 100%,0 100%);
+  border-bottom: 2px solid rgba(255,221,150,.18);
+  transition: background .6s ease, filter .6s ease;
+}
+.lamp-shade::after {
+  content: ""; position: absolute; inset: auto 4px 0; height: 4px;
+  background: #3d3930; border-radius: 50%;
+}
+.lamp-glow {
+  position: absolute; top: 142px; left: 50%; width: 190px; height: 190px;
+  transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(circle,rgba(255,218,117,.78),rgba(255,177,48,.2) 45%,transparent 72%);
+  opacity: 0; filter: blur(5px); transition: opacity .75s ease;
+}
+.lamp-light-cone {
+  position: fixed; top: 155px; left: clamp(90px, 22%, 360px);
+  width: min(620px, 58vw); height: calc(100svh - 150px);
+  transform: translateX(-50%);
+  clip-path: polygon(40% 0,60% 0,100% 100%,0 100%);
+  background: linear-gradient(180deg,rgba(255,210,106,.12),rgba(255,183,57,.045) 50%,transparent);
+  opacity: 0; filter: blur(9px); transition: opacity .9s ease;
+}
+body.lamp-light-on:has(main .login:not(.hidden)) .lamp-shade {
+  background: linear-gradient(100deg,#5c5140,#8c7852 52%,#514735);
+  filter: brightness(1.15);
+}
+body.lamp-light-on:has(main .login:not(.hidden)) .lamp-glow,
+body.lamp-light-on:has(main .login:not(.hidden)) .lamp-light-cone { opacity: 1; }
+.pull-chain {
+  position: absolute; top: 148px; left: clamp(90px, 22%, 360px);
+  width: 72px; height: 145px; margin-left: 27px; padding: 0;
+  display: flex; flex-direction: column; align-items: center;
+  border: 0; border-radius: 30px; background: transparent;
+  cursor: pointer; pointer-events: auto; color: #ffdda0;
+  transform-origin: 50% 0; transition: transform .18s ease;
+}
+.pull-chain:hover { transform: translateY(4px); }
+.pull-chain:active, .pull-chain.pulling { transform: translateY(13px); }
+.chain-cord {
+  display: block; width: 2px; height: 82px;
+  background: linear-gradient(90deg,#59524a,#c6b38c,#554c40);
+  box-shadow: 0 0 4px rgba(255,218,153,.12);
+}
+.chain-handle {
+  display: block; width: 13px; height: 13px; margin-top: -1px;
+  border-radius: 50%; border: 1px solid #ffe2a0;
+  background: radial-gradient(circle at 35% 25%,#fff2bd,#d2a74c 65%,#71501d);
+  box-shadow: 0 2px 9px rgba(0,0,0,.45),0 0 8px rgba(255,207,100,.25);
+}
+.chain-hint {
+  position: absolute; top: 105px; left: 32px; width: 145px;
+  color: rgba(255,233,188,.68); font-size: 11px; letter-spacing: .05em;
+  text-align: left; opacity: .78; transition: opacity .4s ease;
+}
+body.lamp-light-on:has(main .login:not(.hidden)) .chain-hint { opacity: 0; }
+.lamp-fireflies { position: absolute; inset: 0; }
+.lamp-fireflies i {
+  position: absolute; width: 4px; height: 4px; border-radius: 50%;
+  background: #ffda70; box-shadow: 0 0 10px 2px rgba(255,209,91,.75);
+  opacity: 0; transition: opacity .8s ease;
+  animation: lamp-firefly-float 5s ease-in-out infinite;
+}
+.lamp-fireflies i:nth-child(1){left:17%;top:48%;animation-delay:-1s}
+.lamp-fireflies i:nth-child(2){left:30%;top:72%;animation-delay:-2.4s}
+.lamp-fireflies i:nth-child(3){left:41%;top:43%;animation-delay:-.7s}
+.lamp-fireflies i:nth-child(4){left:12%;top:80%;animation-delay:-3s}
+.lamp-fireflies i:nth-child(5){left:37%;top:61%;animation-delay:-1.8s}
+.lamp-fireflies i:nth-child(6){left:25%;top:31%;animation-delay:-.4s}
+.lamp-fireflies i:nth-child(7){left:47%;top:78%;animation-delay:-2.8s}
+.lamp-fireflies i:nth-child(8){left:9%;top:60%;animation-delay:-1.2s}
+body.lamp-light-on:has(main .login:not(.hidden)) .lamp-fireflies i { opacity: .8; }
+@keyframes lamp-firefly-float { 0%,100%{transform:translate(0,0);opacity:.3}50%{transform:translate(14px,-18px);opacity:1} }
+.lamp-welcome {
+  position: absolute; left: clamp(26px, 7vw, 110px); bottom: 12%;
+  display: flex; align-items: center; gap: 12px;
+  color: rgba(255,236,200,.7); font-size: 13px; letter-spacing: .12em;
+  text-transform: uppercase; opacity: .6; transition: opacity .7s ease;
+}
+.lamp-welcome-mark { color: #ffda80; font-size: 24px; text-shadow: 0 0 18px #ffc75d; }
+body:has(main .login:not(.hidden)) .login {
+  width: 100%; padding: 38px 32px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  background: rgba(20,20,25,.72);
+  box-shadow: 0 20px 55px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.035);
+  backdrop-filter: blur(18px);
+  transform: translateY(26px) scale(.97);
+  opacity: 0; visibility: hidden;
+  transition: opacity .65s ease, transform .65s cubic-bezier(.16,1,.3,1), visibility .65s;
+}
+body.lamp-light-on:has(main .login:not(.hidden)) .login {
+  transform: translateY(0) scale(1); opacity: 1; visibility: visible;
+}
+body:has(main .login:not(.hidden)) .login h2 {
+  color: #fffdf6; text-align: center; font-size: 28px; margin-bottom: 8px;
+}
+body:has(main .login:not(.hidden)) .login > .muted {
+  color: #b7b4b1; text-align: center; margin: 0 auto; max-width: 290px;
+}
+body:has(main .login:not(.hidden)) .login .kicker {
+  color: #e5bf68; text-align: center; letter-spacing: .2em;
+}
+body:has(main .login:not(.hidden)) .login form { margin-top: 25px; }
+body:has(main .login:not(.hidden)) .login form>label {
+  color: #e5e0d7; font-size: 12px;
+}
+body:has(main .login:not(.hidden)) .login input:not([type=checkbox]) {
+  background: rgba(255,255,255,.045);
+  border-color: rgba(255,255,255,.13); border-radius: 10px;
+}
+body:has(main .login:not(.hidden)) .login input:focus {
+  border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,.12);
+}
+body:has(main .login:not(.hidden)) .login .text-button,
+body:has(main .login:not(.hidden)) .login .eye { color: #e8c76f; }
+body:has(main .login:not(.hidden)) .login .primary {
+  background: linear-gradient(135deg,#ffd977,#ffb82e);
+  color: #1c1607; border-radius: 10px; box-shadow: 0 8px 26px rgba(255,185,49,.14);
+}
+body:has(main .login:not(.hidden)) .login .notice { color: #aaa59b; }
+body:has(main .login:not(.hidden)) .login .auth-switch .muted { color: #b7b4b1; }
+body:has(main .login:not(.hidden)) footer { position: relative; z-index: 2; color: rgba(255,232,190,.35); }
+@media(max-width: 900px) {
+  body:has(main .login:not(.hidden)) main { justify-content: center; padding: 125px 24px 70px; }
+  .lamp-container, .pull-chain { left: 16%; }
+  .lamp-light-cone { left: 16%; }
+  .lamp-welcome { display: none; }
+}
+@media(max-width: 560px) {
+  body:has(main .login:not(.hidden)) .brand { top: 18px; left: 18px; }
+  body:has(main .login:not(.hidden)) main { grid-template-columns:minmax(0,1fr); padding: 235px 18px 45px; align-items: start; }
+  body:has(main .login:not(.hidden)) .login { padding: 30px 22px; }
+  .lamp-container { left: 50%; transform: translateX(-50%) scale(.78); transform-origin: top center; }
+  .pull-chain { left: 50%; margin-left: 22px; transform: scale(.85); transform-origin: top center; }
+  .lamp-light-cone { left: 50%; top: 135px; width: 110vw; height: 65vh; }
+}
+@media(prefers-reduced-motion: reduce) {
+  .lamp-fireflies i { animation: none !important; }
+  body:has(main .login:not(.hidden)) *, body:has(main .login:not(.hidden))::before,
+  body:has(main .login:not(.hidden))::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
