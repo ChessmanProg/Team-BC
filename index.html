@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#040b21">
   <title>Team BC — Workspace</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./styles.css?v=chain-aligned-1">
+  <link rel="stylesheet" href="./styles.css?v=chain-structural-fix-1">
   <link rel="stylesheet" href="./dashboard.css?v=enchanted-replica-6">
 </head>
 <body>
@@ -14,17 +14,17 @@
   <div class="ocean" aria-hidden="true"><i></i><i></i><i></i><span></span></div>
   <div class="lamp-scene" id="lampScene" aria-label="Lamp login lighting controls">
     <div class="room-light" aria-hidden="true"></div>
-    <div class="lamp-container" aria-hidden="true">
+    <div class="lamp-container">
       <div class="lamp-stand"></div>
       <div class="lamp-shade"></div>
       <div class="lamp-glow"></div>
-    </div>
-    <div class="lamp-light-cone"></div>
-    <div class="lamp-fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <button type="button" class="pull-chain" id="lampSwitch" aria-label="Turn on the lamp" aria-pressed="false">
       <span class="chain-cord"></span><span class="chain-handle"></span>
       <span class="chain-hint">Pull to turn on the light</span>
     </button>
+    </div>
+    <div class="lamp-light-cone"></div>
+    <div class="lamp-fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="lamp-welcome" aria-hidden="true"><span class="lamp-welcome-mark">✦</span><span>Some light. A fresh start.</span></div>
   </div>
   <header class="brand"><div class="brand-mark">BC</div><div><strong>TEAM BC</strong><small>Team workspace</small></div></header>
@@ -105,6 +105,6 @@
     </div>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./app.js?v=lamp-pull-reliable-2"></script>
+  <script src="./app.js?v=chain-structural-fix-1"></script>
 </body>
 </html>
