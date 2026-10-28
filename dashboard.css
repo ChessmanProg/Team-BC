@@ -517,3 +517,121 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].a
     animation: none !important;
   }
 }
+
+
+/* Enchanted forest dashboard treatment — layered artwork plus living light */
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="overview"].active) .workspace-main {
+  background-image:
+    linear-gradient(115deg, rgba(2, 18, 15, .52), rgba(2, 24, 21, .23) 52%, rgba(2, 16, 17, .45)),
+    url("./enchanted-forest.svg") !important;
+  background-size: cover, cover;
+  background-position: center, center;
+  background-attachment: scroll, fixed;
+}
+body:has(#workspace:not(.hidden)) #workspace .topbar {
+  border-bottom: 1px solid rgba(167, 255, 218, .13);
+}
+body:has(#workspace:not(.hidden)) #workspace .page-head .eyebrow {
+  color: #b6ffd8;
+  text-shadow: 0 0 18px rgba(100, 255, 191, .25);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-card {
+  min-height: clamp(250px, 34vw, 360px);
+  margin-top: 28px;
+  padding: clamp(34px, 6vw, 68px) clamp(24px, 8vw, 110px);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid rgba(190, 255, 222, .52);
+  border-radius: 34px 52px 32px 48px;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(13, 80, 57, .56), rgba(3, 30, 27, .62) 62%, rgba(2, 22, 22, .72)),
+    linear-gradient(120deg, rgba(5, 48, 39, .75), rgba(3, 25, 27, .62));
+  box-shadow: 0 18px 60px rgba(0, 14, 10, .28), inset 0 1px 0 rgba(245, 255, 250, .2), inset 0 0 36px rgba(106, 255, 193, .08), 0 0 35px rgba(91, 255, 185, .1);
+  backdrop-filter: blur(8px) saturate(130%);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-card::before {
+  width: 380px; height: 380px; right: -100px; top: -210px;
+  background: radial-gradient(circle, rgba(154, 255, 213, .29), rgba(95, 238, 179, .07) 42%, transparent 72%);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-card::after {
+  width: 340px; height: 340px; left: 8%; right: auto; bottom: -255px;
+  background: radial-gradient(circle, rgba(224, 255, 154, .17), transparent 70%);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:focus-within {
+  outline: 2px solid rgba(199, 255, 225, .7);
+  outline-offset: 4px;
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-mark {
+  align-self: flex-start;
+  margin-top: -8px;
+  color: #d7ffb8;
+  font-size: clamp(54px, 7vw, 82px);
+  text-shadow: 0 0 28px rgba(170, 255, 209, .42);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-copy {
+  max-width: 800px;
+  flex: 1;
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-label {
+  margin-bottom: 22px;
+  color: #d4ffe7;
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-shadow: 0 0 18px rgba(165, 255, 211, .36);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-copy blockquote {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(24px, 3.3vw, 42px);
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+  text-shadow: 0 3px 24px rgba(0, 0, 0, .42), 0 0 20px rgba(197, 255, 221, .12);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-author {
+  margin-top: 20px;
+  color: rgba(228, 255, 239, .9);
+  font-size: 13px;
+  letter-spacing: .16em;
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-mantra {
+  margin: 30px 0 0;
+  color: rgba(223, 255, 232, .92);
+  font-size: 14px;
+  line-height: 1.6;
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-mantra span {
+  margin-right: 8px;
+  color: #d9ff9f;
+  text-shadow: 0 0 15px rgba(223, 255, 159, .85);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:hover {
+  transform: translateY(-4px) scale(1.005);
+  border-color: rgba(220, 255, 235, .78);
+  box-shadow: 0 24px 70px rgba(0, 14, 10, .32), inset 0 1px 0 rgba(245, 255, 250, .25), inset 0 0 48px rgba(106, 255, 193, .12), 0 0 48px rgba(91, 255, 185, .17);
+}
+body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:hover .quote-sparkle {
+  filter: drop-shadow(0 0 10px rgba(223, 255, 184, .95));
+}
+@media (max-width: 760px) {
+  body:has(#workspace:not(.hidden)) #workspace .daily-quote-card {
+    min-height: 250px;
+    padding: 30px 20px;
+    gap: 6px;
+    border-radius: 24px 32px 24px 30px;
+  }
+  body:has(#workspace:not(.hidden)) #workspace .daily-quote-mark {
+    position: absolute;
+    left: 14px;
+    top: 20px;
+    opacity: .35;
+  }
+  body:has(#workspace:not(.hidden)) #workspace .daily-quote-copy blockquote {
+    font-size: clamp(23px, 6vw, 32px);
+  }
+  body:has(#workspace:not(.hidden)) #workspace .daily-quote-mantra { margin-top: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:hover { transform: none; }
+}
