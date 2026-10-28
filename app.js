@@ -549,4 +549,13 @@ async function restoreSavedSession() {
     message(loginNotice, "Couldn't restore your workspace right now. " + friendlyError(error));
   }
 }
+// If the browser restores this page from its back/forward cache, never reopen a
+// previously selected team automatically. Return authenticated users to team selection.
+window.addEventListener("pageshow", (event) => {
+  if (!event.persisted) return;
+  if (activeUser && activeTeams.length) {
+    activeTeamKey = null;
+    showTeamSelection();
+  }
+});
 restoreSavedSession();
