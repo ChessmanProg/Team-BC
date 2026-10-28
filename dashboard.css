@@ -1064,3 +1064,101 @@ body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:hover .quote-spar
   #workspace .workspace-profile { width:100%; }
   .team-selection-profile { margin-bottom:22px; }
 }
+
+
+/* Team selection inherits the same dark, warm-glow visual language as the login page. */
+body:has(#team-selection:not(.hidden)) {
+  background:#0b0c10 !important;
+  background-image:radial-gradient(ellipse at 18% 12%,rgba(255,177,55,.075),transparent 34%),radial-gradient(ellipse at 82% 88%,rgba(255,177,55,.035),transparent 35%),#0b0c10 !important;
+  color:#f4f5f8;
+  min-height:100vh;
+}
+body:has(#team-selection:not(.hidden))::before,
+body:has(#team-selection:not(.hidden))::after { display:none !important; }
+#team-selection.team-selection {
+  min-height:100svh;
+  padding:clamp(28px,6vw,76px) 22px;
+  background:transparent !important;
+  color:#f4f5f8;
+}
+#team-selection .team-selection-inner {
+  width:min(1040px,100%);
+  margin:0 auto;
+  padding:clamp(24px,5vw,52px);
+  border:1px solid rgba(255,255,255,.085);
+  border-radius:24px;
+  background:linear-gradient(145deg,rgba(22,24,32,.84),rgba(13,14,19,.88));
+  box-shadow:0 24px 70px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.035);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+#team-selection .eyebrow,
+#team-selection .team-profile-copy .eyebrow {
+  color:#ffb432;
+  letter-spacing:.16em;
+}
+#team-selection h1 {
+  color:#f7f7fa;
+  font-size:clamp(32px,5vw,52px);
+  letter-spacing:-.035em;
+}
+#team-selection .muted { color:#9a9eac; }
+#team-selection .team-selection-profile {
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.025);
+  border-radius:16px;
+}
+#team-selection .profile-avatar {
+  border-color:rgba(255,180,50,.42);
+  background:linear-gradient(145deg,rgba(255,180,50,.18),rgba(22,24,32,.95));
+  color:#ffe0a0;
+}
+#team-selection .team-profile-copy strong { color:#f5f5f8; }
+#team-selection .team-profile-copy .text-button,
+#team-selection #selection-signout,
+#team-selection .text-button {
+  color:#ffc15a;
+}
+#team-selection .team-card-grid { gap:16px; margin-top:30px; }
+#team-selection .team-card {
+  min-height:190px;
+  padding:24px;
+  gap:18px;
+  color:#f5f5f8;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(30,31,39,.78),rgba(14,15,20,.92));
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.025);
+  transition:transform .22s ease,border-color .22s ease,background .22s ease,box-shadow .22s ease;
+}
+#team-selection .team-card:hover,
+#team-selection .team-card:focus-visible {
+  transform:translateY(-4px);
+  border-color:rgba(255,180,50,.52);
+  background:linear-gradient(145deg,rgba(48,37,22,.8),rgba(17,17,21,.96));
+  box-shadow:0 16px 36px rgba(0,0,0,.32),0 0 24px rgba(255,180,50,.055);
+  outline:none;
+}
+#team-selection .team-card-icon {
+  width:46px;
+  height:46px;
+  border:1px solid rgba(255,180,50,.2);
+  border-radius:14px;
+  background:rgba(255,180,50,.09);
+  color:#ffc15a;
+}
+#team-selection .team-card strong { color:#f8f7f3; }
+#team-selection .team-card small { color:#9a9eac; }
+#team-selection .team-card small span { color:#ffc15a; }
+#team-selection .primary,
+#team-selection button.primary {
+  background:linear-gradient(135deg,#ffc832,#ff9600);
+  border-color:#ffb432;
+  color:#171006;
+}
+@media(max-width:760px) {
+  #team-selection.team-selection { padding:20px 14px; }
+  #team-selection .team-selection-inner { padding:22px 18px; border-radius:20px; }
+  #team-selection .team-card-grid { gap:12px; margin-top:22px; }
+  #team-selection .team-card { min-height:140px; padding:20px; }
+}
