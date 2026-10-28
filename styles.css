@@ -742,3 +742,26 @@ body:has(#login-panel:not(.hidden)) #recovery-panel:not(.hidden) {
     grid-column:1 !important; padding:28px 22px !important;
   }
 }
+
+
+/* Align the draggable pull-chain with the lamp's actual center and shade. */
+body:has(#login-panel:not(.hidden)) .pull-chain {
+  left: clamp(100px, 24vw, 330px) !important;
+  top: calc(clamp(70px, 17vh, 155px) + 164px) !important;
+  transform: translateX(-36px) !important;
+}
+body:has(#login-panel:not(.hidden)) .pull-chain:active,
+body:has(#login-panel:not(.hidden)) .pull-chain.pulling {
+  transform: translate(-36px, 13px) !important;
+}
+@media (max-width: 760px) {
+  body:has(#login-panel:not(.hidden)) .pull-chain {
+    left: 50% !important;
+    top: 144px !important;
+    transform: translateX(-36px) !important;
+  }
+  body:has(#login-panel:not(.hidden)) .pull-chain:active,
+  body:has(#login-panel:not(.hidden)) .pull-chain.pulling {
+    transform: translate(-36px, 13px) !important;
+  }
+}
