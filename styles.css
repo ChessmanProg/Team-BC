@@ -1056,3 +1056,37 @@ body:has(main .login:not(.hidden)) .lamp-scene .pull-chain {
     left: calc(50% - 32px) !important;
   }
 }
+
+
+/* Structural chain alignment: the chain now shares the lamp container's coordinate system. */
+body:has(main .login:not(.hidden)) .lamp-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: clamp(90px, 22vw, 300px) !important;
+  width: 130px !important;
+  height: 300px !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+body:has(main .login:not(.hidden)) .lamp-container .pull-chain {
+  position: absolute !important;
+  top: 148px !important;
+  left: calc(50% - 32px) !important;
+  right: auto !important;
+  width: 64px !important;
+  height: 150px !important;
+  margin: 0 !important;
+  transform: none !important;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
+  touch-action: none !important;
+}
+body:has(main .login:not(.hidden)) .lamp-container .pull-chain:active,
+body:has(main .login:not(.hidden)) .lamp-container .pull-chain.pulling {
+  transform: translateY(12px) !important;
+}
+@media (max-width: 760px) {
+  body:has(main .login:not(.hidden)) .lamp-container {
+    left: calc(50% - 65px) !important;
+  }
+}
