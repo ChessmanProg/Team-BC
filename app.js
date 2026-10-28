@@ -246,7 +246,8 @@ const pageInfo = {
   agents: ["Agents", "Manage agent records for this team."],
   coaching: ["Coaching", "Create and manage coaching sessions and meeting links."],
   "ic-logs": ["IC Logs", "Record and review incidents and interactions."],
-  "quick-links": ["Quick Links", "Save useful team links in one place."]
+  "quick-links": ["Quick Links", "Save useful team links in one place."],
+  "bc-ai": ["BC AI", "Shoot your photo into the hoop to upload it."]
 };
 const pageConfig = {
   agents: { table:"team_agents", singular:"agent", plural:"agents", fields:[
@@ -524,6 +525,98 @@ async function deleteRecord(page, id) {
     await refreshRecordList(page);
   } catch (error) { message($("#record-notice"), friendlyError(error)); }
 }
+async function renderBCAIPage(content) {
+  content.innerHTML = '<section class="content-panel bc-ai-panel"><div class="panel-heading"><div><h2>🏀 BC AI Photo Court</h2><p class="muted">Choose a photo, line up your shot, and send it through the hoop.</p></div></div>' +
+    '<input id="bc-ai-photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>' +
+    '<div class="bc-ai-court" id="bc-ai-court" tabindex="0" role="button" aria-label="Drop a photo here or click to choose one">' +
+      '<div class="bc-ai-court-lines" aria-hidden="true"></div><div class="bc-ai-backboard"></div><div class="bc-ai-hoop"><span class="bc-ai-net"></span></div>' +
+      '<div class="bc-ai-instructions"><strong>Take your shot!</strong><span>Drop a photo here or tap to browse</span><small>JPG, PNG, WEBP or GIF · Max 10 MB</small></div>' +
+      '<div class="bc-ai-ball" id="bc-ai-ball" aria-hidden="true">🏀</div>' +
+      '<div class="bc-ai-selected" id="bc-ai-selected" hidden></div>' +
+      '<div class="bc-ai-score-flash" id="bc-ai-score-flash" aria-live="polite"></div>' +
+    '</div><div class="bc-ai-controls"><button type="button" class="small-button" id="bc-ai-browse">Choose photo</button><button type="button" class="primary action-button" id="bc-ai-shoot" disabled>🏀 Shoot to upload</button></div>' +
+    '<p class="notice" id="bc-ai-notice" role="status">Photos are saved privately for members of ' + escapeHtml(teamDisplay(activeTeam())) + '.</p>' +
+    '<div class="bc-ai-gallery-heading"><h3>Uploaded photos</h3><button type="button" class="small-button" id="bc-ai-refresh">Refresh</button></div><div class="bc-ai-gallery" id="bc-ai-gallery"><p class="muted">Loading photos…</p></div></section>';
+  const input = $("#bc-ai-photo-input"), court = $("#bc-ai-court");
+  const selected = $("#bc-ai-selected"), shoot = $("#bc-ai-shoot"), notice = $("#bc-ai-notice");
+  let chosenFile = null, busy = false;
+  function chooseFile(file) {
+    if (!file) return;
+    if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) { message(notice, "Please choose a JPG, PNG, WEBP, or GIF photo."); return; }
+    if (file.size > 10 * 1024 * 1024) { message(notice, "That photo is over 10 MB. Choose a smaller image."); return; }
+    chosenFile = file;
+    selected.hidden = false;
+    selected.textContent = "📷 " + file.name + " · " + (file.size / 1024 / 1024).toFixed(2) + " MB";
+    shoot.disabled = false;
+    court.classList.add("has-photo");
+    message(notice, "Ready! Press “Shoot to upload” to take your shot.");
+  }
+  input.addEventListener("change", () => chooseFile(input.files?.[0]));
+  $("#bc-ai-browse").addEventListener("click", () => input.click());
+  court.addEventListener("click", (event) => { if (!event.target.closest("button") && !busy) input.click(); });
+  court.addEventListener("keydown", (event) => { if ((event.key === "Enter" || event.key === " ") && !busy) { event.preventDefault(); input.click(); } });
+  ["dragenter","dragover"].forEach((name) => court.addEventListener(name, (event) => { event.preventDefault(); court.classList.add("is-dragging"); }));
+  ["dragleave","drop"].forEach((name) => court.addEventListener(name, (event) => { event.preventDefault(); court.classList.remove("is-dragging"); }));
+  court.addEventListener("drop", (event) => chooseFile(event.dataTransfer?.files?.[0]));
+  $("#bc-ai-shoot").addEventListener("click", async () => {
+    if (!chosenFile || busy) return;
+    busy = true; shoot.disabled = true; input.disabled = true;
+    court.classList.remove("shot-made","shot-missed"); court.classList.add("shooting");
+    message(notice, "Taking the shot…");
+    await new Promise((resolve) => setTimeout(resolve, 950));
+    try {
+      const safeName = chosenFile.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(-90) || "photo";
+      const path = activeTeamKey + "/" + activeUser.id + "/" + Date.now() + "-" + safeName;
+      const { error } = await supabaseClient.storage.from("bc-ai-photos").upload(path, chosenFile, {contentType:chosenFile.type, upsert:false});
+      if (error) throw error;
+      court.classList.remove("shooting"); court.classList.add("shot-made");
+      $("#bc-ai-score-flash").textContent = "SWISH! PHOTO UPLOADED ✓";
+      message(notice, "Nice shot! Your photo was uploaded successfully.");
+      chosenFile = null; input.value = ""; selected.hidden = true; selected.textContent = ""; shoot.disabled = true;
+      await loadBCAIGallery();
+    } catch (error) {
+      court.classList.remove("shooting"); court.classList.add("shot-missed");
+      $("#bc-ai-score-flash").textContent = "REBOUND — TRY AGAIN";
+      message(notice, "Upload failed: " + friendlyError(error) + " Your photo is still selected, so you can retry.");
+      shoot.disabled = !chosenFile;
+    } finally { busy = false; input.disabled = false; }
+  });
+  async function loadBCAIGallery() {
+    const gallery = $("#bc-ai-gallery");
+    gallery.innerHTML = '<p class="muted">Loading photos…</p>';
+    try {
+      const { data, error } = await supabaseClient.storage.from("bc-ai-photos").list(activeTeamKey, {limit:100, sortBy:{column:"created_at",order:"desc"}});
+      if (error) throw error;
+      const folders = (data || []).filter((item) => item.id === null);
+      const files = (data || []).filter((item) => item.id !== null && item.name);
+      const allFiles = [];
+      for (const folder of folders) {
+        const { data: nested, error: nestedError } = await supabaseClient.storage.from("bc-ai-photos").list(activeTeamKey + "/" + folder.name, {limit:100, sortBy:{column:"created_at",order:"desc"}});
+        if (!nestedError) {
+          for (const item of (nested || []).filter((entry) => entry.id !== null && entry.name)) {
+            allFiles.push({name:item.name,path:activeTeamKey + "/" + folder.name + "/" + item.name,created_at:item.created_at});
+          }
+        }
+      }
+      for (const item of files) allFiles.push({name:item.name,path:activeTeamKey + "/" + item.name,created_at:item.created_at});
+      allFiles.sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+      if (!allFiles.length) { gallery.innerHTML = '<div class="empty-state">No photos yet. Be the first to score!</div>'; return; }
+      gallery.innerHTML = "";
+      for (const item of allFiles) {
+        const { data: signed, error: signError } = await supabaseClient.storage.from("bc-ai-photos").createSignedUrl(item.path, 3600);
+        if (signError || !signed?.signedUrl) continue;
+        const card = document.createElement("a");
+        card.className = "bc-ai-photo-card"; card.href = signed.signedUrl; card.target = "_blank"; card.rel = "noopener noreferrer";
+        const img = document.createElement("img"); img.src = signed.signedUrl; img.alt = item.name; img.loading = "lazy";
+        const caption = document.createElement("span"); caption.textContent = item.name;
+        card.append(img, caption); gallery.appendChild(card);
+      }
+      if (!gallery.children.length) gallery.innerHTML = '<p class="muted">Photos are saved, but previews could not be loaded. Try refreshing.</p>';
+    } catch (error) { gallery.innerHTML = '<p class="notice">' + escapeHtml(friendlyError(error)) + '</p>'; }
+  }
+  $("#bc-ai-refresh").addEventListener("click", loadBCAIGallery);
+  await loadBCAIGallery();
+}
 async function renderPage(page) {
   if (!activeTeamKey) return showTeamSelection();
   currentPage = page;
@@ -540,6 +633,7 @@ async function renderPage(page) {
   content.innerHTML = '<section class="content-panel"><p class="muted">Loading…</p></section>';
   try {
     if (page === "overview") await renderOverview(content);
+    else if (page === "bc-ai") await renderBCAIPage(content);
     else await renderRecordsPage(page, content);
   } catch (error) {
     content.innerHTML = '<section class="content-panel"><p class="notice">' + escapeHtml(friendlyError(error)) + '</p><button class="small-button" id="retry-load">Try again</button></section>';
