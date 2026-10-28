@@ -583,3 +583,162 @@ body:not(.lamp-light-on):has(#login-panel:not(.hidden)) #login-panel {
     grid-column: 1;
   }
 }
+
+
+/* Reference-inspired login rebuild: near-black room, left lamp, right auth card. */
+body:has(#login-panel:not(.hidden)) {
+  background: #0b0c10 !important;
+  background-image: none !important;
+  color: #f4f5f8;
+  overflow-x: hidden;
+}
+body:has(#login-panel:not(.hidden))::before,
+body:has(#login-panel:not(.hidden))::after { display:none !important; }
+body:has(#login-panel:not(.hidden)) .brand,
+body:has(#login-panel:not(.hidden)) main .hero,
+body:has(#login-panel:not(.hidden)) .lamp-welcome,
+body:has(#login-panel:not(.hidden)) .ocean,
+body:has(#login-panel:not(.hidden)) .ocean-video { display:none !important; }
+body:has(#login-panel:not(.hidden)) .lamp-scene {
+  position:fixed !important;
+  inset:0 !important;
+  z-index:1 !important;
+  background:#0b0c10 !important;
+  overflow:hidden;
+  pointer-events:none !important;
+}
+body:has(#login-panel:not(.hidden)) .lamp-scene::before {
+  content:none !important;
+  display:none !important;
+}
+body.lamp-light-on:has(#login-panel:not(.hidden)) .lamp-scene {
+  background: radial-gradient(ellipse at 25% 48%, rgba(255,180,50,.075), transparent 40%), #0b0c10 !important;
+}
+body:has(#login-panel:not(.hidden)) .lamp-container {
+  position:absolute !important;
+  left:clamp(100px, 24vw, 330px) !important;
+  top:clamp(70px, 17vh, 155px) !important;
+  transform:translateX(-50%) scale(.95) !important;
+  transform-origin:top center;
+  z-index:3 !important;
+}
+body:has(#login-panel:not(.hidden)) .lamp-light-cone {
+  position:absolute !important;
+  left:clamp(100px, 24vw, 330px) !important;
+  top:clamp(160px, 31vh, 285px) !important;
+  width:min(500px, 52vw) !important;
+  height:min(650px, 72vh) !important;
+  transform:translateX(-50%) !important;
+  clip-path:polygon(35% 0, 65% 0, 100% 100%, 0 100%) !important;
+  background:linear-gradient(180deg, rgba(255,200,80,.22), rgba(255,180,50,.055) 62%, transparent) !important;
+  filter:blur(8px);
+  opacity:0;
+  transition:opacity .8s ease;
+  pointer-events:none !important;
+  z-index:2 !important;
+}
+body.lamp-light-on:has(#login-panel:not(.hidden)) .lamp-light-cone { opacity:1 !important; }
+body:has(#login-panel:not(.hidden)) .lamp-glow {
+  position:absolute !important;
+  left:clamp(100px, 24vw, 330px) !important;
+  top:clamp(130px, 25vh, 235px) !important;
+  transform:translateX(-50%) !important;
+  width:180px !important;
+  height:150px !important;
+  background:radial-gradient(ellipse, rgba(255,190,80,.28), transparent 72%) !important;
+  opacity:0;
+  pointer-events:none !important;
+}
+body.lamp-light-on:has(#login-panel:not(.hidden)) .lamp-glow { opacity:1 !important; }
+body:has(#login-panel:not(.hidden)) .pull-chain {
+  position:absolute !important;
+  left:clamp(100px, 24vw, 330px) !important;
+  top:clamp(180px, 32vh, 300px) !important;
+  transform:translateX(35px) !important;
+  z-index:30 !important;
+  pointer-events:auto !important;
+  touch-action:none;
+}
+body:has(#login-panel:not(.hidden)) .pull-chain:active,
+body:has(#login-panel:not(.hidden)) .pull-chain.pulling {
+  transform:translate(35px, 13px) !important;
+}
+body:has(#login-panel:not(.hidden)) main {
+  position:relative !important;
+  z-index:5 !important;
+  width:100% !important;
+  max-width:1200px !important;
+  min-height:100svh !important;
+  margin:0 auto !important;
+  padding:40px clamp(24px, 7vw, 100px) !important;
+  display:grid !important;
+  grid-template-columns:minmax(240px, 1fr) minmax(340px, 420px) !important;
+  gap:clamp(30px, 7vw, 100px) !important;
+  align-items:center !important;
+  pointer-events:none;
+}
+body:has(#login-panel:not(.hidden)) #login-panel {
+  grid-column:2 !important;
+  justify-self:end !important;
+  width:100% !important;
+  padding:38px 32px !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  border-radius:20px !important;
+  background:rgba(22,24,32,.75) !important;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 20px 40px rgba(0,0,0,.5) !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  transform:translateY(20px) !important;
+  transition:opacity .8s ease, transform .8s ease, border-color .8s ease, box-shadow .8s ease, visibility .8s !important;
+  pointer-events:none !important;
+}
+body.lamp-light-on:has(#login-panel:not(.hidden)) #login-panel {
+  opacity:1 !important;
+  visibility:visible !important;
+  transform:translateY(0) !important;
+  border-color:rgba(255,180,50,.25) !important;
+  box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px rgba(255,180,50,.08) !important;
+  pointer-events:auto !important;
+}
+body:has(#login-panel:not(.hidden)) #login-panel .kicker { color:#ffb432 !important; }
+body:has(#login-panel:not(.hidden)) #login-panel .muted { color:#9a9eac !important; }
+body:has(#login-panel:not(.hidden)) #login-panel input {
+  background:rgba(255,255,255,.04);
+  border-color:rgba(255,255,255,.1);
+}
+body:has(#login-panel:not(.hidden)) #login-panel .primary {
+  background:linear-gradient(135deg,#ffc832,#ff9600) !important;
+  color:#0d0e12 !important;
+}
+body:has(#login-panel:not(.hidden)) #signup-panel:not(.hidden),
+body:has(#login-panel:not(.hidden)) #recovery-panel:not(.hidden) {
+  opacity:1 !important;
+  visibility:visible !important;
+  pointer-events:auto !important;
+}
+@media(max-width:760px) {
+  body:has(#login-panel:not(.hidden)) main {
+    grid-template-columns:minmax(0,1fr) !important;
+    max-width:520px !important;
+    padding:300px 20px 30px !important;
+    gap:20px !important;
+  }
+  body:has(#login-panel:not(.hidden)) .lamp-container {
+    left:50% !important; top:20px !important; transform:translateX(-50%) scale(.72) !important;
+  }
+  body:has(#login-panel:not(.hidden)) .lamp-light-cone {
+    left:50% !important; top:165px !important; width:90vw !important; height:280px !important;
+    transform:translateX(-50%) !important;
+  }
+  body:has(#login-panel:not(.hidden)) .lamp-glow {
+    left:50% !important; top:135px !important;
+  }
+  body:has(#login-panel:not(.hidden)) .pull-chain {
+    left:50% !important; top:170px !important; transform:translateX(25px) !important;
+  }
+  body:has(#login-panel:not(.hidden)) #login-panel {
+    grid-column:1 !important; padding:28px 22px !important;
+  }
+}
