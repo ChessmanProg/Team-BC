@@ -1043,22 +1043,22 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 }
 
 
-/* Give Team Lev its own red identity on the team-selection screen only */
+/* Give Team Lev an orange identity on the team-selection screen; keep the heart logo */
 #team-selection .team-card[data-team-key="lev"] {
-  border-color: rgba(255, 112, 132, .52);
-  background: linear-gradient(145deg, rgba(112, 20, 39, .72), rgba(42, 12, 27, .72));
-  box-shadow: inset 0 1px 0 rgba(255, 204, 211, .08);
+  border-color: rgba(255, 166, 72, .62);
+  background: linear-gradient(145deg, rgba(128, 63, 12, .76), rgba(54, 29, 12, .78));
+  box-shadow: inset 0 1px 0 rgba(255, 224, 177, .1);
 }
 #team-selection .team-card[data-team-key="lev"] .team-card-icon {
-  background: rgba(255, 91, 116, .2);
-  color: #ff9cab;
+  background: rgba(255, 143, 45, .22);
+  color: #ffb15e;
 }
 #team-selection .team-card[data-team-key="lev"] small span {
-  color: #ff9cab;
+  color: #ffb15e;
 }
 #team-selection .team-card[data-team-key="lev"]:hover {
-  border-color: rgba(255, 145, 160, .9);
-  background: linear-gradient(145deg, rgba(151, 27, 52, .82), rgba(61, 13, 34, .82));
+  border-color: rgba(255, 194, 112, .95);
+  background: linear-gradient(145deg, rgba(161, 78, 13, .86), rgba(75, 38, 12, .86));
 }
 
 
