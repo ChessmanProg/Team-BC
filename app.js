@@ -101,6 +101,9 @@ async function getUserTeams(user) {
   return { memberships, teams };
 }
 function showTeamSelection() {
+  sessionStorage.removeItem("teamBcSelectedTeam");
+  sessionStorage.removeItem("teamBcCurrentPage");
+  activeTeamKey = null;
   workspace.classList.add("hidden");
   workspace.style.display = "none";
   teamSelection.classList.remove("hidden");
@@ -113,12 +116,13 @@ function showTeamSelection() {
   document.querySelector(".brand").classList.add("hidden");
   footer.classList.add("hidden");
 }
-function enterTeam(teamKey) {
+function enterTeam(teamKey, requestedPage = "overview") {
   if (!activeTeams.some((team) => team.team_key === teamKey) || !activeMemberships.some((membership) => membership.team_key === teamKey)) {
     message($("#team-selection-notice"), "You don't have access to that team.");
     return;
   }
   activeTeamKey = teamKey;
+  sessionStorage.setItem("teamBcSelectedTeam", teamKey);
   const selector = $("#team-switch");
   selector.replaceChildren();
   activeTeams.forEach((team) => { const option = document.createElement("option"); option.value = team.team_key; option.textContent = teamDisplay(team); selector.appendChild(option); });
@@ -130,9 +134,12 @@ function enterTeam(teamKey) {
   teamSelection.classList.add("hidden");
   workspace.classList.remove("hidden");
   workspace.style.display = "grid";
-  renderPage("overview");
+  const savedPage = pageInfo[requestedPage] ? requestedPage : "overview";
+  renderPage(savedPage);
 }
 async function signOut() {
+  sessionStorage.removeItem("teamBcSelectedTeam");
+  sessionStorage.removeItem("teamBcCurrentPage");
   if (supabaseClient) await supabaseClient.auth.signOut();
   activeUser = null; activeMemberships = []; activeTeams = []; activeTeamKey = null;
   teamSelection.classList.add("hidden");
@@ -143,7 +150,11 @@ async function signOut() {
 async function openAuthenticatedWorkspace(user, memberships, teams) {
   activeUser = user; activeMemberships = memberships; activeTeams = teams;
   message(loginNotice, "");
-  showTeamSelection();
+  const savedTeamKey = sessionStorage.getItem("teamBcSelectedTeam");
+  const savedPage = sessionStorage.getItem("teamBcCurrentPage") || "overview";
+  const canRestoreTeam = teams.some((team) => team.team_key === savedTeamKey) && memberships.some((membership) => membership.team_key === savedTeamKey);
+  if (canRestoreTeam) enterTeam(savedTeamKey, savedPage);
+  else showTeamSelection();
 }
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -513,6 +524,8 @@ async function deleteRecord(page, id) {
 async function renderPage(page) {
   if (!activeTeamKey) return showTeamSelection();
   currentPage = page;
+  sessionStorage.setItem("teamBcSelectedTeam", activeTeamKey);
+  sessionStorage.setItem("teamBcCurrentPage", pageInfo[page] ? page : "overview");
   if (!workspace.classList.contains("hidden")) {
     setBackgroundVideo(page === "overview" ? "overview-background.mp4" : page === "agents" ? "agents-background.mp4" : page === "ic-logs" ? "ic-logs-background.mp4" : "ocean-background.mp4");
   }
@@ -550,13 +563,4 @@ async function restoreSavedSession() {
     message(loginNotice, "Couldn't restore your workspace right now. " + friendlyError(error));
   }
 }
-// If the browser restores this page from its back/forward cache, never reopen a
-// previously selected team automatically. Return authenticated users to team selection.
-window.addEventListener("pageshow", (event) => {
-  if (!event.persisted) return;
-  if (activeUser && activeTeams.length) {
-    activeTeamKey = null;
-    showTeamSelection();
-  }
-});
 restoreSavedSession();
