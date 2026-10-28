@@ -1178,3 +1178,10 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
   #workspace .bc-ai-court.shot-made .bc-ai-hoop,
   #workspace .bc-ai-court.shot-missed .bc-ai-ball { animation:none; }
 }
+
+
+/* Drag-to-shoot interaction for BC AI */
+#workspace .bc-ai-court { cursor: default; touch-action: pan-y; }
+#workspace .bc-ai-ball { cursor: grab; touch-action: none; user-select: none; -webkit-user-select:none; transition:filter .15s ease; }
+#workspace .bc-ai-ball.is-grabbed { cursor: grabbing; z-index:8; transform:scale(1.12); filter:drop-shadow(0 0 14px rgba(255,174,76,.75)); transition:none; }
+#workspace .bc-ai-ball.is-uploading { opacity:.35; pointer-events:none; }
