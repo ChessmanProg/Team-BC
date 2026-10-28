@@ -982,3 +982,25 @@ body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:hover .quote-spar
 @media (max-width: 900px) { #workspace .workspace-main::before { left: 220px; } }
 @media (max-width: 640px) { #workspace .page-head { position: relative; inset: auto; min-height: 42px; } #workspace .quote-pagination { margin-top: 28px; } }
 @media (prefers-reduced-motion: reduce) { #workspace .quote-pagination i.is-active { animation: none; } }
+
+#workspace .daily-quote-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+#workspace .daily-quote-card::before { display: none; }
+#workspace .daily-quote-card::after { opacity: .4; }
+#workspace .quote-orbit { opacity: .22; }
+#workspace .daily-quote-card:hover {
+  transform: translateY(-2px);
+  border-color: transparent;
+  box-shadow: none;
+}
+#workspace .daily-quote-card:hover .daily-quote-copy blockquote {
+  text-shadow: 0 2px 24px rgba(0,0,0,.55), 0 0 30px rgba(190,255,221,.28);
+}
+@media (prefers-reduced-motion: reduce) {
+  #workspace .daily-quote-card:hover { transform: none; }
+}
