@@ -1014,3 +1014,34 @@ body:has(main .login:not(.hidden)) #login-panel {
 body:has(main .login:not(.hidden)) main {
   display: grid !important;
 }
+
+
+/* Readability recovery: the login card must be visible even while the lamp is off. */
+body:has(#login-panel:not(.hidden)) #login-panel {
+  display: block !important;
+  position: relative !important;
+  z-index: 10000 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  background: rgba(10, 24, 43, 0.97) !important;
+  border: 1px solid rgba(255, 220, 145, 0.65) !important;
+  box-shadow: 0 18px 70px rgba(0,0,0,.7), 0 0 35px rgba(255,190,70,.12) !important;
+  color: #f7f4ed !important;
+}
+body:has(#login-panel:not(.hidden)) #login-panel h2,
+body:has(#login-panel:not(.hidden)) #login-panel label,
+body:has(#login-panel:not(.hidden)) #login-panel .muted,
+body:has(#login-panel:not(.hidden)) #login-panel .notice,
+body:has(#login-panel:not(.hidden)) #login-panel .auth-switch .muted {
+  color: #f0eadc !important;
+}
+body:has(#login-panel:not(.hidden)) #login-panel input:not([type=checkbox]) {
+  color: #ffffff !important;
+  background: #101c2b !important;
+  border-color: rgba(255,220,145,.55) !important;
+}
+body:has(#login-panel:not(.hidden)) #login-panel input::placeholder {
+  color: #b7bdc8 !important;
+}
