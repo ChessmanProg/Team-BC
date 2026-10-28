@@ -765,3 +765,14 @@ body:has(#login-panel:not(.hidden)) .pull-chain.pulling {
     transform: translate(-36px, 13px) !important;
   }
 }
+
+
+/* Hide the login layout entirely once the authenticated team picker is shown. */
+body:has(#team-selection:not(.hidden)) main,
+body:has(#workspace:not(.hidden)) main,
+body:has(#team-selection:not(.hidden)) footer,
+body:has(#workspace:not(.hidden)) footer {
+  display: none !important;
+}
+/* The login page uses explicit display rules, so hidden must win over those rules. */
+main.hidden { display: none !important; }
