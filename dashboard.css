@@ -257,18 +257,7 @@ body:has(#workspace:not(.hidden)) #workspace .preview-pill {
 }
 
 
-/* Agents tab: extra-transparent forest glass so the uploaded video stays visible */
-body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .stat,
-body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .content-panel,
-body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .link-card {
-  background: linear-gradient(135deg, rgba(7, 43, 22, .23), rgba(4, 25, 15, .15)) !important;
-  border: 1px solid rgba(188, 255, 205, .26);
-  box-shadow: 0 8px 26px rgba(0, 10, 4, .10), inset 0 1px 0 rgba(242, 255, 244, .15);
-  backdrop-filter: blur(5px) saturate(125%);
-}
-body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .content-panel:before {
-  opacity: .22;
-}
+/* Agents tab uses the same stable glass treatment as IC Logs. */
 
 
 /* Functional records and team chooser */
@@ -1003,4 +992,25 @@ body:has(#workspace:not(.hidden)) #workspace .daily-quote-card:hover .quote-spar
 }
 @media (prefers-reduced-motion: reduce) {
   #workspace .daily-quote-card:hover { transform: none; }
+}
+
+
+/* Keep Agents and IC Logs visually consistent to avoid the Agents panel appearing too transparent. */
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .workspace-main {
+  background-image: linear-gradient(135deg, rgba(3, 16, 32, .48), rgba(5, 36, 53, .28) 58%, rgba(3, 16, 32, .52)) !important;
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .stat,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .content-panel,
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .link-card {
+  background: linear-gradient(135deg, rgba(9, 48, 35, .34), rgba(4, 28, 22, .24)) !important;
+  border: 1px solid rgba(190, 255, 224, .22);
+  box-shadow: 0 8px 28px rgba(0, 12, 8, .12), inset 0 1px 0 rgba(240, 255, 247, .16), inset 0 -1px 0 rgba(155, 255, 210, .06);
+  backdrop-filter: blur(7px) saturate(140%);
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .content-panel:before {
+  opacity: .32;
+}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="agents"].active) .nav-item.active {
+  background: linear-gradient(115deg, rgba(27, 110, 137, .82), rgba(22, 67, 92, .74));
+  box-shadow: inset 3px 0 #8ddcff, 0 5px 22px rgba(0, 20, 13, .16);
 }
