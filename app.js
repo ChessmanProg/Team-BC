@@ -189,6 +189,41 @@ $("#recovery-form").addEventListener("submit", async (event) => {
   finally { submit.disabled = false; }
 });
 $("#back-login").addEventListener("click", signOut);
+$("#change-password-toggle").addEventListener("click", () => {
+  const host = $("#password-change-host");
+  if (!host) return;
+  if (host.innerHTML) { host.innerHTML = ""; return; }
+  host.innerHTML = '<section class="content-panel password-change-panel"><h2>Change your password</h2><p class="muted">Enter your current password, then choose a new password of at least 8 characters.</p><form id="change-password-form" class="record-form"><div class="form-grid"><label>Current password<input type="password" name="current_password" autocomplete="current-password" required></label><label>New password<input type="password" name="new_password" autocomplete="new-password" minlength="8" required></label><label>Confirm new password<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required></label></div><div class="form-actions"><button class="primary action-button" type="submit">Update password</button><button class="small-button" type="button" id="cancel-password-change">Cancel</button></div><p class="notice" id="change-password-notice" role="status"></p></form></section>';
+  $("#cancel-password-change").addEventListener("click", () => { host.innerHTML = ""; });
+  $("#change-password-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const notice = $("#change-password-notice");
+    const submit = form.querySelector('button[type="submit"]');
+    const currentPassword = form.elements.current_password.value;
+    const newPassword = form.elements.new_password.value;
+    const confirmPassword = form.elements.confirm_password.value;
+    if (newPassword.length < 8) return message(notice, "Your new password must be at least 8 characters.");
+    if (newPassword !== confirmPassword) return message(notice, "The new passwords do not match.");
+    if (newPassword === currentPassword) return message(notice, "Choose a new password different from your current password.");
+    submit.disabled = true;
+    message(notice, "Verifying your current password…");
+    try {
+      const { error: verifyError } = await supabaseClient.auth.signInWithPassword({ email: activeUser.email, password: currentPassword });
+      if (verifyError) throw new Error("Your current password is incorrect.");
+      message(notice, "Updating password…");
+      const { error: updateError } = await supabaseClient.auth.updateUser({ password: newPassword });
+      if (updateError) throw updateError;
+      form.reset();
+      message(notice, "Password changed successfully.");
+    } catch (error) {
+      message(notice, friendlyError(error));
+    } finally {
+      submit.disabled = false;
+    }
+  });
+});
+
 $("#back-teams").addEventListener("click", showTeamSelection);
 
 const pageInfo = {
