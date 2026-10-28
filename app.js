@@ -123,9 +123,10 @@ function enterTeam(teamKey) {
   selector.replaceChildren();
   activeTeams.forEach((team) => { const option = document.createElement("option"); option.value = team.team_key; option.textContent = teamDisplay(team); selector.appendChild(option); });
   selector.value = teamKey;
-  $("#team-brand").textContent = teamDisplay(activeTeam()).toUpperCase();
-  $("#workspace-user").textContent = activeUser?.email || "Signed in";
-  $("#workspace-role").textContent = activeMemberships.find((m) => m.team_key === teamKey)?.role || "member";
+  $("#team-brand").textContent = "Team BC";
+  const displayName = activeUser?.user_metadata?.full_name || activeUser?.user_metadata?.name || activeUser?.email?.split("@")[0] || "Team member";
+  $("#workspace-user").textContent = "Hello, " + displayName;
+  $("#workspace-role").textContent = teamDisplay(activeTeam());
   teamSelection.classList.add("hidden");
   workspace.classList.remove("hidden");
   workspace.style.display = "grid";
@@ -314,7 +315,7 @@ async function renderOverview(content) {
   const quote = getDailyQuote();
   content.innerHTML = '<div class="stat-grid">' +
     [["TOTAL AGENTS",counts[0]],["COACHING SESSIONS",counts[1]],["TOTAL IC LOGS",counts[2]],["QUICK LINKS",counts[3]]].map(([label,count]) => '<article class="stat"><small>' + label + '</small><strong>' + count + '</strong></article>').join("") +
-    '</div><section class="daily-quote-card" aria-labelledby="daily-quote-title"><div class="daily-quote-magic" aria-hidden="true"><span class="quote-orbit"></span><span class="quote-orb quote-orb-one"></span><span class="quote-orb quote-orb-two"></span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span></div><div class="daily-quote-mark" aria-hidden="true">“</div><div class="daily-quote-copy"><p class="daily-quote-label" id="daily-quote-title">✧ A LITTLE MAGIC FOR TODAY <span>✦</span></p><blockquote>' + escapeHtml(quote.text) + '</blockquote><p class="daily-quote-author">— ' + escapeHtml(quote.author) + '</p><p class="daily-quote-mantra"><span aria-hidden="true">✧</span> A new thought. A fresh start. Every day.</p></div></section><section class="content-panel"><h2>Welcome to ' + escapeHtml(teamDisplay(activeTeam())) + '</h2><p class="muted">Your records are saved to this team only.</p><div class="empty-state">' + (canManageActiveTeam() ? "Choose a section from the left menu to add or manage records." : "Choose a section from the left menu to view records and open links.") + '</div></section>';
+    '</div><section class="daily-quote-card" aria-labelledby="daily-quote-title"><div class="daily-quote-magic" aria-hidden="true"><span class="quote-orbit"></span><span class="quote-orb quote-orb-one"></span><span class="quote-orb quote-orb-two"></span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span></div><div class="daily-quote-mark" aria-hidden="true">“</div><div class="daily-quote-copy"><p class="daily-quote-label" id="daily-quote-title">★ QUOTE OF THE DAY <span>✦</span></p><blockquote>' + escapeHtml(quote.text) + '</blockquote><p class="daily-quote-author">— ' + escapeHtml(quote.author) + '</p><p class="daily-quote-mantra"><span aria-hidden="true">♧</span> Better today than yesterday.<br>That’s progress.</p><div class="quote-pagination" aria-hidden="true"><i class="is-active"></i><i></i><i></i><i></i></div></div></section><section class="content-panel"><h2>Welcome to ' + escapeHtml(teamDisplay(activeTeam())) + '</h2><p class="muted">Your records are saved to this team only.</p><div class="empty-state">' + (canManageActiveTeam() ? "Choose a section from the left menu to add or manage records." : "Choose a section from the left menu to view records and open links.") + '</div></section>';
 }
 function fieldMarkup(field, row={}) {
   let value = row[field.key] ?? "";
