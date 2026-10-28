@@ -526,20 +526,20 @@ async function deleteRecord(page, id) {
   } catch (error) { message($("#record-notice"), friendlyError(error)); }
 }
 async function renderBCAIPage(content) {
-  content.innerHTML = '<section class="content-panel bc-ai-panel"><div class="panel-heading"><div><h2>🏀 BC AI Photo Court</h2><p class="muted">Choose a photo, then drag the basketball into the hoop to upload it.</p></div></div>' +
+  content.innerHTML = '<section class="content-panel bc-ai-panel"><div class="panel-heading"><div><h2>🏀 BC AI Photo Court</h2><p class="muted">Choose a photo, pull the ball back, then release to shoot toward the hoop.</p></div></div>' +
     '<input id="bc-ai-photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>' +
-    '<div class="bc-ai-court" id="bc-ai-court" tabindex="0" aria-label="Basketball court. Drag the ball into the hoop to upload your selected photo.">' +
+    '<div class="bc-ai-court" id="bc-ai-court" tabindex="0" aria-label="Basketball court. Pull the ball back and release to shoot toward the hoop.">' +
       '<div class="bc-ai-court-lines" aria-hidden="true"></div><div class="bc-ai-backboard"></div><div class="bc-ai-hoop"><span class="bc-ai-net"></span></div>' +
-      '<div class="bc-ai-instructions"><strong>Take your shot!</strong><span>Drag the ball into the hoop</span><small>Choose a JPG, PNG, WEBP or GIF · Max 10 MB</small></div>' +
-      '<div class="bc-ai-ball" id="bc-ai-ball" role="button" tabindex="0" aria-label="Drag basketball to the hoop">🏀</div>' +
+      '<div class="bc-ai-instructions"><strong>Pull. Aim. Release!</strong><span>Drag the ball back, then let go</span><small>Choose a JPG, PNG, WEBP or GIF · Max 10 MB</small></div>' +
+      '<div class="bc-ai-ball" id="bc-ai-ball" role="button" tabindex="0" aria-label="Pull basketball back and release to shoot">🏀</div>' +
       '<div class="bc-ai-selected" id="bc-ai-selected" hidden></div>' +
       '<div class="bc-ai-score-flash" id="bc-ai-score-flash" aria-live="polite"></div>' +
     '</div><div class="bc-ai-controls"><button type="button" class="small-button" id="bc-ai-browse">Choose photo</button></div>' +
-    '<p class="notice" id="bc-ai-notice" role="status">Choose a photo, then drag the ball into the hoop. Photos are private to ' + escapeHtml(teamDisplay(activeTeam())) + '.</p>' +
+    '<p class="notice" id="bc-ai-notice" role="status">Choose a photo, pull the basketball back, then release. Photos are private to ' + escapeHtml(teamDisplay(activeTeam())) + '.</p>' +
     '<div class="bc-ai-gallery-heading"><h3>Uploaded photos</h3><button type="button" class="small-button" id="bc-ai-refresh">Refresh</button></div><div class="bc-ai-gallery" id="bc-ai-gallery"><p class="muted">Loading photos…</p></div></section>';
   const input = $("#bc-ai-photo-input"), court = $("#bc-ai-court"), ball = $("#bc-ai-ball");
   const hoop = court.querySelector(".bc-ai-hoop"), selected = $("#bc-ai-selected"), notice = $("#bc-ai-notice");
-  let chosenFile = null, busy = false, pointerOffset = {x:0,y:0}, draggingBall = false;
+  let chosenFile = null, busy = false, pointerOffset = {x:0,y:0}, draggingBall = false, dragStart = {x:0,y:0}, ballStart = {x:0,y:0};
   function chooseFile(file) {
     if (!file) return;
     if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) { message(notice, "Please choose a JPG, PNG, WEBP, or GIF photo."); return; }
@@ -549,7 +549,7 @@ async function renderBCAIPage(content) {
     selected.textContent = "📷 " + file.name + " · " + (file.size / 1024 / 1024).toFixed(2) + " MB";
     court.classList.add("has-photo");
     court.classList.remove("shot-made","shot-missed");
-    message(notice, "Photo ready! Now drag the basketball into the hoop.");
+    message(notice, "Photo ready! Pull the ball back and release to shoot.");
   }
   input.addEventListener("change", () => chooseFile(input.files?.[0]));
   $("#bc-ai-browse").addEventListener("click", () => { if (!busy) input.click(); });
@@ -561,13 +561,14 @@ async function renderBCAIPage(content) {
     event.preventDefault();
     const rect = ball.getBoundingClientRect(), courtRect = court.getBoundingClientRect();
     pointerOffset = {x:event.clientX - rect.left, y:event.clientY - rect.top};
-    ball.style.left = (rect.left - courtRect.left) + "px";
-    ball.style.top = (rect.top - courtRect.top) + "px";
+    ballStart = {x:rect.left - courtRect.left, y:rect.top - courtRect.top};
+    dragStart = {x:event.clientX, y:event.clientY};
+    ball.style.left = ballStart.x + "px"; ball.style.top = ballStart.y + "px";
     ball.style.right = "auto"; ball.style.bottom = "auto";
     ball.classList.add("is-grabbed"); draggingBall = true;
     ball.setPointerCapture(event.pointerId);
     court.classList.add("is-dragging");
-    message(notice, chosenFile ? "Keep dragging… aim for the orange hoop!" : "Choose a photo first, then drag the ball into the hoop.");
+    message(notice, chosenFile ? "Pull the ball back, then release to shoot!" : "Choose a photo first. Then pull the ball back and release.");
   });
   ball.addEventListener("pointermove", (event) => {
     if (!draggingBall) return;
@@ -576,24 +577,24 @@ async function renderBCAIPage(content) {
     const y = Math.max(0, Math.min(rect.height - ball.offsetHeight, event.clientY - rect.top - pointerOffset.y));
     ball.style.left = x + "px"; ball.style.top = y + "px";
   });
-  ball.addEventListener("pointerup", async () => {
+  ball.addEventListener("pointerup", async (event) => {
     if (!draggingBall) return;
     draggingBall = false; ball.classList.remove("is-grabbed"); court.classList.remove("is-dragging");
-    const ballRect = ball.getBoundingClientRect(), hoopRect = hoop.getBoundingClientRect();
-    const cx = ballRect.left + ballRect.width*.5, cy = ballRect.top + ballRect.height*.5;
-    const hit = cx >= hoopRect.left - 12 && cx <= hoopRect.right + 12 && cy >= hoopRect.top - 18 && cy <= hoopRect.bottom + 18;
-    if (!hit) {
-      court.classList.add("shot-missed");
-      message(notice, chosenFile ? "Almost! Drag the ball into the hoop and release to upload." : "Choose a photo first, then take your shot.");
-      setTimeout(() => { if (!draggingBall) { ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom=""; court.classList.remove("shot-missed"); } }, 550);
-      return;
-    }
+    const courtRect = court.getBoundingClientRect(), ballRect = ball.getBoundingClientRect(), hoopRect = hoop.getBoundingClientRect();
+    const release = {x:ballRect.left-courtRect.left, y:ballRect.top-courtRect.top};
+    const hoopTarget = {x:hoopRect.left-courtRect.left+(hoopRect.width-ballRect.width)/2, y:hoopRect.top-courtRect.top+(hoopRect.height-ballRect.height)/2};
+    const pullDistance = Math.hypot(event.clientX-dragStart.x, event.clientY-dragStart.y);
     if (!chosenFile) {
-      message(notice, "Nice aim! Choose a photo first, then drag the ball into the hoop.");
-      setTimeout(() => { ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom=""; }, 300);
+      message(notice, "Choose a photo first, then pull the ball back and release to shoot.");
+      ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
       return;
     }
-    await uploadChosenPhoto();
+    if (pullDistance < 12) {
+      message(notice, "Pull the ball back a little, then release!");
+      ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
+      return;
+    }
+    await shootBall(release, hoopTarget, pullDistance);
   });
   ball.addEventListener("pointercancel", () => {
     draggingBall = false; ball.classList.remove("is-grabbed"); court.classList.remove("is-dragging");
@@ -603,22 +604,37 @@ async function renderBCAIPage(content) {
     if ((event.key === "Enter" || event.key === " ") && !busy) {
       event.preventDefault();
       if (!chosenFile) input.click();
-      else message(notice, "Drag the basketball into the hoop to make the shot.");
+      else message(notice, "Use your mouse or finger to pull the basketball back, then release.");
     }
   });
-  async function uploadChosenPhoto() {
+  async function shootBall(release, target, pullDistance) {
     if (!chosenFile || busy) return;
     busy = true; input.disabled = true; ball.classList.add("is-uploading");
     court.classList.remove("shot-made","shot-missed");
-    message(notice, "Swish! Uploading your photo…");
+    message(notice, "You released it… shot in the air!");
+    const startX = release.x, startY = release.y;
+    const dx = target.x-startX, dy = target.y-startY;
+    const lift = Math.min(95, 30 + pullDistance*.22);
+    const duration = Math.max(420, Math.min(850, 850-pullDistance*1.2));
     try {
+      if (ball.animate) {
+        const animation = ball.animate([
+          {left:startX+"px",top:startY+"px",transform:"rotate(0deg) scale(1)",opacity:1},
+          {left:(startX+dx*.48)+"px",top:(startY+dy*.48-lift)+"px",transform:"rotate(260deg) scale(.88)",opacity:1,offset:.48},
+          {left:target.x+"px",top:target.y+"px",transform:"rotate(560deg) scale(.58)",opacity:.85}
+        ], {duration,easing:"cubic-bezier(.2,.7,.25,1)",fill:"forwards"});
+        await animation.finished;
+      } else {
+        ball.style.left=target.x+"px"; ball.style.top=target.y+"px";
+        await new Promise(resolve=>setTimeout(resolve,duration));
+      }
       const safeName = chosenFile.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(-90) || "photo";
       const path = activeTeamKey + "/" + activeUser.id + "/" + Date.now() + "-" + safeName;
       const { error } = await supabaseClient.storage.from("bc-ai-photos").upload(path, chosenFile, {contentType:chosenFile.type, upsert:false});
       if (error) throw error;
       court.classList.add("shot-made");
       $("#bc-ai-score-flash").textContent = "SWISH! PHOTO UPLOADED ✓";
-      message(notice, "Nice shot! Your photo was uploaded successfully.");
+      message(notice, "Great shot! Your photo was uploaded successfully.");
       chosenFile = null; input.value = ""; selected.hidden = true; selected.textContent = ""; court.classList.remove("has-photo");
       await loadBCAIGallery();
     } catch (error) {
@@ -628,6 +644,7 @@ async function renderBCAIPage(content) {
     } finally {
       busy = false; input.disabled = false; ball.classList.remove("is-uploading");
       ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
+      if (ball.getAnimations) ball.getAnimations().forEach(animation=>animation.cancel());
     }
   }
   async function loadBCAIGallery() {
