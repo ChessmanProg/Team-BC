@@ -814,3 +814,28 @@ body:has(#login-panel:not(.hidden)) .lamp-scene .pull-chain.pulling {
     transform: translate(-36px, 13px) !important;
   }
 }
+
+
+/* Reliability fallback: keep sign-in usable even if the lamp animation fails. */
+body:has(#login-panel:not(.hidden)) #login-panel {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  position: relative !important;
+  z-index: 120 !important;
+}
+body:has(#signup-panel:not(.hidden)) #signup-panel,
+body:has(#recovery-panel:not(.hidden)) #recovery-panel {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 120 !important;
+}
+body:has(#team-selection:not(.hidden)),
+body:has(#workspace:not(.hidden)) {
+  overflow-y: auto;
+}
