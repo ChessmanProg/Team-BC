@@ -241,6 +241,8 @@ function enterTeam(teamKey) {
   teamSelection.classList.add("hidden");
   workspace.classList.remove("hidden");
   workspace.style.display = "grid";
+  // Reset any scroll position left over from login/team selection so the workspace starts at the top.
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   renderPage("overview");
 }
 async function signOut() {
