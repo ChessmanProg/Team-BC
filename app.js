@@ -7,14 +7,53 @@ const main = document.querySelector("main");
 const footer = document.querySelector("footer");
 const lampSwitch = $("#lampSwitch");
 if (lampSwitch) {
-  lampSwitch.addEventListener("click", () => {
+  let chainPointerStart = null;
+  let chainWasDragged = false;
+  let suppressChainClick = false;
+  const toggleLamp = () => {
     const isOn = document.body.classList.toggle("lamp-light-on");
     lampSwitch.classList.add("pulling");
-    window.setTimeout(() => lampSwitch.classList.remove("pulling"), 180);
+    window.setTimeout(() => lampSwitch.classList.remove("pulling"), 220);
     lampSwitch.setAttribute("aria-pressed", String(isOn));
     lampSwitch.setAttribute("aria-label", isOn ? "Turn off the lamp" : "Turn on the lamp");
     const hint = lampSwitch.querySelector(".chain-hint");
     if (hint) hint.textContent = isOn ? "Pull to turn off the light" : "Pull to turn on the light";
+  };
+
+  // Keep click/tap support, while also letting users physically pull the chain down.
+  lampSwitch.addEventListener("pointerdown", (event) => {
+    if (event.button !== undefined && event.button !== 0) return;
+    chainPointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    chainWasDragged = false;
+    suppressChainClick = false;
+    try { lampSwitch.setPointerCapture(event.pointerId); } catch (_) {}
+  });
+  lampSwitch.addEventListener("pointermove", (event) => {
+    if (!chainPointerStart || event.pointerId !== chainPointerStart.id) return;
+    const dx = event.clientX - chainPointerStart.x;
+    const dy = event.clientY - chainPointerStart.y;
+    if (Math.abs(dy) > 12 || Math.abs(dx) > 18) chainWasDragged = true;
+  });
+  lampSwitch.addEventListener("pointerup", (event) => {
+    if (!chainPointerStart || event.pointerId !== chainPointerStart.id) return;
+    const dy = event.clientY - chainPointerStart.y;
+    const dx = event.clientX - chainPointerStart.x;
+    const pulledDown = dy >= 18 && dy > Math.abs(dx) * 0.8;
+    if (pulledDown) {
+      toggleLamp();
+      suppressChainClick = true;
+    }
+    chainPointerStart = null;
+    if (suppressChainClick) window.setTimeout(() => { suppressChainClick = false; }, 350);
+  });
+  lampSwitch.addEventListener("pointercancel", () => { chainPointerStart = null; chainWasDragged = false; });
+  lampSwitch.addEventListener("click", (event) => {
+    if (suppressChainClick || chainWasDragged) {
+      event.preventDefault();
+      chainWasDragged = false;
+      return;
+    }
+    toggleLamp();
   });
 }
 const teamSelection = $("#team-selection");
