@@ -5,6 +5,18 @@ const workspace = $("#workspace");
 const loginPanel = $("#login-panel");
 const main = document.querySelector("main");
 const footer = document.querySelector("footer");
+const lampSwitch = $("#lampSwitch");
+if (lampSwitch) {
+  lampSwitch.addEventListener("click", () => {
+    const isOn = document.body.classList.toggle("lamp-light-on");
+    lampSwitch.classList.add("pulling");
+    window.setTimeout(() => lampSwitch.classList.remove("pulling"), 180);
+    lampSwitch.setAttribute("aria-pressed", String(isOn));
+    lampSwitch.setAttribute("aria-label", isOn ? "Turn off the lamp" : "Turn on the lamp");
+    const hint = lampSwitch.querySelector(".chain-hint");
+    if (hint) hint.textContent = isOn ? "Pull to turn off the light" : "Pull to turn on the light";
+  });
+}
 const teamSelection = $("#team-selection");
 const panels = [loginPanel, $("#signup-panel"), $("#recovery-panel")];
 const SUPABASE_URL = "https://asqyegtenygvgwwtazac.supabase.co";
