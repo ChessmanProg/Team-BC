@@ -970,3 +970,34 @@ body:has(#workspace:not(.hidden)) #workspace {
   display: grid !important;
   min-height: 100vh !important;
 }
+
+
+/* Make the lamp pull target easy to grab and reliably clickable. */
+body:has(main .login:not(.hidden)) .lamp-scene .pull-chain {
+  position: fixed !important;
+  display: block !important;
+  left: clamp(155px, calc(22vw + 65px), 365px) !important;
+  top: 145px !important;
+  width: 64px !important;
+  height: 150px !important;
+  min-width: 64px !important;
+  min-height: 150px !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  touch-action: none !important;
+  cursor: grab !important;
+  background: transparent !important;
+}
+body:has(main .login:not(.hidden)) .lamp-scene {
+  pointer-events: none !important;
+  z-index: 9998 !important;
+}
+body:has(main .login:not(.hidden)) .lamp-scene .pull-chain * {
+  pointer-events: none !important;
+}
+@media (max-width: 760px) {
+  body:has(main .login:not(.hidden)) .lamp-scene .pull-chain {
+    left: calc(50% + 2px) !important;
+    top: 145px !important;
+  }
+}
