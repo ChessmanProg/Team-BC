@@ -1194,3 +1194,35 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-ai-photo-actions button { flex:1; min-width:0; }
 #workspace .bc-ai-delete-button { border-color:rgba(255,110,110,.42); color:#ffd2d2; }
 #workspace .bc-ai-delete-button:hover { background:rgba(190,45,55,.2); border-color:rgba(255,110,110,.8); }
+
+
+/* Floating Coaching reminder: Chissmiss Time */
+.chissmiss-backdrop { position:fixed; inset:0; z-index:9999; display:grid; place-items:center; padding:20px; background:rgba(2,8,24,.68); backdrop-filter:blur(10px); animation:chissmiss-fade .22s ease-out; }
+.chissmiss-modal { position:relative; width:min(440px,100%); padding:36px 30px 28px; overflow:hidden; text-align:center; color:#eff9ff; border:1px solid rgba(147,218,255,.42); border-radius:28px; background:radial-gradient(ellipse at 50% -10%,rgba(68,164,255,.28),transparent 58%),linear-gradient(145deg,rgba(15,35,67,.97),rgba(5,17,39,.98)); box-shadow:0 30px 100px rgba(0,0,0,.5),0 0 55px rgba(70,166,255,.18),inset 0 1px rgba(255,255,255,.12); animation:chissmiss-pop .35s cubic-bezier(.2,.8,.2,1); }
+.chissmiss-close { position:absolute; top:12px; right:15px; width:34px; height:34px; border:1px solid rgba(255,255,255,.16); border-radius:50%; color:#d7eaff; background:rgba(255,255,255,.07); font-size:23px; cursor:pointer; }
+.chissmiss-sparkle { display:grid; place-items:center; width:54px; height:54px; margin:0 auto 14px; border:1px solid rgba(126,210,255,.38); border-radius:18px; color:#a8e4ff; background:rgba(91,174,255,.12); font-size:28px; box-shadow:0 0 28px rgba(85,176,255,.2); }
+.chissmiss-eyebrow { margin:0 0 8px; color:#92d9ff; font-size:10px; font-weight:800; letter-spacing:.22em; }
+.chissmiss-modal h2 { margin:0; font-size:clamp(25px,6vw,34px); letter-spacing:-.04em; }
+.chissmiss-message { margin:18px 0 16px; color:#e3f1ff; font-size:16px; line-height:1.7; }
+.chissmiss-message strong { color:#9de3ff; }
+.chissmiss-divider { width:54px; height:2px; margin:0 auto 14px; border-radius:2px; background:linear-gradient(90deg,transparent,#87d6ff,transparent); }
+.chissmiss-subtext { margin:0 0 22px; color:#a6bed8; font-size:12px; }
+.chissmiss-continue { width:100%; min-height:48px; border:1px solid rgba(160,226,255,.56); border-radius:14px; color:#07172c; background:linear-gradient(110deg,#b9edff,#78caff); box-shadow:0 8px 28px rgba(66,165,255,.2); font-weight:800; cursor:pointer; transition:transform .2s ease,box-shadow .2s ease; }
+.chissmiss-continue:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(66,165,255,.32); }
+@keyframes chissmiss-fade { from { opacity:0; } to { opacity:1; } }
+@keyframes chissmiss-pop { from { opacity:0; transform:translateY(16px) scale(.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+#workspace .bc-ai-comments { padding:10px; border-top:1px solid rgba(143,211,224,.18); }
+#workspace .bc-ai-comments-heading { display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:9px; }
+#workspace .bc-ai-comments-heading strong { font-size:11px; color:#d9f2ff; }
+#workspace .bc-ai-comments-heading span { font-size:9px; color:#8db8d0; }
+#workspace .bc-ai-comments-list { display:grid; gap:7px; max-height:180px; overflow:auto; }
+#workspace .bc-ai-comment { padding:8px; border:1px solid rgba(143,211,224,.14); border-radius:9px; background:rgba(2,17,32,.42); }
+#workspace .bc-ai-comment strong { font-size:10px; color:#aee6ff; }
+#workspace .bc-ai-comment time { float:right; font-size:9px; color:#789bb3; }
+#workspace .bc-ai-comment p { margin:5px 0 0; color:#d8eaf6; font-size:11px; line-height:1.45; white-space:pre-wrap; overflow-wrap:anywhere; }
+#workspace .bc-ai-no-comments { margin:0; color:#88a9bf; font-size:10px; line-height:1.5; }
+#workspace .bc-ai-comment-form { display:grid; gap:7px; margin-top:9px; }
+#workspace .bc-ai-comment-form textarea { width:100%; min-height:56px; resize:vertical; padding:9px; border:1px solid rgba(143,211,224,.24); border-radius:9px; color:#e8f6ff; background:rgba(2,17,32,.56); font:inherit; font-size:11px; }
+#workspace .bc-ai-comment-form textarea:focus { outline:2px solid rgba(126,208,255,.5); border-color:rgba(126,208,255,.65); }
+#workspace .bc-ai-comment-form button { justify-self:stretch; font-size:11px; }
+@media(prefers-reduced-motion:reduce) { .chissmiss-backdrop,.chissmiss-modal { animation:none; } }
