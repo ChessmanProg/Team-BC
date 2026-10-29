@@ -531,12 +531,6 @@ async function refreshRecordList(page) {
       if (row) showRecordForm(page, row);
     }));
     host.querySelectorAll("[data-delete]").forEach((button) => button.addEventListener("click", () => deleteRecord(page, button.dataset.delete)));
-    host.querySelectorAll("[data-meeting-link]").forEach((link) => link.addEventListener("click", (event) => {
-      event.preventDefault();
-      const meetingUrl = link.href;
-      window.open(meetingUrl, "_blank", "noopener,noreferrer");
-      window.alert("Don't Forget IC and Zoho Tagging");
-    }));
   } catch (error) { host.innerHTML = '<p class="notice">' + escapeHtml(friendlyError(error)) + '</p>'; }
 }
 function showRecordForm(page, row=null) {
