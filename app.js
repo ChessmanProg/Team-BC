@@ -281,15 +281,19 @@ function closeChissmissReminder() {
   const modal = document.getElementById("chissmiss-reminder");
   if (modal) modal.remove();
 }
-function showChissmissReminder() {
+function showChissmissReminder(meetingUrl) {
   closeChissmissReminder();
   const modal = document.createElement("div");
   modal.id = "chissmiss-reminder";
   modal.className = "chissmiss-backdrop";
-  modal.innerHTML = '<section class="chissmiss-modal" role="dialog" aria-modal="true" aria-labelledby="chissmiss-title"><button type="button" class="chissmiss-close" aria-label="Close reminder">×</button><div class="chissmiss-sparkle" aria-hidden="true">✦</div><p class="chissmiss-eyebrow">A LITTLE REMINDER</p><h2 id="chissmiss-title">Chissmiss Time 😉</h2><p class="chissmiss-message">Don\'t forget your <strong>IC</strong> and <strong>Zoho Tagging</strong> 😉</p><div class="chissmiss-divider"></div><p class="chissmiss-subtext">Get everything ready, then enjoy your meeting!</p><button type="button" class="chissmiss-continue">Chissmiss Time ✨</button></section>';
+  modal.innerHTML = '<section class="chissmiss-modal" role="dialog" aria-modal="true" aria-labelledby="chissmiss-title"><button type="button" class="chissmiss-close" aria-label="Close reminder">×</button><div class="chissmiss-sparkle" aria-hidden="true">✦</div><p class="chissmiss-eyebrow">A LITTLE REMINDER</p><h2 id="chissmiss-title">Chissmiss Time 😉</h2><p class="chissmiss-message">Don\'t forget your <strong>IC</strong> and <strong>Zoho Tagging</strong> 😉</p><div class="chissmiss-divider"></div><p class="chissmiss-subtext">Get everything ready, then join your meeting!</p><button type="button" class="chissmiss-continue">Chissmiss Time ✨</button></section>';
   document.body.appendChild(modal);
   modal.addEventListener("click", (event) => {
-    if (event.target === modal || event.target.closest(".chissmiss-close, .chissmiss-continue")) closeChissmissReminder();
+    if (event.target === modal || event.target.closest(".chissmiss-close")) closeChissmissReminder();
+  });
+  modal.querySelector(".chissmiss-continue").addEventListener("click", () => {
+    if (meetingUrl) window.location.href = meetingUrl;
+    else closeChissmissReminder();
   });
   modal.querySelector(".chissmiss-continue").focus();
 }
@@ -297,7 +301,7 @@ document.addEventListener("click", (event) => {
   const link = event.target.closest("a[data-meeting-link]");
   if (!link) return;
   event.preventDefault();
-  showChissmissReminder();
+  showChissmissReminder(link.href);
 });
 
 $("#back-teams").addEventListener("click", showTeamSelection);
