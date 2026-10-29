@@ -276,6 +276,30 @@ $("#change-password-toggle").addEventListener("click", () => {
   });
 });
 
+
+function closeChissmissReminder() {
+  const modal = document.getElementById("chissmiss-reminder");
+  if (modal) modal.remove();
+}
+function showChissmissReminder() {
+  closeChissmissReminder();
+  const modal = document.createElement("div");
+  modal.id = "chissmiss-reminder";
+  modal.className = "chissmiss-backdrop";
+  modal.innerHTML = '<section class="chissmiss-modal" role="dialog" aria-modal="true" aria-labelledby="chissmiss-title"><button type="button" class="chissmiss-close" aria-label="Close reminder">×</button><div class="chissmiss-sparkle" aria-hidden="true">✦</div><p class="chissmiss-eyebrow">A LITTLE REMINDER</p><h2 id="chissmiss-title">Chissmiss Time 😉</h2><p class="chissmiss-message">Don\'t forget your <strong>IC</strong> and <strong>Zoho Tagging</strong> 😉</p><div class="chissmiss-divider"></div><p class="chissmiss-subtext">Get everything ready, then enjoy your meeting!</p><button type="button" class="chissmiss-continue">Chissmiss Time ✨</button></section>';
+  document.body.appendChild(modal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal || event.target.closest(".chissmiss-close, .chissmiss-continue")) closeChissmissReminder();
+  });
+  modal.querySelector(".chissmiss-continue").focus();
+}
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("a[data-meeting-link]");
+  if (!link) return;
+  event.preventDefault();
+  showChissmissReminder();
+});
+
 $("#back-teams").addEventListener("click", showTeamSelection);
 
 const pageInfo = {
@@ -745,6 +769,82 @@ async function renderBCAIPage(content) {
         const img = document.createElement("img"); img.src = signed.signedUrl; img.alt = item.name; img.loading = "lazy";
         const caption = document.createElement("span"); caption.textContent = item.name;
         preview.append(img, caption); card.appendChild(preview);
+
+        const commentsPanel = document.createElement("div");
+        commentsPanel.className = "bc-ai-comments";
+        const commentsHeading = document.createElement("div");
+        commentsHeading.className = "bc-ai-comments-heading";
+        commentsHeading.innerHTML = '<strong>💬 Photo reminders</strong><span>Team notes</span>';
+        const commentsList = document.createElement("div");
+        commentsList.className = "bc-ai-comments-list";
+        commentsList.innerHTML = '<p class="muted">Loading comments…</p>';
+        const commentForm = document.createElement("form");
+        commentForm.className = "bc-ai-comment-form";
+        const commentInput = document.createElement("textarea");
+        commentInput.name = "comment";
+        commentInput.maxLength = 1000;
+        commentInput.rows = 2;
+        commentInput.placeholder = "Add a reminder or note about this photo…";
+        commentInput.setAttribute("aria-label", "Comment on this photo");
+        commentInput.required = true;
+        const commentSubmit = document.createElement("button");
+        commentSubmit.type = "submit";
+        commentSubmit.className = "small-button";
+        commentSubmit.textContent = "Add comment";
+        commentForm.append(commentInput, commentSubmit);
+        commentsPanel.append(commentsHeading, commentsList, commentForm);
+        card.appendChild(commentsPanel);
+        async function refreshPhotoComments() {
+          commentsList.innerHTML = '<p class="muted">Loading comments…</p>';
+          try {
+            const { data: comments, error: commentsError } = await supabaseClient.from("team_bc_ai_photo_comments")
+              .select("id, user_id, comment_text, created_at").eq("team_key", activeTeamKey).eq("photo_path", item.path)
+              .order("created_at", {ascending:true});
+            if (commentsError) throw commentsError;
+            commentsList.innerHTML = "";
+            if (!comments?.length) {
+              commentsList.innerHTML = '<p class="bc-ai-no-comments">No reminders yet. Leave the first note ✨</p>';
+              return;
+            }
+            for (const comment of comments) {
+              const entry = document.createElement("article");
+              entry.className = "bc-ai-comment";
+              const author = document.createElement("strong");
+              author.textContent = comment.user_id === activeUser?.id ? "You" : "Team member";
+              const date = document.createElement("time");
+              date.dateTime = comment.created_at;
+              date.textContent = formatDate(comment.created_at, true);
+              const body = document.createElement("p");
+              body.textContent = comment.comment_text;
+              entry.append(author, date, body);
+              commentsList.appendChild(entry);
+            }
+          } catch (error) {
+            commentsList.innerHTML = '<p class="bc-ai-no-comments">Comments need to be enabled in Supabase before they can be loaded.</p>';
+          }
+        }
+        commentForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const text = commentInput.value.trim();
+          if (!text) return;
+          commentSubmit.disabled = true;
+          commentSubmit.textContent = "Saving…";
+          try {
+            const { error: insertCommentError } = await supabaseClient.from("team_bc_ai_photo_comments").insert({
+              team_key: activeTeamKey, photo_path: item.path, user_id: activeUser.id, comment_text: text
+            });
+            if (insertCommentError) throw insertCommentError;
+            commentInput.value = "";
+            await refreshPhotoComments();
+          } catch (error) {
+            message(notice, "Couldn't save the photo comment. Make sure the BC AI comments SQL setup has been run. " + friendlyError(error));
+          } finally {
+            commentSubmit.disabled = false;
+            commentSubmit.textContent = "Add comment";
+          }
+        });
+        await refreshPhotoComments();
+
         if (isEditablePhotoPath(item.path)) {
           const actions = document.createElement("div"); actions.className = "bc-ai-photo-actions";
           const replaceButton = document.createElement("button"); replaceButton.type = "button"; replaceButton.className = "small-button"; replaceButton.textContent = "Replace"; replaceButton.addEventListener("click", () => { pendingReplacePath = item.path; replaceInput.click(); });
