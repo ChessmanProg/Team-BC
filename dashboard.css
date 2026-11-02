@@ -1226,3 +1226,21 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-ai-comment-form textarea:focus { outline:2px solid rgba(126,208,255,.5); border-color:rgba(126,208,255,.65); }
 #workspace .bc-ai-comment-form button { justify-self:stretch; font-size:11px; }
 @media(prefers-reduced-motion:reduce) { .chissmiss-backdrop,.chissmiss-modal { animation:none; } }
+
+
+/* BC AI Comment Template workspace */
+#workspace .bc-template-toolbar { display:grid; grid-template-columns:minmax(0,1fr) minmax(180px,240px); gap:10px; margin:18px 0; }
+#workspace .bc-template-toolbar input,#workspace .bc-template-toolbar select { width:100%; min-width:0; padding:11px 13px; border:1px solid rgba(143,211,224,.24); border-radius:11px; color:#e8f6ff; background:rgba(2,17,32,.68); font:inherit; }
+#workspace .bc-template-toolbar select option,#workspace .bc-template-form select option { color:#102033; }
+#workspace .bc-template-form { margin:14px 0 18px; }
+#workspace .bc-template-full { grid-column:1/-1; }
+#workspace .bc-template-full textarea { min-height:130px; resize:vertical; }
+#workspace .bc-template-list { display:grid; gap:12px; }
+#workspace .bc-template-card { padding:17px; border:1px solid rgba(143,211,224,.18); border-radius:16px; background:linear-gradient(145deg,rgba(13,39,65,.72),rgba(4,18,39,.78)); }
+#workspace .bc-template-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+#workspace .bc-template-card h3 { margin:0 0 7px; color:#eaf8ff; font-size:16px; }
+#workspace .bc-template-category { display:inline-flex; padding:4px 9px; border:1px solid rgba(119,205,231,.24); border-radius:30px; color:#9edcf0; background:rgba(71,164,199,.1); font-size:10px; }
+#workspace .bc-template-copy { margin:14px 0; color:#d5e8f5; font-size:13px; line-height:1.7; white-space:pre-wrap; overflow-wrap:anywhere; }
+#workspace .bc-template-actions { display:flex; flex-wrap:wrap; gap:8px; }
+#workspace .bc-template-actions button { min-width:105px; }
+@media(max-width:640px) { #workspace .bc-template-toolbar { grid-template-columns:1fr; } #workspace .bc-template-card-top { flex-direction:column; } }
