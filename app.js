@@ -879,7 +879,7 @@ async function renderBCAICommentTemplates(content) {
   const categoryFilter = $("#template-category-filter");
   let templates = [];
   let editingId = null;
-  const categories = ["General","Positive feedback","Coaching","Attendance","Quality","Productivity","Reminders","Other"];
+  const categories = ["General","Allowed Variation","Misspelling","Different Brand","Walmart Brand","PCB Unrelated"];
   categories.forEach((category) => { const option=document.createElement("option"); option.value=category; option.textContent=category; categoryFilter.appendChild(option); });
   async function loadTemplates() {
     host.innerHTML = '<p class="muted">Loading templates…</p>';
