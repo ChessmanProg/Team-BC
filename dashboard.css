@@ -1244,3 +1244,76 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-template-actions { display:flex; flex-wrap:wrap; gap:8px; }
 #workspace .bc-template-actions button { min-width:105px; }
 @media(max-width:640px) { #workspace .bc-template-toolbar { grid-template-columns:1fr; } #workspace .bc-template-card-top { flex-direction:column; } }
+
+
+/* BC AI Comment Templates — compact claymorphism treatment */
+#workspace .bc-template-panel {
+  min-height: 0;
+  margin-top: 12px;
+  padding: 15px;
+  border: 1px solid rgba(169, 222, 211, .16);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(28, 54, 59, .78), rgba(11, 31, 39, .82));
+  box-shadow: 8px 8px 20px rgba(0, 8, 14, .26), -5px -5px 16px rgba(157, 220, 204, .035), inset 1px 1px 0 rgba(230, 255, 246, .07);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+#workspace .bc-template-panel:before { display: none; }
+#workspace .bc-template-panel .panel-heading { margin-bottom: 10px; gap: 10px; }
+#workspace .bc-template-panel .panel-heading h2 { margin-bottom: 4px; font-size: 18px; }
+#workspace .bc-template-panel .panel-heading p { font-size: 12px; line-height: 1.4; }
+#workspace .bc-template-panel .action-button { padding: 8px 12px !important; border-radius: 11px; font-size: 12px; }
+#workspace .bc-template-toolbar { grid-template-columns: minmax(0,1fr) minmax(150px,210px); gap: 8px; margin: 10px 0; }
+#workspace .bc-template-toolbar input,
+#workspace .bc-template-toolbar select {
+  min-height: 36px;
+  padding: 8px 11px;
+  border: 1px solid rgba(169, 222, 211, .15);
+  border-radius: 11px;
+  background: linear-gradient(145deg, rgba(7, 26, 33, .78), rgba(24, 48, 52, .72));
+  box-shadow: inset 3px 3px 7px rgba(0, 8, 13, .22), inset -2px -2px 6px rgba(169, 222, 211, .035);
+  font-size: 12px;
+}
+#workspace .bc-template-list { grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 9px; }
+#workspace .bc-template-card {
+  padding: 11px 12px;
+  border: 1px solid rgba(169, 222, 211, .14);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(36, 64, 66, .84), rgba(14, 34, 42, .88));
+  box-shadow: 5px 5px 12px rgba(0, 8, 14, .24), -3px -3px 10px rgba(157, 220, 204, .035), inset 1px 1px 0 rgba(230, 255, 246, .06);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+#workspace .bc-template-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(169, 222, 211, .25);
+  box-shadow: 7px 7px 15px rgba(0, 8, 14, .26), -3px -3px 10px rgba(157, 220, 204, .05), inset 1px 1px 0 rgba(230, 255, 246, .07);
+}
+#workspace .bc-template-card-top { gap: 8px; }
+#workspace .bc-template-card h3 { margin: 0 0 5px; font-size: 13px; }
+#workspace .bc-template-category { padding: 3px 7px; border-radius: 8px; font-size: 9px; }
+#workspace .bc-template-copy { margin: 8px 0; font-size: 11px; line-height: 1.5; }
+#workspace .bc-template-actions { gap: 6px; }
+#workspace .bc-template-actions button { min-width: 0; min-height: 30px; padding: 6px 9px !important; border-radius: 9px; font-size: 10px; }
+#workspace .bc-template-form { margin: 10px 0 12px; padding: 13px; border: 1px solid rgba(169, 222, 211, .15); border-radius: 14px; background: linear-gradient(145deg, rgba(30, 57, 59, .86), rgba(11, 31, 39, .9)); box-shadow: 5px 5px 12px rgba(0,8,14,.2), inset 1px 1px 0 rgba(230,255,246,.05); }
+#workspace .bc-template-form h3 { margin: 0 0 9px; font-size: 14px; }
+#workspace .bc-template-form .form-grid { gap: 9px; }
+#workspace .bc-template-form .form-grid label { gap: 5px; font-size: 11px; }
+#workspace .bc-template-form .form-grid input,
+#workspace .bc-template-form .form-grid select,
+#workspace .bc-template-form .form-grid textarea {
+  min-height: 34px;
+  padding: 7px 9px;
+  border: 1px solid rgba(169, 222, 211, .15);
+  border-radius: 9px;
+  background: linear-gradient(145deg, rgba(7,26,33,.82), rgba(24,48,52,.72));
+  box-shadow: inset 2px 2px 5px rgba(0,8,13,.22), inset -2px -2px 5px rgba(169,222,211,.03);
+  font-size: 12px;
+}
+#workspace .bc-template-form .form-grid textarea { min-height: 86px; }
+#workspace .bc-template-form .form-actions { margin-top: 10px; }
+@media(max-width:640px) {
+  #workspace .bc-template-panel { padding: 12px; }
+  #workspace .bc-template-toolbar { grid-template-columns: 1fr; }
+  #workspace .bc-template-list { grid-template-columns: 1fr; }
+  #workspace .bc-template-panel .panel-heading { align-items: flex-start; flex-direction: column; }
+}
+@media(prefers-reduced-motion:reduce) { #workspace .bc-template-card { transition: none; } }
