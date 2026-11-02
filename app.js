@@ -313,6 +313,7 @@ const pageInfo = {
   "ic-logs": ["IC Logs", "Record and review incidents and interactions."],
   "quick-links": ["Quick Links", "Save useful team links in one place."],
   "bc-ai": ["BC AI", "Shoot your photo into the hoop to upload it."],
+  "bc-ai-comment-template": ["BC AI COMMENT TEMPLATE", "Create, organize, and copy your team comment templates."],
   "team-requests": ["Team requests", "Review requests to join this team."]
 };
 const pageConfig = {
@@ -871,6 +872,62 @@ async function renderBCAIPage(content) {
   $("#bc-ai-refresh").addEventListener("click", loadBCAIGallery);
   await loadBCAIGallery();
 }
+async function renderBCAICommentTemplates(content) {
+  content.innerHTML = '<section class="content-panel bc-template-panel"><div class="panel-heading"><div><h2>BC AI Comment Templates</h2><p class="muted">Saved for ' + escapeHtml(teamDisplay(activeTeam())) + ' only. Copy a template whenever you need it.</p></div><button type="button" class="primary action-button" id="add-comment-template">+ Add template</button></div><div class="bc-template-toolbar"><input id="template-search" type="search" placeholder="Search templates…"><select id="template-category-filter"><option value="">All categories</option></select></div><div id="comment-template-form-host"></div><p class="notice" id="comment-template-notice" role="status"></p><div id="comment-template-list"><p class="muted">Loading templates…</p></div></section>';
+  const host = $("#comment-template-list");
+  const formHost = $("#comment-template-form-host");
+  const categoryFilter = $("#template-category-filter");
+  let templates = [];
+  let editingId = null;
+  const categories = ["General","Positive feedback","Coaching","Attendance","Quality","Productivity","Reminders","Other"];
+  categories.forEach((category) => { const option=document.createElement("option"); option.value=category; option.textContent=category; categoryFilter.appendChild(option); });
+  async function loadTemplates() {
+    host.innerHTML = '<p class="muted">Loading templates…</p>';
+    const {data,error}=await supabaseClient.from("team_bc_ai_comment_templates").select("id,team_key,title,category,comment_text,created_by,created_at").eq("team_key",activeTeamKey).order("created_at",{ascending:false});
+    if(error) throw error;
+    templates=data||[];
+    renderList();
+  }
+  function renderList() {
+    const query=$("#template-search").value.trim().toLowerCase();
+    const category=categoryFilter.value;
+    const filtered=templates.filter(item=>(!category||item.category===category)&&(!query||[item.title,item.category,item.comment_text].some(value=>String(value||"").toLowerCase().includes(query))));
+    host.innerHTML="";
+    if(!filtered.length){host.innerHTML='<div class="empty-state">No templates found. Add your first comment template.</div>';return;}
+    filtered.forEach(item=>{
+      const card=document.createElement("article");card.className="bc-template-card";
+      const top=document.createElement("div");top.className="bc-template-card-top";
+      const heading=document.createElement("div");
+      const title=document.createElement("h3");title.textContent=item.title;
+      const tag=document.createElement("span");tag.className="bc-template-category";tag.textContent=item.category||"General";
+      heading.append(title,tag);top.appendChild(heading);
+      const body=document.createElement("p");body.className="bc-template-copy";body.textContent=item.comment_text;
+      const actions=document.createElement("div");actions.className="bc-template-actions";
+      const copy=document.createElement("button");copy.type="button";copy.className="primary action-button";copy.textContent="Copy comment";
+      copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(item.comment_text);message($("#comment-template-notice"),"Copied: "+item.title);}catch(error){const area=document.createElement("textarea");area.value=item.comment_text;document.body.appendChild(area);area.select();const ok=document.execCommand("copy");area.remove();message($("#comment-template-notice"),ok?"Copied: "+item.title:"Copy failed. Select and copy the comment manually.");}});
+      actions.appendChild(copy);
+      if(item.created_by===activeUser.id){
+        const edit=document.createElement("button");edit.type="button";edit.className="small-button";edit.textContent="Edit";edit.addEventListener("click",()=>showForm(item));actions.appendChild(edit);
+        const remove=document.createElement("button");remove.type="button";remove.className="small-button danger";remove.textContent="Delete";remove.addEventListener("click",async()=>{if(!confirm("Delete this comment template?"))return;remove.disabled=true;const {error}=await supabaseClient.from("team_bc_ai_comment_templates").delete().eq("id",item.id).eq("team_key",activeTeamKey).eq("created_by",activeUser.id);if(error){message($("#comment-template-notice"),friendlyError(error));remove.disabled=false;return;}message($("#comment-template-notice"),"Template deleted.");await loadTemplates();});actions.appendChild(remove);
+      }
+      card.append(top,body,actions);host.appendChild(card);
+    });
+  }
+  function showForm(item=null) {
+    editingId=item?.id||null;
+    formHost.innerHTML='<form id="comment-template-form" class="record-form bc-template-form"><h3>'+(item?"Edit comment template":"New comment template")+'</h3><div class="form-grid"><label>Template title<input name="title" maxlength="100" required></label><label>Category<select name="category">'+categories.map(value=>'<option>'+escapeHtml(value)+'</option>').join("")+'</select></label><label class="bc-template-full">Comment text<textarea name="comment_text" rows="5" maxlength="3000" required placeholder="Write the comment you want to reuse…"></textarea></label></div><div class="form-actions"><button type="submit" class="primary action-button">Save template</button><button type="button" class="small-button" id="cancel-comment-template">Cancel</button></div></form>';
+    const form=$("#comment-template-form");
+    if(item){form.elements.title.value=item.title;form.elements.category.value=item.category||"General";form.elements.comment_text.value=item.comment_text;}
+    $("#cancel-comment-template").addEventListener("click",()=>{formHost.innerHTML="";editingId=null;});
+    form.addEventListener("submit",async event=>{event.preventDefault();const submit=form.querySelector('[type="submit"]');submit.disabled=true;const payload={title:form.elements.title.value.trim(),category:form.elements.category.value,comment_text:form.elements.comment_text.value.trim()};if(!payload.title||!payload.comment_text){submit.disabled=false;return;}
+      try{let result;if(editingId)result=await supabaseClient.from("team_bc_ai_comment_templates").update(payload).eq("id",editingId).eq("team_key",activeTeamKey).eq("created_by",activeUser.id);else result=await supabaseClient.from("team_bc_ai_comment_templates").insert({...payload,team_key:activeTeamKey,created_by:activeUser.id});if(result.error)throw result.error;formHost.innerHTML="";editingId=null;message($("#comment-template-notice"),item?"Template updated.":"Template saved.");await loadTemplates();}catch(error){message($("#comment-template-notice"),"Could not save template. "+friendlyError(error));}finally{submit.disabled=false;}
+    });
+  }
+  $("#add-comment-template").addEventListener("click",()=>showForm());
+  $("#template-search").addEventListener("input",renderList);
+  categoryFilter.addEventListener("change",renderList);
+  try{await loadTemplates();}catch(error){host.innerHTML='<div class="empty-state">Could not load templates. Run the BC AI Comment Template SQL setup in your Supabase project, then refresh this page.<br><small>'+escapeHtml(friendlyError(error))+'</small></div>';}
+}
 async function renderTeamRequests(content) {
   if (!canManageActiveTeam()) throw new Error("Only this team's admins can review requests.");
   const { data: requests, error } = await supabaseClient.from("team_join_requests")
@@ -897,7 +954,7 @@ async function renderPage(page) {
   sessionStorage.setItem("teamBcSelectedTeam", activeTeamKey);
   sessionStorage.setItem("teamBcCurrentPage", pageInfo[page] ? page : "overview");
   if (!workspace.classList.contains("hidden")) {
-    setBackgroundVideo(page === "overview" ? "overview-background.mp4" : ["agents", "coaching", "ic-logs", "quick-links"].includes(page) ? "ic-logs-background.mp4" : "ocean-background.mp4");
+    setBackgroundVideo(page === "overview" ? "overview-background.mp4" : ["agents", "coaching", "ic-logs", "quick-links", "bc-ai-comment-template"].includes(page) ? "ic-logs-background.mp4" : "ocean-background.mp4");
   }
   const [title, subtitle] = pageInfo[page] || pageInfo.overview;
   $("#crumb").textContent = title; $("#crumb").dataset.page = page;
@@ -910,6 +967,7 @@ async function renderPage(page) {
   try {
     if (page === "overview") await renderOverview(content);
     else if (page === "bc-ai") await renderBCAIPage(content);
+    else if (page === "bc-ai-comment-template") await renderBCAICommentTemplates(content);
     else if (page === "team-requests") await renderTeamRequests(content);
     else await renderRecordsPage(page, content);
   } catch (error) {
