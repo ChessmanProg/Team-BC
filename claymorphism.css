@@ -334,3 +334,116 @@ body:has(#workspace:not(.hidden)) .ambient-background {
   border-color:#9a82dc !important;
   box-shadow:0 5px 15px rgba(85,65,145,.1) !important;
 }
+
+
+/* Reference-matched clay UI: crisp white page with soft raised lavender-white
+   surfaces and purple clay controls. Avoid bright gradients and ambient art. */
+html:has(#workspace:not(.hidden)),
+body:has(#workspace:not(.hidden)),
+html:has(#team-selection:not(.hidden)),
+body:has(#team-selection:not(.hidden)) {
+  background:#fff !important;
+  background-image:none !important;
+}
+#workspace:not(.hidden),
+#workspace:not(.hidden) .app-shell,
+#workspace:not(.hidden) .workspace-main,
+#workspace:not(.hidden) .workspace-main::before,
+#workspace:not(.hidden) .workspace-main::after,
+#team-selection:not(.hidden) {
+  background:#fff !important;
+  background-image:none !important;
+}
+#workspace .sidebar {
+  background:#f8f6ff !important;
+  border:0 !important;
+  border-radius:28px !important;
+  box-shadow:8px 8px 18px #e3def2,-8px -8px 18px #fff !important;
+}
+#workspace .nav-item {
+  color:#4b2b9d !important;
+  background:#f8f6ff !important;
+  border:1px solid #fff !important;
+  border-radius:18px !important;
+  box-shadow:4px 4px 8px #e4dff3,-4px -4px 8px #fff !important;
+}
+#workspace .nav-item:hover {
+  background:#f7f4ff !important;
+  border:1px solid #d7cafb !important;
+  box-shadow:inset 2px 2px 5px #e5def5,inset -2px -2px 5px #fff !important;
+}
+#workspace .nav-item.active {
+  color:#fff !important;
+  background:#7040d8 !important;
+  border:1px solid #7040d8 !important;
+  border-radius:18px !important;
+  box-shadow:5px 6px 10px #cfc3ed,inset 2px 2px 4px #a78ce9,inset -2px -2px 4px #5125b2 !important;
+}
+#workspace .stat,#workspace .content-panel,#workspace .link-card,
+#workspace .daily-quote-card,#workspace .bc-template-panel,
+#workspace .bc-ai-photo-card,#workspace .bc-template-card {
+  color:#34206f !important;
+  background:#f8f6ff !important;
+  border:1px solid #fff !important;
+  border-radius:26px !important;
+  box-shadow:8px 8px 18px #e2dcf1,-8px -8px 18px #fff,inset 1px 1px 2px #fff !important;
+}
+#workspace .content-panel:before { display:none !important; }
+#workspace .content-panel h2,#workspace .content-panel h3,
+#workspace .stat strong,#workspace .bc-ai-photo-card span,
+#workspace .bc-template-card h3 { color:#4d2aab !important; }
+#workspace .stat small,#workspace .content-panel>.muted,
+#workspace .page-head .muted,#workspace .topbar .muted { color:#796ba5 !important; }
+#workspace input,#workspace select,#workspace textarea,
+#workspace .form-grid input,#workspace .form-grid select,#workspace .form-grid textarea {
+  color:#38257c !important;
+  background:#f8f6ff !important;
+  border:1px solid #fff !important;
+  border-radius:15px !important;
+  box-shadow:inset 4px 4px 8px #e4def3,inset -4px -4px 8px #fff !important;
+}
+#workspace .small-button,#workspace .action-button,#workspace button.primary {
+  color:#fff !important;
+  background:#7040d8 !important;
+  border:1px solid #7040d8 !important;
+  border-radius:16px !important;
+  box-shadow:5px 6px 10px #d0c4ed,inset 2px 2px 4px #a78ce9,inset -2px -2px 4px #5125b2 !important;
+}
+#workspace .bc-ai-court {
+  background:#f8f6ff !important;
+  border:2px dashed #b8a3ed !important;
+  border-radius:24px !important;
+  box-shadow:inset 5px 5px 10px #e4def3,inset -5px -5px 10px #fff !important;
+}
+#workspace .bc-ai-comment {
+  background:#f8f6ff !important;
+  border:1px solid #fff !important;
+  border-radius:18px !important;
+  box-shadow:4px 4px 8px #e4def3,-4px -4px 8px #fff !important;
+}
+#team-selection .team-selection-inner {
+  color:#34206f !important;
+  background:#f8f6ff !important;
+  border:1px solid #fff !important;
+  border-radius:30px !important;
+  box-shadow:10px 10px 20px #e2dcf1,-10px -10px 20px #fff !important;
+}
+#team-selection .team-card {
+  color:#34206f !important;
+  background:#f8f6ff !important;
+  border:1px solid #fff !important;
+  border-radius:26px !important;
+  box-shadow:8px 8px 16px #e2dcf1,-8px -8px 16px #fff,inset 1px 1px 2px #fff !important;
+}
+#team-selection .team-card-icon {
+  color:#7040d8 !important;
+  background:#f8f6ff !important;
+  border:1px solid #fff !important;
+  border-radius:22px !important;
+  box-shadow:inset 4px 4px 8px #e4def3,inset -4px -4px 8px #fff !important;
+}
+#team-selection .team-card:hover {
+  transform:translateY(-2px) !important;
+  border-color:#d7cafb !important;
+  box-shadow:10px 10px 18px #ded7ef,-8px -8px 16px #fff !important;
+}
