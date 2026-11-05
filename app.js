@@ -117,7 +117,7 @@ async function showTeamRequestChoice(user) {
     return;
   }
   teamSelection.innerHTML = '<div class="team-selection-inner"><p class="eyebrow">WELCOME TO TEAM BC</p><h1>Choose your team</h1><p class="muted">Your choice will be sent to that team’s admin for approval. You cannot change it yourself after submitting.</p><div class="team-card-grid">' +
-    [{team_key:"chenn",display_name:"Team Chenn BC AI"},{team_key:"gemma",display_name:"Team Gemma BC AI"},{team_key:"lev",display_name:"Team Lev BC AI"}].map((team) => '<button type="button" class="team-card" data-request-team="' + team.team_key + '"><span class="team-card-icon">' + ({chenn:"☀",gemma:"〰",lev:"♥"}[team.team_key]) + '</span><strong>' + escapeHtml(team.display_name) + '</strong><small>Request access <span>→</span></small></button>').join("") +
+    [{team_key:"chenn",display_name:"Team Chenn BC AI"},{team_key:"gemma",display_name:"Team Gemma BC AI"},{team_key:"lev",display_name:"Team Lev BC AI"}].map((team) => '<button type="button" class="team-card" data-request-team="' + team.team_key + '"><span class="team-card-icon">' + ({chenn:"☀",gemma:"〰",lev:"🦁"}[team.team_key]) + '</span><strong>' + escapeHtml(team.display_name) + '</strong><small>Request access <span>→</span></small></button>').join("") +
     '</div><p class="notice" id="team-selection-notice" role="status"></p><button type="button" class="text-button" id="request-signout">Sign out</button></div>';
   teamSelection.querySelectorAll("[data-request-team]").forEach((button) => button.addEventListener("click", async () => {
     teamSelection.querySelectorAll("[data-request-team]").forEach((item) => item.disabled = true);
@@ -139,7 +139,7 @@ function showTeamSelection() {
   workspace.style.display = "none";
   teamSelection.classList.remove("hidden");
   teamSelection.innerHTML = '<div class="team-selection-inner"><p class="eyebrow">WELCOME TO TEAM BC</p><h1>Choose your team</h1><p class="muted">Only teams assigned to your account are shown.</p><div class="team-card-grid">' +
-    activeTeams.map((team) => '<button type="button" class="team-card" data-team-key="' + escapeHtml(team.team_key) + '"><span class="team-card-icon">' + ({chenn:'☀',gemma:'〰',lev:'♥'}[team.team_key] || '✦') + '</span><strong>' + escapeHtml(teamDisplay(team)) + '</strong><small>Open team workspace <span>→</span></small></button>').join("") +
+    activeTeams.map((team) => '<button type="button" class="team-card" data-team-key="' + escapeHtml(team.team_key) + '"><span class="team-card-icon">' + ({chenn:'☀',gemma:'〰',lev:'🦁'}[team.team_key] || '✦') + '</span><strong>' + escapeHtml(teamDisplay(team)) + '</strong><small>Open team workspace <span>→</span></small></button>').join("") +
     '</div><p class="notice" id="team-selection-notice" role="status"></p><button type="button" class="text-button" id="selection-signout">Sign out</button></div>';
   teamSelection.querySelectorAll("[data-team-key]").forEach((button) => button.addEventListener("click", () => enterTeam(button.dataset.teamKey)));
   $("#selection-signout").addEventListener("click", signOut);
