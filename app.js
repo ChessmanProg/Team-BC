@@ -191,6 +191,23 @@ async function openAuthenticatedWorkspace(user, memberships, teams) {
   else if (!memberships.length) await showTeamRequestChoice(user);
   else showTeamSelection();
 }
+$("#google-signin").addEventListener("click", async () => {
+  if (!supabaseClient) return message(loginNotice, "Authentication library did not load. Check your internet connection and refresh.");
+  const button = $("#google-signin");
+  button.disabled = true;
+  message(loginNotice, "Redirecting to Google…");
+  try {
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: "https://chessmanprog.github.io/Team-BC/" }
+    });
+    if (error) throw error;
+  } catch (error) {
+    message(loginNotice, friendlyError(error));
+    button.disabled = false;
+  }
+});
+
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!supabaseClient) return message(loginNotice, "Authentication library did not load. Check your internet connection and refresh.");
