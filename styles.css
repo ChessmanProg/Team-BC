@@ -119,3 +119,12 @@ body:has(#login-panel:not(.hidden)) {
   background: rgba(5, 18, 38, .72);
 }
 .daily-schedule-filter .muted { flex-basis: 100%; margin: 0; font-size: 12px; }
+
+
+/* Google OAuth sign-in */
+.google-signin-button{width:100%;min-height:48px;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid rgba(205,225,245,.42);border-radius:10px;background:#fff;color:#202124;font:600 14px Inter,system-ui,sans-serif;cursor:pointer;transition:background .18s,border-color .18s}
+.google-signin-button:hover{background:#f7f9fc;border-color:#b7c4d5}
+.google-signin-button:disabled{opacity:.65;cursor:wait}
+.google-g{font-family:Arial,sans-serif;font-size:21px;font-weight:800;background:conic-gradient(from -45deg,#4285f4 0deg 90deg,#34a853 90deg 180deg,#fbbc05 180deg 250deg,#ea4335 250deg 310deg,#4285f4 310deg);background-clip:text;-webkit-background-clip:text;color:transparent}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:17px 0;color:var(--muted);font-size:11px;letter-spacing:.04em}
+.auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:var(--line)}
