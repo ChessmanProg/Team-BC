@@ -412,9 +412,18 @@ function getDailyQuote() {
 async function renderOverview(content) {
   const counts = await loadCounts();
   const quote = getDailyQuote();
-  content.innerHTML = '<div class="stat-grid">' +
-    [["TOTAL AGENTS",counts[0]],["COACHING SESSIONS",counts[1]],["TOTAL IC LOGS",counts[2]],["QUICK LINKS",counts[3]]].map(([label,count]) => '<article class="stat"><small>' + label + '</small><strong>' + count + '</strong></article>').join("") +
-    '</div><section class="daily-quote-card" aria-labelledby="daily-quote-title"><div class="daily-quote-magic" aria-hidden="true"><span class="quote-orbit"></span><span class="quote-orb quote-orb-one"></span><span class="quote-orb quote-orb-two"></span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span><span class="quote-sparkle">✦</span><span class="quote-sparkle">✧</span></div><div class="daily-quote-mark" aria-hidden="true">“</div><div class="daily-quote-copy"><p class="daily-quote-label" id="daily-quote-title">★ QUOTE OF THE DAY <span>✦</span></p><blockquote>' + escapeHtml(quote.text) + '</blockquote><p class="daily-quote-author">— ' + escapeHtml(quote.author) + '</p><p class="daily-quote-mantra"><span aria-hidden="true">♧</span> Better today than yesterday.<br>That’s progress.</p><div class="quote-pagination" aria-hidden="true"><i class="is-active"></i><i></i><i></i><i></i></div></div></section><section class="content-panel"><h2>Welcome to ' + escapeHtml(teamDisplay(activeTeam())) + '</h2><p class="muted">Your records are saved to this team only.</p><div class="empty-state">' + (canManageActiveTeam() ? "Choose a section from the left menu to add or manage records." : "Choose a section from the left menu to view records and open links.") + '</div></section>';
+  const labels = ["Agents", "Coaching sessions", "IC logs", "Quick links"];
+  const statCards = labels.map((label, index) => ({label, value: counts[index]}));
+  content.innerHTML =
+    '<section class="bc-overview">' +
+      '<div class="bc-overview-heading"><div><p class="bc-overview-kicker">WORKSPACE OVERVIEW</p><h2>Welcome back</h2><p class="bc-overview-subtitle">Your workspace at a glance. Keep every team moving forward.</p></div><span class="bc-live-status"><i></i> Workspace live</span></div>' +
+      '<div class="bc-overview-kpis">' + statCards.map((item, index) =>
+        '<article class="bc-overview-kpi"><div class="bc-kpi-top"><span>' + escapeHtml(item.label) + '</span><span class="bc-kpi-icon">' + ["◈","▤","◎","↗"][index] + '</span></div><strong>' + escapeHtml(item.value) + '</strong><small>Saved in this team workspace</small></article>'
+      ).join("") + '</div>' +
+      '<div class="bc-overview-lower"><section class="bc-overview-panel bc-overview-activity"><div class="bc-overview-panel-head"><div><h3>Workspace activity</h3><p>Current team records and updates</p></div><span class="bc-panel-dot">● Live</span></div><div class="bc-overview-empty"><span class="bc-empty-mark">✦</span><strong>Your team workspace is ready</strong><p>As your team adds records, your activity and performance will appear here.</p></div><div class="bc-overview-metric-row"><span>Team data</span><strong>Up to date</strong></div></section>' +
+      '<section class="bc-overview-panel bc-overview-quote"><div class="bc-overview-panel-head"><div><h3>Quote of the day</h3><p>A little motivation for your shift</p></div><span class="bc-quote-spark">✦</span></div><blockquote>“' + escapeHtml(quote.text) + '”</blockquote><p class="bc-quote-author">— ' + escapeHtml(quote.author) + '</p><div class="bc-quote-foot">Better today than yesterday. That’s progress.</div></section></div>' +
+      '<section class="bc-overview-welcome"><div><span class="bc-overview-kicker">TEAM SPACE</span><h3>' + escapeHtml(teamDisplay(activeTeam())) + '</h3><p>' + (canManageActiveTeam() ? "Choose a workspace section to add or manage team records." : "Choose a workspace section to view records and open links.") + '</p></div><span class="bc-team-emblem">BC</span></section>' +
+    '</section>';
 }
 function fieldMarkup(field, row={}) {
   let value = row[field.key] ?? "";
