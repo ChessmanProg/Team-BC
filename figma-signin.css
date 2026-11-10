@@ -1,0 +1,156 @@
+/* Figma node 2:165 — Team BC sign-in, isolated styles for this screen */
+body:has(#login-panel:not(.hidden)) {
+  --figma-ink: #090d16;
+  --figma-panel: rgba(15, 23, 42, .70);
+  --figma-line: #2b394b;
+  --figma-muted: #94a3b8;
+  --figma-green: #10b981;
+  color: #f5f8fc;
+  background: #090d16;
+  isolation: isolate;
+}
+body:has(#login-panel:not(.hidden)) .ocean-video,
+body:has(#login-panel:not(.hidden)) .ocean { display: none; }
+body:has(#login-panel:not(.hidden))::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 88% 50%, rgba(14,165,233,.13), transparent 35%),
+    radial-gradient(ellipse at 31% 65%, rgba(16,185,129,.15), transparent 40%),
+    linear-gradient(rgba(88,130,154,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88,130,154,.055) 1px, transparent 1px),
+    radial-gradient(ellipse at center, transparent 35%, rgba(9,13,22,.9) 100%);
+  background-size: auto, auto, 64px 64px, 64px 64px, auto;
+}
+body:has(#login-panel:not(.hidden)) .brand {
+  top: 40px; left: 4%; gap: 11px; letter-spacing: 0;
+}
+body:has(#login-panel:not(.hidden)) .brand-mark {
+  width: 34px; height: 38px; border: 0; border-radius: 0;
+  color: #10b981; background: transparent; box-shadow: none;
+  font-size: 24px; position: relative;
+}
+body:has(#login-panel:not(.hidden)) .brand-mark::before {
+  content: "ϟ"; position: absolute; inset: 0; display: grid; place-items: center;
+  color: #10b981; font-size: 34px; text-shadow: 0 0 18px rgba(16,185,129,.45);
+}
+body:has(#login-panel:not(.hidden)) .brand-mark { font-size: 0; }
+body:has(#login-panel:not(.hidden)) .brand strong { color: #f3f7fa; font-size: 23px; font-weight: 750; }
+body:has(#login-panel:not(.hidden)) .brand small { display: none; }
+body:has(#login-panel:not(.hidden)) .brand::after {
+  content: "INTERNAL AI WORKSPACE"; position: fixed; right: 4%; top: 51px;
+  color: #738b91; font-size: 10px; letter-spacing: 2px; font-weight: 500;
+}
+body:has(#login-panel:not(.hidden)) main {
+  width: 100%; max-width: 1600px; min-height: 100vh;
+  grid-template-columns: minmax(280px, 400px) minmax(400px, 464px) minmax(220px, 320px);
+  justify-content: space-between; align-items: center;
+  gap: clamp(28px, 5vw, 80px); padding: 150px 5% 75px;
+}
+body:has(#login-panel:not(.hidden)) .hero { max-width: 400px; }
+body:has(#login-panel:not(.hidden)) .hero .eyebrow {
+  color: #6cbca1; font-size: 11px; letter-spacing: 2px; position: relative; padding-left: 15px;
+}
+body:has(#login-panel:not(.hidden)) .hero .eyebrow::before {
+  content: ""; width: 6px; height: 6px; position: absolute; left: 0; top: 4px;
+  border-radius: 50%; background: #6cbca1; box-shadow: 0 0 9px #10b981;
+}
+body:has(#login-panel:not(.hidden)) .hero h1 {
+  margin: 20px 0; font-size: 50px; line-height: 1.12; letter-spacing: -2px; color: #f5f8fc;
+}
+body:has(#login-panel:not(.hidden)) .hero h1 span { color: #f5f8fc; }
+body:has(#login-panel:not(.hidden)) .hero .intro {
+  max-width: 390px; color: #91a5b4; font-size: 16px; line-height: 26px;
+}
+body:has(#login-panel:not(.hidden)) .features { padding-top: 12px; }
+body:has(#login-panel:not(.hidden)) .features li { gap: 14px; margin: 20px 0; }
+body:has(#login-panel:not(.hidden)) .features li > b {
+  width: 40px; height: 40px; border-radius: 10px; color: #63d9b5;
+  border: 1px solid rgba(16,185,129,.18); background: rgba(16,185,129,.07);
+}
+body:has(#login-panel:not(.hidden)) .features strong { color: #dce8eb; font-size: 14px; font-weight: 500; }
+body:has(#login-panel:not(.hidden)) .features small { color: #7f96a4; font-size: 12px; }
+body:has(#login-panel:not(.hidden)) .glass {
+  border: 1px solid rgba(16,185,129,.29); border-radius: 16px;
+  background: var(--figma-panel); backdrop-filter: blur(12px);
+  box-shadow: 0 24px 60px -12px rgba(0,0,0,.28), 0 0 28px rgba(16,185,129,.06);
+}
+body:has(#login-panel:not(.hidden)) .login { width: 100%; padding: 36px 36px 32px; }
+body:has(#login-panel:not(.hidden)) .login .kicker {
+  margin: 0 0 8px; color: #6abca3; font-size: 10px; letter-spacing: 1.9px;
+}
+body:has(#login-panel:not(.hidden)) .login h2 {
+  margin: 0 0 8px; color: #f5f8fc; font-size: 32px; line-height: 40px; letter-spacing: -.8px;
+}
+body:has(#login-panel:not(.hidden)) .login > .muted { color: #94a3b8; font-size: 14px; }
+body:has(#login-panel:not(.hidden)) .login form { margin-top: 24px; }
+body:has(#login-panel:not(.hidden)) .google-signin-button {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 11px;
+  padding: 14px; border: 0; border-radius: 8px; background: #f8fafc; color: #17212d;
+  font: 600 14px Inter, system-ui, sans-serif; cursor: pointer;
+}
+body:has(#login-panel:not(.hidden)) .google-g {
+  display: inline-grid; place-items: center; width: 18px; height: 18px;
+  color: #4285f4; font-size: 18px; font-weight: 800;
+}
+body:has(#login-panel:not(.hidden)) .auth-divider {
+  display: flex; align-items: center; gap: 14px; margin: 22px 0;
+  color: #7d91a7; font-size: 11px; white-space: nowrap;
+}
+body:has(#login-panel:not(.hidden)) .auth-divider::before,
+body:has(#login-panel:not(.hidden)) .auth-divider::after {
+  content: ""; height: 1px; flex: 1; background: #2b394b;
+}
+body:has(#login-panel:not(.hidden)) .login form > label {
+  margin: 18px 0 8px; color: #d9e4ed; font-size: 13px; font-weight: 500;
+}
+body:has(#login-panel:not(.hidden)) .login input:not([type=checkbox]) {
+  height: 48px; border: 1px solid #364359; border-radius: 8px; padding: 0 14px;
+  background: #1e293b; color: #f5f8fc; font-size: 13px;
+}
+body:has(#login-panel:not(.hidden)) .login input:focus {
+  border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.08);
+}
+body:has(#login-panel:not(.hidden)) .login input::placeholder { color: #94a3b8; }
+body:has(#login-panel:not(.hidden)) .eye { color: #94a3b8; }
+body:has(#login-panel:not(.hidden)) .form-row { margin: 18px 0 22px; font-size: 12px; }
+body:has(#login-panel:not(.hidden)) .remember { color: #aab9c9; }
+body:has(#login-panel:not(.hidden)) .text-button { color: #63d9b5; font-size: 12px; }
+body:has(#login-panel:not(.hidden)) .primary {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  height: 49px; border-radius: 8px; color: white; font-size: 14px; font-weight: 600;
+  background: linear-gradient(100deg,#117aea,#087dc9);
+  box-shadow: 0 4px 20px rgba(14,165,233,.24);
+}
+body:has(#login-panel:not(.hidden)) .primary span { float: none; margin: 0; }
+body:has(#login-panel:not(.hidden)) .login .notice { color: #88a9c8; font-size: 10px; }
+body:has(#login-panel:not(.hidden)) .auth-switch { justify-content: center; gap: 5px; }
+body:has(#login-panel:not(.hidden)) main::after {
+  content: "Same team.\A New possibilities.\A\A PLAN  •  TRACK  •  ACHIEVE";
+  white-space: pre-wrap; justify-self: start; align-self: center;
+  color: #ddeaf1; font-size: 38px; line-height: 1.22; letter-spacing: -1.3px;
+  font-weight: 600; max-width: 320px; position: relative; padding-top: 30px;
+}
+body:has(#login-panel:not(.hidden)) main::after { text-shadow: none; }
+body:has(#login-panel:not(.hidden)) footer { color: #738b91; }
+@media (max-width: 1180px) {
+  body:has(#login-panel:not(.hidden)) main {
+    grid-template-columns: minmax(260px, 1fr) minmax(380px, 464px);
+    max-width: 1000px; gap: 36px; padding-left: 32px; padding-right: 32px;
+  }
+  body:has(#login-panel:not(.hidden)) main::after { display: none; }
+}
+@media (max-width: 760px) {
+  body:has(#login-panel:not(.hidden)) main {
+    display: grid; grid-template-columns: minmax(0,1fr); max-width: 540px;
+    gap: 24px; padding: 110px 20px 34px;
+  }
+  body:has(#login-panel:not(.hidden)) .hero { display: block; }
+  body:has(#login-panel:not(.hidden)) .hero h1 { font-size: 39px; }
+  body:has(#login-panel:not(.hidden)) .features { display: none; }
+  body:has(#login-panel:not(.hidden)) .login { padding: 26px; }
+  body:has(#login-panel:not(.hidden)) .brand::after { display: none; }
+}
