@@ -1317,3 +1317,40 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
   #workspace .bc-template-panel .panel-heading { align-items: flex-start; flex-direction: column; }
 }
 @media(prefers-reduced-motion:reduce) { #workspace .bc-template-card { transition: none; } }
+
+/* Figma Overview screen */
+#workspace .bc-overview{display:flex;flex-direction:column;gap:22px;padding:8px 0 28px;color:#f1f6fa}
+#workspace .bc-overview-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+#workspace .bc-overview-kicker{font-size:10px;letter-spacing:1.5px;font-weight:700;color:#62d7b1;margin:0 0 8px}
+#workspace .bc-overview-heading h2{font-size:30px;line-height:1.25;letter-spacing:-.7px;margin:0 0 7px;color:#f1f6fa}
+#workspace .bc-overview-subtitle{font-size:14px;color:#96a9ba;margin:0}
+#workspace .bc-live-status{display:inline-flex;align-items:center;gap:8px;color:#62d7b1;font-size:11px;white-space:nowrap;padding:8px 11px;border:1px solid rgba(98,215,177,.2);border-radius:18px;background:rgba(16,185,129,.07)}
+#workspace .bc-live-status i{width:6px;height:6px;border-radius:50%;background:#62d7b1;box-shadow:0 0 10px #62d7b1}
+#workspace .bc-overview-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+#workspace .bc-overview-kpi{min-width:0;border:1px solid #2a3a47;border-radius:12px;padding:18px 20px;background:rgba(19,33,44,.74)}
+#workspace .bc-kpi-top{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#96a9ba;font-size:12px}
+#workspace .bc-kpi-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;color:#7ef0c8;background:rgba(16,185,129,.1);font-size:16px}
+#workspace .bc-overview-kpi strong{display:block;font-size:32px;line-height:1.35;margin:12px 0 4px;color:#f0f6fa}
+#workspace .bc-overview-kpi small{font-size:10px;color:#7c93a5}
+#workspace .bc-overview-lower{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);gap:16px}
+#workspace .bc-overview-panel{min-width:0;border:1px solid #2a3a47;border-radius:12px;padding:20px;background:rgba(19,33,44,.74)}
+#workspace .bc-overview-panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+#workspace .bc-overview-panel-head h3{font-size:15px;margin:0 0 6px;color:#f1f6fa}
+#workspace .bc-overview-panel-head p{font-size:11px;color:#7c93a5;margin:0}
+#workspace .bc-panel-dot{font-size:10px;color:#62d7b1}
+#workspace .bc-overview-empty{display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;min-height:185px;padding:20px 12px}
+#workspace .bc-empty-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:rgba(16,185,129,.1);color:#7ef0c8;font-size:20px;margin-bottom:12px}
+#workspace .bc-overview-empty strong{font-size:13px;color:#dce8ef}
+#workspace .bc-overview-empty p{max-width:330px;font-size:11px;line-height:1.7;color:#7c93a5;margin:7px 0 0}
+#workspace .bc-overview-metric-row{display:flex;justify-content:space-between;border-top:1px solid #2a3a47;padding-top:12px;color:#96a9ba;font-size:11px}
+#workspace .bc-overview-metric-row strong{color:#62d7b1;font-weight:600}
+#workspace .bc-overview-quote blockquote{font-size:17px;line-height:1.65;color:#dce8ef;margin:28px 0 12px}
+#workspace .bc-quote-spark{color:#7ef0c8;font-size:18px}
+#workspace .bc-quote-author{font-size:11px;color:#96a9ba;margin:0}
+#workspace .bc-quote-foot{border-top:1px solid #2a3a47;margin-top:22px;padding-top:14px;color:#62d7b1;font-size:11px}
+#workspace .bc-overview-welcome{display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #2a3a47;border-radius:12px;padding:18px 20px;background:linear-gradient(110deg,rgba(19,33,44,.82),rgba(16,59,64,.22))}
+#workspace .bc-overview-welcome h3{font-size:16px;margin:0 0 5px}
+#workspace .bc-overview-welcome p{font-size:11px;color:#96a9ba;margin:0}
+#workspace .bc-team-emblem{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(126,240,200,.3);border-radius:12px;color:#7ef0c8;font-weight:800;background:rgba(16,185,129,.08)}
+@media(max-width:900px){#workspace .bc-overview-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#workspace .bc-overview-lower{grid-template-columns:1fr}}
+@media(max-width:540px){#workspace .bc-overview-heading{flex-direction:column}#workspace .bc-overview-kpis{grid-template-columns:1fr}#workspace .bc-overview-kpi{padding:16px}}
