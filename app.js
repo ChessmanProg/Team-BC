@@ -809,6 +809,7 @@ function showRecordForm(page, row=null) {
       message($("#record-notice"), row ? "Changes saved." : "Record added.");
       editingRecordId = null;
       if (page === "coaching" && $("#coaching-dashboard")) await renderPage("coaching");
+      else if (page === "ic-logs") await renderPage("ic-logs");
       else await refreshRecordList(page);
     } catch (error) {
       message($("#record-form-notice"), friendlyError(error));
@@ -826,6 +827,7 @@ async function deleteRecord(page, id) {
     if (error) throw error;
     message($("#record-notice"), "Record deleted.");
     if (page === "coaching" && $("#coaching-dashboard")) await renderPage("coaching");
+    else if (page === "ic-logs") await renderPage("ic-logs");
     else await refreshRecordList(page);
   } catch (error) { message($("#record-notice"), friendlyError(error)); }
 }
