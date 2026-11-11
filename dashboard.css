@@ -1392,3 +1392,110 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 @media(max-width:1050px){#workspace .bc-agent-layout{grid-template-columns:minmax(0,1fr) 270px}#workspace .bc-agent-summary{gap:8px}#workspace .bc-agent-summary article{gap:8px;padding:12px}}
 @media(max-width:800px){#workspace .bc-agent-layout{grid-template-columns:1fr}#workspace .bc-agent-profile{position:static}#workspace .bc-agent-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){#workspace .bc-agents-toolbar{flex-wrap:wrap}#workspace .bc-agent-search{flex-basis:100%}#workspace .bc-agents-toolbar select{flex:1}#workspace .bc-agent-grid{grid-template-columns:1fr}#workspace .bc-agent-invite{margin-top:0;margin-bottom:0;align-self:flex-start}}
+
+
+/* Figma 5:128 — Coaching workspace */
+#workspace .bc-coaching-page { width:100%; color:#e8f1f6; }
+#workspace .bc-coaching-summary {
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+  margin:4px 0 24px; padding:20px 22px; border:1px solid rgba(143,211,224,.22);
+  border-radius:13px; background:linear-gradient(115deg,rgba(11,39,48,.74),rgba(7,28,39,.58));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06); backdrop-filter:blur(12px);
+}
+#workspace .bc-coaching-summary>div:first-child strong { display:block; color:#e8f2f6; font-size:16px; }
+#workspace .bc-coaching-summary p { margin:5px 0 0; color:#9db1bf; font-size:12px; }
+#workspace .bc-coaching-summary-count { display:flex; align-items:center; gap:12px; white-space:nowrap; }
+#workspace .bc-coaching-summary-count strong { color:#62dfb7; font-size:25px; letter-spacing:-.5px; }
+#workspace .bc-coaching-summary-count span { color:#9db1bf; font-size:11px; }
+#workspace .bc-coaching-columns { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr); gap:22px; align-items:start; }
+#workspace .bc-coaching-schedule,#workspace .bc-coaching-resources { min-width:0; }
+#workspace .bc-coaching-section-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin:0 0 14px; }
+#workspace .bc-coaching-section-head h2 { margin:0; color:#e7eff5; font-size:16px; font-weight:650; }
+#workspace .bc-coaching-month { display:flex; align-items:center; gap:10px; color:#9db1bf; font-size:11px; }
+#workspace .bc-coaching-month button { width:24px; height:24px; border:0; border-radius:6px; color:#b7cad4; background:rgba(133,177,191,.1); cursor:pointer; font-size:17px; }
+#workspace .bc-coaching-month button:hover { color:#70e5c0; background:rgba(16,185,129,.16); }
+#workspace .bc-coaching-week { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:7px; margin-bottom:14px; }
+#workspace .bc-coaching-day {
+  display:flex; flex-direction:column; align-items:center; gap:7px; min-width:0; padding:11px 4px;
+  border:1px solid rgba(143,211,224,.17); border-radius:11px; color:#a8bac5;
+  background:rgba(10,34,47,.58); cursor:pointer; transition:.18s ease;
+}
+#workspace .bc-coaching-day span { font-size:9px; font-weight:700; letter-spacing:.06em; }
+#workspace .bc-coaching-day strong { color:#e5eef4; font-size:18px; line-height:1.2; }
+#workspace .bc-coaching-day:hover { border-color:rgba(98,223,183,.45); }
+#workspace .bc-coaching-day.is-selected { border-color:rgba(16,185,129,.6); background:rgba(16,185,129,.16); box-shadow:inset 0 0 0 1px rgba(16,185,129,.08); }
+#workspace .bc-coaching-day.is-selected span { color:#73e9c2; }
+#workspace .bc-coaching-day.is-today:not(.is-selected) { border-color:rgba(98,177,219,.42); }
+#workspace .bc-coaching-day-label { margin:2px 0 10px; color:#82d9bd; font-size:10px; font-weight:750; letter-spacing:.08em; text-transform:uppercase; }
+#workspace .bc-coaching-session-list { display:grid; gap:12px; }
+#workspace .bc-coaching-session-card {
+  padding:17px 18px; border:1px solid rgba(143,211,224,.2); border-radius:12px;
+  background:linear-gradient(135deg,rgba(9,34,48,.78),rgba(7,28,41,.64));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045); backdrop-filter:blur(10px);
+}
+#workspace .bc-coaching-session-time { color:#6fe3bd; font-size:10px; font-weight:750; letter-spacing:.03em; text-transform:uppercase; }
+#workspace .bc-coaching-session-time span { color:#9bb0bd; font-weight:500; }
+#workspace .bc-coaching-session-card h3 { margin:10px 0 5px; color:#e7f0f5; font-size:15px; }
+#workspace .bc-coaching-session-notes { min-height:18px; margin:0; color:#9db1bf; font-size:12px; line-height:1.55; }
+#workspace .bc-coaching-session-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:14px; }
+#workspace .bc-coaching-attendees,#workspace .bc-coaching-no-link { color:#91a9b8; font-size:10px; }
+#workspace .bc-coaching-session-actions { display:flex; align-items:center; flex-wrap:wrap; gap:7px; }
+#workspace .bc-coaching-join,#workspace .bc-coaching-edit,#workspace .bc-coaching-delete {
+  display:inline-flex; align-items:center; justify-content:center; min-height:32px; padding:7px 11px;
+  border:1px solid rgba(143,211,224,.22); border-radius:7px; color:#dceaf1; background:rgba(124,171,191,.1);
+  text-decoration:none; font:inherit; font-size:11px; cursor:pointer;
+}
+#workspace .bc-coaching-join { border-color:rgba(33,133,255,.5); color:#fff; background:#1675f8; }
+#workspace .bc-coaching-join:hover { background:#3288ff; }
+#workspace .bc-coaching-edit:hover { border-color:rgba(98,223,183,.55); }
+#workspace .bc-coaching-delete { color:#ffcaca; border-color:rgba(255,130,130,.24); }
+#workspace .bc-coaching-empty,#workspace .bc-coaching-resource-empty {
+  display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:150px; padding:22px;
+  border:1px dashed rgba(143,211,224,.2); border-radius:12px; text-align:center; background:rgba(8,31,43,.38);
+}
+#workspace .bc-coaching-empty>span { color:#72e6c0; font-size:22px; }
+#workspace .bc-coaching-empty strong,#workspace .bc-coaching-resource-empty strong { margin-top:8px; color:#dfeaf0; font-size:13px; }
+#workspace .bc-coaching-empty p,#workspace .bc-coaching-resource-empty p { max-width:300px; margin:6px 0 0; color:#91a8b6; font-size:11px; line-height:1.5; }
+#workspace .bc-coaching-resource-count { color:#70dfba; font-size:10px; }
+#workspace .bc-coaching-resource-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+#workspace .bc-coaching-resource-card {
+  display:flex; flex-direction:column; align-items:flex-start; min-height:142px; padding:16px;
+  border:1px solid rgba(143,211,224,.2); border-radius:12px; color:inherit; text-decoration:none;
+  background:linear-gradient(135deg,rgba(9,34,48,.78),rgba(7,28,41,.64)); backdrop-filter:blur(10px);
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+#workspace .bc-coaching-resource-card:hover { transform:translateY(-2px); border-color:rgba(98,223,183,.45); background:rgba(12,53,55,.72); }
+#workspace .bc-coaching-resource-icon { display:grid; place-items:center; width:28px; height:28px; margin-bottom:12px; border:1px solid rgba(79,177,255,.8); border-radius:50%; color:#74caff; font-size:13px; }
+#workspace .bc-coaching-resource-card strong { color:#e2edf3; font-size:12px; line-height:1.4; }
+#workspace .bc-coaching-resource-card small { margin-top:6px; color:#8fa7b5; font-size:9px; line-height:1.5; }
+#workspace .bc-coaching-resource-open { margin-top:auto; padding-top:12px; color:#6fe3bd; font-size:10px; }
+#workspace .bc-coaching-guidelines {
+  margin-top:12px; padding:17px 18px; border:1px solid rgba(143,211,224,.2); border-radius:12px;
+  background:linear-gradient(135deg,rgba(9,34,48,.78),rgba(7,28,41,.64)); backdrop-filter:blur(10px);
+}
+#workspace .bc-coaching-guidelines h3 { margin:0 0 9px; color:#e3edf3; font-size:13px; }
+#workspace .bc-coaching-guidelines p { margin:0; color:#9db1bf; font-size:11px; line-height:1.6; }
+#workspace .bc-coaching-guideline-foot { display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding-top:12px; border-top:1px solid rgba(143,211,224,.13); color:#77d9ba; font-size:9px; letter-spacing:.1em; }
+#workspace .bc-coaching-toolbar { display:flex; gap:7px; margin-left:auto; }
+#workspace .bc-coaching-schedule-button,#workspace .bc-coaching-bulk-button {
+  min-height:34px; padding:8px 12px; border:1px solid rgba(143,211,224,.24); border-radius:7px;
+  color:#e9f3f7; background:rgba(12,49,55,.72); cursor:pointer; font:inherit; font-size:11px;
+}
+#workspace .bc-coaching-schedule-button { border-color:#1675f8; background:#1675f8; color:#fff; }
+#workspace .bc-coaching-bulk-button:hover { border-color:rgba(98,223,183,.55); }
+#workspace .bc-coaching-page .record-form { margin-top:14px; }
+@media(max-width:1050px) {
+  #workspace .bc-coaching-columns { grid-template-columns:1fr; }
+  #workspace .bc-coaching-resource-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:640px) {
+  #workspace .bc-coaching-summary { align-items:flex-start; flex-direction:column; padding:17px; }
+  #workspace .bc-coaching-summary-count { align-items:baseline; }
+  #workspace .bc-coaching-section-head { align-items:flex-start; }
+  #workspace .bc-coaching-toolbar { width:100%; margin-left:0; }
+  #workspace .bc-coaching-toolbar button { flex:1; }
+  #workspace .bc-coaching-week { gap:4px; }
+  #workspace .bc-coaching-day { padding:9px 2px; }
+  #workspace .bc-coaching-resource-grid { grid-template-columns:1fr; }
+  #workspace .bc-coaching-session-footer { align-items:flex-start; flex-direction:column; }
+}

@@ -474,6 +474,112 @@ function renderRecordList(page, rows) {
     (canManage ? '<td class="record-actions"><button type="button" class="small-button" data-edit="' + row.id + '">Edit</button><button type="button" class="small-button danger" data-delete="' + row.id + '">Delete</button></td>' : '') + '</tr>').join("") +
     '</tbody></table></div>';
 }
+
+function localDateKey(date) {
+  return [date.getFullYear(), String(date.getMonth()+1).padStart(2,"0"), String(date.getDate()).padStart(2,"0")].join("-");
+}
+function renderCoachingDate(date) {
+  return date.toLocaleDateString([], {month:"short",day:"numeric"});
+}
+async function renderCoachingPage(content) {
+  const [sessions, resources] = await Promise.all([fetchRows("team_coaching"), fetchRows("team_quick_links")]);
+  recordsCache = sessions;
+  const canManage = canManageActiveTeam();
+  const today = new Date();
+  let selectedDate = localDateKey(today);
+  let weekOffset = 0;
+  content.innerHTML =
+    '<section class="bc-coaching-page" id="coaching-dashboard">' +
+      '<div class="bc-coaching-summary"><div><strong>Keep your momentum going</strong><p id="coaching-summary-copy">Your team’s coaching activity, all in one place.</p></div><div class="bc-coaching-summary-count"><strong id="coaching-summary-count">0</strong><span>Sessions this week</span></div></div>' +
+      '<div class="bc-coaching-columns"><section class="bc-coaching-schedule"><div class="bc-coaching-section-head"><h2>Upcoming Coaching Sessions</h2><div class="bc-coaching-month"><button type="button" id="coaching-prev-week" aria-label="Previous week">‹</button><span id="coaching-month-label"></span><button type="button" id="coaching-next-week" aria-label="Next week">›</button></div></div>' +
+        '<div class="bc-coaching-week" id="coaching-week"></div><div class="bc-coaching-session-list" id="coaching-session-list"></div>' +
+        '<div class="bc-coaching-form-host" id="record-form-host"></div><div class="bc-coaching-bulk-host" id="bulk-coaching-host"></div><p class="notice" id="record-notice" role="status"></p>' +
+      '</section><aside class="bc-coaching-resources"><div class="bc-coaching-section-head"><h2>Training Resources</h2><span class="bc-coaching-resource-count">'+resources.length+' saved</span></div><div class="bc-coaching-resource-grid" id="coaching-resource-grid"></div>' +
+        '<section class="bc-coaching-guidelines"><h3>Team guidelines</h3><p>Use your team’s saved resources to prepare for coaching sessions and keep shared practices consistent.</p><div class="bc-coaching-guideline-foot"><span>TEAM BC WORKSPACE</span><span>✦</span></div></section>' +
+      '</aside></div></section>';
+  const weekHost = $("#coaching-week");
+  const sessionHost = $("#coaching-session-list");
+  function weekStart() {
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + weekOffset*7);
+    date.setDate(date.getDate() - ((date.getDay()+6)%7));
+    return date;
+  }
+  function drawWeek() {
+    const start = weekStart();
+    const end = new Date(start); end.setDate(start.getDate()+6);
+    $("#coaching-month-label").textContent = start.getMonth()===end.getMonth()
+      ? start.toLocaleDateString([], {month:"long",year:"numeric"})
+      : start.toLocaleDateString([], {month:"short"})+" – "+end.toLocaleDateString([], {month:"short",year:"numeric"});
+    weekHost.innerHTML = "";
+    for (let i=0;i<7;i++) {
+      const date = new Date(start); date.setDate(start.getDate()+i);
+      const key = localDateKey(date);
+      const day = document.createElement("button");
+      day.type = "button";
+      day.className = "bc-coaching-day"+(key===selectedDate?" is-selected":"")+(key===localDateKey(today)?" is-today":"");
+      day.innerHTML = '<span>'+escapeHtml(date.toLocaleDateString([], {weekday:"short"}).slice(0,3).toUpperCase())+'</span><strong>'+date.getDate()+'</strong>';
+      day.setAttribute("aria-pressed", String(key===selectedDate));
+      day.addEventListener("click",()=>{selectedDate=key;drawWeek();drawSessions();});
+      weekHost.appendChild(day);
+    }
+  }
+  function drawSessions() {
+    const daySessions = sessions.filter(row => {
+      if (!row.scheduled_at) return false;
+      const date = new Date(row.scheduled_at);
+      return !Number.isNaN(date.getTime()) && localDateKey(date)===selectedDate;
+    }).sort((a,b)=>new Date(a.scheduled_at)-new Date(b.scheduled_at));
+    const weekStartDate = weekStart(), weekEndDate = new Date(weekStartDate); weekEndDate.setDate(weekEndDate.getDate()+7);
+    const weekCount = sessions.filter(row => {
+      if (!row.scheduled_at) return false;
+      const date = new Date(row.scheduled_at);
+      return !Number.isNaN(date.getTime()) && date>=weekStartDate && date<weekEndDate && String(row.status||"Scheduled").toLowerCase()==="scheduled";
+    }).length;
+    $("#coaching-summary-count").textContent = weekCount;
+    $("#coaching-summary-copy").textContent = sessions.length+" coaching record"+(sessions.length===1?"":"s")+" saved for "+teamDisplay(activeTeam())+".";
+    sessionHost.innerHTML = '<div class="bc-coaching-day-label">'+escapeHtml(new Date(selectedDate+"T12:00:00").toLocaleDateString([], {weekday:"long",month:"long",day:"numeric"}))+'</div>';
+    if (!daySessions.length) {
+      sessionHost.innerHTML += '<div class="bc-coaching-empty"><span>✦</span><strong>No sessions scheduled for this day</strong><p>Choose another date or schedule a coaching session.</p></div>';
+      return;
+    }
+    daySessions.forEach(row => {
+      const date = new Date(row.scheduled_at);
+      const card = document.createElement("article");
+      card.className = "bc-coaching-session-card";
+      const time = date.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+      const status = row.status || "Scheduled";
+      card.innerHTML = '<div class="bc-coaching-session-time">'+escapeHtml(time)+' <span>· '+escapeHtml(status)+'</span></div><h3>'+escapeHtml(row.agent_name||"Team coaching")+'</h3><p class="bc-coaching-session-notes">'+escapeHtml(row.notes||"Coaching session")+'</p><div class="bc-coaching-session-footer"><span class="bc-coaching-attendees">Team BC · '+escapeHtml(teamDisplay(activeTeam()))+'</span><div class="bc-coaching-session-actions">'+(row.meet_link?'<a class="bc-coaching-join" href="'+escapeHtml(/^https?:\/\//i.test(row.meet_link)?row.meet_link:"https://"+row.meet_link)+'" target="_blank" rel="noopener noreferrer" data-meeting-link="true">Join session ↗</a>':'<span class="bc-coaching-no-link">No meeting link</span>')+(canManage?'<button type="button" class="bc-coaching-edit" data-edit="'+escapeHtml(row.id)+'">Edit</button><button type="button" class="bc-coaching-delete" data-delete="'+escapeHtml(row.id)+'">Delete</button>':'')+'</div></div>';
+      sessionHost.appendChild(card);
+    });
+    sessionHost.querySelectorAll("[data-edit]").forEach(button=>button.addEventListener("click",()=>{const row=sessions.find(item=>String(item.id)===button.dataset.edit);if(row)showRecordForm("coaching",row);}));
+    sessionHost.querySelectorAll("[data-delete]").forEach(button=>button.addEventListener("click",()=>deleteRecord("coaching",button.dataset.delete)));
+  }
+  const resourceGrid = $("#coaching-resource-grid");
+  if (!resources.length) {
+    resourceGrid.innerHTML = '<div class="bc-coaching-resource-empty"><strong>No training resources yet</strong><p>Add useful guides and links in the Quick Links section to show them here.</p></div>';
+  } else {
+    resources.slice(0,6).forEach((resource,index)=>{
+      const card=document.createElement("a");
+      const url=/^https?:\/\//i.test(resource.url||"")?resource.url:"https://"+(resource.url||"");
+      card.className="bc-coaching-resource-card";
+      card.href=url;card.target="_blank";card.rel="noopener noreferrer";
+      card.innerHTML='<span class="bc-coaching-resource-icon">'+(index%2?"↗":"▷")+'</span><strong>'+escapeHtml(resource.title||"Team resource")+'</strong><small>'+escapeHtml(resource.description||"Saved team link")+'</small><span class="bc-coaching-resource-open">Open resource →</span>';
+      resourceGrid.appendChild(card);
+    });
+  }
+  if (canManage) {
+    const toolbar=document.createElement("div");
+    toolbar.className="bc-coaching-toolbar";
+    toolbar.innerHTML='<button type="button" class="bc-coaching-schedule-button" id="coaching-add-session">+ Schedule session</button><button type="button" class="bc-coaching-bulk-button" id="coaching-bulk-import">Bulk import</button>';
+    content.querySelector(".bc-coaching-section-head").appendChild(toolbar);
+    $("#coaching-add-session").addEventListener("click",()=>showRecordForm("coaching"));
+    $("#coaching-bulk-import").addEventListener("click",showBulkCoachingImport);
+  }
+  $("#coaching-prev-week").addEventListener("click",()=>{weekOffset--;const date=new Date(selectedDate+"T12:00:00");date.setDate(date.getDate()-7);selectedDate=localDateKey(date);drawWeek();drawSessions();});
+  $("#coaching-next-week").addEventListener("click",()=>{weekOffset++;const date=new Date(selectedDate+"T12:00:00");date.setDate(date.getDate()+7);selectedDate=localDateKey(date);drawWeek();drawSessions();});
+  drawWeek();drawSessions();
+}
+
 async function renderRecordsPage(page, content) {
   const config = pageConfig[page];
   const today = new Date();
@@ -555,7 +661,8 @@ async function importBulkCoaching() {
     if (error) throw error;
     $("#bulk-coaching-host").innerHTML = "";
     message($("#record-notice"), rows.length + " coaching schedule(s) imported.");
-    await refreshRecordList("coaching");
+    if ($("#coaching-dashboard")) await renderPage("coaching");
+    else await refreshRecordList("coaching");
   } catch (error) {
     message(notice, friendlyError(error));
   } finally { button.disabled = false; }
@@ -618,7 +725,8 @@ function showRecordForm(page, row=null) {
       host.innerHTML = "";
       message($("#record-notice"), row ? "Changes saved." : "Record added.");
       editingRecordId = null;
-      await refreshRecordList(page);
+      if (page === "coaching" && $("#coaching-dashboard")) await renderPage("coaching");
+      else await refreshRecordList(page);
     } catch (error) {
       message($("#record-form-notice"), friendlyError(error));
     } finally { submit.disabled = false; }
@@ -634,7 +742,8 @@ async function deleteRecord(page, id) {
     const { error } = await supabaseClient.from(config.table).delete().eq("id",id).eq("team_key",activeTeamKey);
     if (error) throw error;
     message($("#record-notice"), "Record deleted.");
-    await refreshRecordList(page);
+    if (page === "coaching" && $("#coaching-dashboard")) await renderPage("coaching");
+    else await refreshRecordList(page);
   } catch (error) { message($("#record-notice"), friendlyError(error)); }
 }
 async function renderBCAIPage(content) {
@@ -1018,6 +1127,7 @@ async function renderPage(page) {
   try {
     if (page === "overview") await renderOverview(content);
     else if (page === "agents") await renderAgentsPage(content);
+    else if (page === "coaching") await renderCoachingPage(content);
     else if (page === "bc-ai") await renderBCAIPage(content);
     else if (page === "bc-ai-comment-template") await renderBCAICommentTemplates(content);
     else if (page === "team-requests") await renderTeamRequests(content);
