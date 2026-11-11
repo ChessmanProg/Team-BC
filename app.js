@@ -425,6 +425,31 @@ async function renderOverview(content) {
       '<section class="bc-overview-welcome"><div><span class="bc-overview-kicker">TEAM SPACE</span><h3>' + escapeHtml(teamDisplay(activeTeam())) + '</h3><p>' + (canManageActiveTeam() ? "Choose a workspace section to add or manage team records." : "Choose a workspace section to view records and open links.") + '</p></div><span class="bc-team-emblem">BC</span></section>' +
     '</section>';
 }
+
+async function renderAgentsPage(content) {
+ const [agents,coaching,logs]=await Promise.all([fetchRows("team_agents"),fetchRows("team_coaching"),fetchRows("team_ic_logs")]);
+ recordsCache=agents; const canManage=canManageActiveTeam(); let selectedId=agents[0]?.id??null;
+ const active=agents.filter(a=>String(a.status||"").toLowerCase()==="active").length;
+ content.innerHTML='<section class="bc-agents-page"><div class="bc-agents-toolbar"><label class="bc-agent-search">⌕ <input id="agent-search" type="search" placeholder="Search by agent name, role, or status..." aria-label="Search agents"></label><select id="agent-role-filter" aria-label="Filter role"><option value="all">All roles</option><option value="member">Team member</option></select><select id="agent-status-filter" aria-label="Filter status"><option value="all">All statuses</option><option>Active</option><option>Inactive</option><option>On Leave</option></select></div><div class="bc-agent-summary"><article><strong>'+agents.length+'</strong><span>Team members</span></article><article><strong>'+active+'</strong><span>Active members</span></article><article><strong>'+coaching.length+'</strong><span>Coaching sessions</span></article><article><strong>'+logs.length+'</strong><span>IC logs</span></article></div><div class="bc-agent-layout"><section class="bc-agent-directory"><div class="bc-agent-section-head"><h2>Agent directory</h2><span id="agent-result-count"></span></div><div class="bc-agent-grid" id="agent-grid"></div></section><aside class="bc-agent-profile" id="agent-profile"></aside></div><div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p></section>';
+ const grid=$("#agent-grid"),profile=$("#agent-profile");
+ function profileView(a){if(!a){profile.innerHTML='<div class="bc-agent-profile-empty">No agents match these filters.</div>';return;}
+  const sessions=coaching.filter(r=>(r.agent_name||"").toLowerCase()===(a.agent_name||"").toLowerCase()).length, ic=logs.filter(r=>(r.agent_name||"").toLowerCase()===(a.agent_name||"").toLowerCase()).length;
+  const initials=(a.agent_name||"?").trim().split(/\\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase();
+  profile.innerHTML='<div class="bc-agent-profile-head"><h3>Agent profile</h3>'+(canManage?'<button id="agent-edit" type="button">Edit</button>':'')+'</div><div class="bc-agent-profile-identity"><span class="bc-agent-avatar bc-agent-avatar-large">'+escapeHtml(initials)+'</span><div><strong>'+escapeHtml(a.agent_name||"Unnamed member")+'</strong><span>Team member · '+escapeHtml(a.status||"Unspecified")+'</span></div></div><h4>Team activity</h4><div class="bc-agent-detail-row"><span>Coaching sessions</span><strong>'+sessions+'</strong></div><div class="bc-agent-detail-row"><span>IC logs</span><strong>'+ic+'</strong></div><div class="bc-agent-notes"><span>NOTES</span><p>'+escapeHtml(a.notes||"No notes have been added.")+'</p></div><div class="bc-agent-profile-footer">Member record <strong>Team-only</strong></div>';
+  $("#agent-edit")?.addEventListener("click",()=>showRecordForm("agents",a));
+ }
+ function draw(){const q=$("#agent-search").value.trim().toLowerCase(),s=$("#agent-status-filter").value.toLowerCase(),r=$("#agent-role-filter").value;
+  const filtered=agents.filter(a=>(!q||[a.agent_name,a.status,a.notes,"team member"].join(" ").toLowerCase().includes(q))&&(s==="all"||(a.status||"").toLowerCase()===s)&&(r==="all"||r==="member"));
+  $("#agent-result-count").textContent=filtered.length+" members · Grid view";
+  grid.innerHTML=filtered.length?filtered.map(a=>{const initials=(a.agent_name||"?").trim().split(/\\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase(),status=a.status||"Unspecified",n=coaching.filter(x=>(x.agent_name||"").toLowerCase()===(a.agent_name||"").toLowerCase()).length;return '<button type="button" class="bc-agent-card'+(String(a.id)===String(selectedId)?" is-selected":"")+'" data-agent-id="'+escapeHtml(a.id)+'"><span class="bc-agent-card-top"><span class="bc-agent-avatar">'+escapeHtml(initials)+'</span><span class="bc-agent-status '+(status.toLowerCase()==="active"?"is-active":"")+'"><i></i>'+escapeHtml(status)+'</span></span><strong class="bc-agent-name">'+escapeHtml(a.agent_name||"Unnamed member")+'</strong><span class="bc-agent-role">Team member</span><span class="bc-agent-card-stats"><span>Coaching sessions</span><strong>'+n+'</strong></span><span class="bc-agent-card-notes">'+escapeHtml(a.notes||"No additional notes")+'</span><span class="bc-agent-card-action">View profile →</span></button>'}).join(""):'<div class="bc-agent-no-results">No agents match your search or filters.</div>';
+  if(!filtered.some(a=>String(a.id)===String(selectedId)))selectedId=filtered[0]?.id??null;profileView(filtered.find(a=>String(a.id)===String(selectedId))||null);
+ }
+ grid.addEventListener("click",e=>{const card=e.target.closest("[data-agent-id]");if(card){selectedId=card.dataset.agentId;draw()}});
+ ["agent-search","agent-role-filter","agent-status-filter"].forEach(id=>$("#"+id).addEventListener(id==="agent-search"?"input":"change",draw));
+ if(canManage){const b=document.createElement("button");b.type="button";b.className="bc-agent-invite";b.textContent="+ Invite agent";b.addEventListener("click",()=>showRecordForm("agents"));content.querySelector(".bc-agents-toolbar").after(b)}
+ draw();
+}
+
 function fieldMarkup(field, row={}) {
   let value = row[field.key] ?? "";
   if (field.key === "agent_name" && activeTeamKey === "chenn") {
@@ -992,6 +1017,7 @@ async function renderPage(page) {
   content.innerHTML = '<section class="content-panel"><p class="muted">Loading…</p></section>';
   try {
     if (page === "overview") await renderOverview(content);
+    else if (page === "agents") await renderAgentsPage(content);
     else if (page === "bc-ai") await renderBCAIPage(content);
     else if (page === "bc-ai-comment-template") await renderBCAICommentTemplates(content);
     else if (page === "team-requests") await renderTeamRequests(content);

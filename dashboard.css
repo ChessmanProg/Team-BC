@@ -1354,3 +1354,41 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-team-emblem{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(126,240,200,.3);border-radius:12px;color:#7ef0c8;font-weight:800;background:rgba(16,185,129,.08)}
 @media(max-width:900px){#workspace .bc-overview-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#workspace .bc-overview-lower{grid-template-columns:1fr}}
 @media(max-width:540px){#workspace .bc-overview-heading{flex-direction:column}#workspace .bc-overview-kpis{grid-template-columns:1fr}#workspace .bc-overview-kpi{padding:16px}}
+
+/* Figma Agents view */
+#workspace .bc-agents-page{display:flex;flex-direction:column;gap:18px;padding:8px 0 30px;color:#eaf2f8}
+#workspace .bc-agents-toolbar{display:flex;align-items:center;gap:12px}
+#workspace .bc-agent-search{display:flex;align-items:center;gap:10px;flex:1;min-width:140px;height:44px;padding:0 14px;border:1px solid #2a3a47;border-radius:10px;background:#13212c;color:#96a9ba}
+#workspace .bc-agent-search input{width:100%;border:0;outline:0;background:transparent;color:#eaf2f8;font:inherit;font-size:12px}
+#workspace .bc-agent-search input::placeholder{color:#8195a5}
+#workspace .bc-agents-toolbar select{height:40px;padding:0 12px;border:1px solid #334654;border-radius:8px;background:#1a2a37;color:#c4d3de;font:inherit;font-size:11px}
+#workspace .bc-agent-invite{align-self:flex-end;margin-top:-62px;margin-bottom:14px;padding:10px 15px;border:0;border-radius:8px;background:#1675f8;color:white;font:inherit;font-size:12px;cursor:pointer}
+#workspace .bc-agent-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+#workspace .bc-agent-summary article{display:flex;align-items:center;gap:14px;min-width:0;padding:16px;border:1px solid #2a3a47;border-radius:10px;background:rgba(19,33,44,.74)}
+#workspace .bc-agent-summary strong{font-size:22px;color:#eaf2f8}#workspace .bc-agent-summary span{font-size:11px;color:#96a9ba}
+#workspace .bc-agent-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,29%);gap:16px;align-items:start}
+#workspace .bc-agent-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}#workspace .bc-agent-section-head h2{font-size:16px;margin:0}#workspace .bc-agent-section-head span{font-size:10px;color:#96a9ba}
+#workspace .bc-agent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#workspace .bc-agent-card{display:flex;flex-direction:column;align-items:stretch;min-width:0;min-height:200px;padding:16px;text-align:left;border:1px solid #2a3a47;border-radius:11px;background:rgba(19,33,44,.78);color:inherit;font:inherit;cursor:pointer}
+#workspace .bc-agent-card:hover,#workspace .bc-agent-card.is-selected{border-color:rgba(16,185,129,.7);background:rgba(19,43,47,.9)}
+#workspace .bc-agent-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+#workspace .bc-agent-avatar{display:grid;place-items:center;flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#1d705d,#193a43);border:1px solid rgba(126,240,200,.25);color:#9af4d5;font-size:12px;font-weight:700}
+#workspace .bc-agent-avatar-large{width:52px;height:52px;font-size:16px}
+#workspace .bc-agent-status{display:inline-flex;align-items:center;gap:6px;color:#9aaab7;font-size:10px}#workspace .bc-agent-status i{width:6px;height:6px;border-radius:50%;background:#8193a1}#workspace .bc-agent-status.is-active i{background:#62d7b1;box-shadow:0 0 8px rgba(98,215,177,.5)}
+#workspace .bc-agent-name{font-size:13px;color:#e8f0f7}#workspace .bc-agent-role{font-size:10px;color:#96a9ba;margin-top:3px}
+#workspace .bc-agent-card-stats{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid #263946;color:#96a9ba;font-size:10px}#workspace .bc-agent-card-stats strong{color:#7ef0c8;font-size:14px}
+#workspace .bc-agent-card-notes{display:-webkit-box;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:28px;margin-top:8px;color:#8195a5;font-size:10px;line-height:1.5}
+#workspace .bc-agent-card-action{margin-top:auto;padding-top:12px;color:#7ef0c8;font-size:10px}
+#workspace .bc-agent-no-results{grid-column:1/-1;padding:35px 12px;text-align:center;color:#96a9ba;font-size:12px;border:1px dashed #334654;border-radius:10px}
+#workspace .bc-agent-profile{position:sticky;top:20px;min-width:0;padding:16px;border:1px solid #2a3a47;border-radius:11px;background:rgba(19,33,44,.82)}
+#workspace .bc-agent-profile-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}#workspace .bc-agent-profile-head h3{font-size:13px;margin:0}
+#workspace .bc-agent-profile-head button{border:1px solid #334654;border-radius:6px;padding:5px 9px;background:#1a2a37;color:#c4d3de;font:inherit;font-size:10px;cursor:pointer}
+#workspace .bc-agent-profile-identity{display:flex;align-items:center;gap:12px;margin-bottom:20px}#workspace .bc-agent-profile-identity strong,#workspace .bc-agent-profile-identity span{display:block}#workspace .bc-agent-profile-identity strong{font-size:14px}#workspace .bc-agent-profile-identity div span{font-size:10px;color:#96a9ba;margin-top:5px}
+#workspace .bc-agent-profile h4{font-size:11px;margin:0 0 8px}
+#workspace .bc-agent-detail-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #263946;color:#96a9ba;font-size:10px}#workspace .bc-agent-detail-row strong{color:#eaf2f8}
+#workspace .bc-agent-notes{margin-top:16px;padding:13px;border:1px solid #2a3a47;border-radius:9px;background:rgba(9,15,22,.3)}#workspace .bc-agent-notes span{font-size:9px;letter-spacing:1px;color:#62d7b1}#workspace .bc-agent-notes p{font-size:11px;line-height:1.6;color:#96a9ba;margin:8px 0 0;overflow-wrap:anywhere}
+#workspace .bc-agent-profile-footer{display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid #263946;color:#8195a5;font-size:10px}#workspace .bc-agent-profile-footer strong{color:#62d7b1}
+#workspace .bc-agent-profile-empty{padding:40px 10px;text-align:center;color:#96a9ba;font-size:11px;line-height:1.6}
+@media(max-width:1050px){#workspace .bc-agent-layout{grid-template-columns:minmax(0,1fr) 270px}#workspace .bc-agent-summary{gap:8px}#workspace .bc-agent-summary article{gap:8px;padding:12px}}
+@media(max-width:800px){#workspace .bc-agent-layout{grid-template-columns:1fr}#workspace .bc-agent-profile{position:static}#workspace .bc-agent-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){#workspace .bc-agents-toolbar{flex-wrap:wrap}#workspace .bc-agent-search{flex-basis:100%}#workspace .bc-agents-toolbar select{flex:1}#workspace .bc-agent-grid{grid-template-columns:1fr}#workspace .bc-agent-invite{margin-top:0;margin-bottom:0;align-self:flex-start}}
