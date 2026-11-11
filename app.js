@@ -580,6 +580,89 @@ async function renderCoachingPage(content) {
   drawWeek();drawSessions();
 }
 
+
+async function renderICLogsPage(content) {
+  const rows = await fetchRows("team_ic_logs");
+  recordsCache = rows;
+  const canManage = canManageActiveTeam();
+  let selectedId = rows[0]?.id ?? null;
+  content.innerHTML =
+    '<section class="bc-ic-page">' +
+      '<div class="bc-ic-toolbar"><label class="bc-ic-search">⌕ <input id="ic-search" type="search" placeholder="Search by Log ID..." aria-label="Search IC logs"></label>' +
+      '<div class="bc-ic-date-range"><span>▦</span><label><span class="sr-only">From date</span><input id="ic-date-from" type="date" aria-label="From date"></label><span>–</span><label><span class="sr-only">To date</span><input id="ic-date-to" type="date" aria-label="To date"></label></div>' +
+      '<button type="button" class="bc-ic-export" id="ic-export-csv">↓ Export CSV</button></div>' +
+      '<div class="bc-ic-stats" id="ic-stats"></div>' +
+      '<div class="bc-ic-layout"><section class="bc-ic-table-panel"><div class="bc-ic-panel-head"><div><h2>Interaction records</h2><p>Team IC log entries</p></div><span id="ic-result-count"></span></div>' +
+      '<div class="bc-ic-table-scroll"><table class="bc-ic-table"><thead><tr><th>LOG ID</th><th>AGENT NAME</th><th>CATEGORY</th><th>IC EXTENSION</th><th>DATE</th><th></th></tr></thead><tbody id="ic-table-body"></tbody></table></div>' +
+      '<div id="ic-empty" class="bc-ic-empty" hidden>No IC logs match your search or date range.</div></section>' +
+      '<aside class="bc-ic-detail" id="ic-detail"></aside></div>' +
+      '<div class="bc-ic-form-host" id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p>' +
+    '</section>';
+  const search = $("#ic-search"), from = $("#ic-date-from"), to = $("#ic-date-to");
+  const body = $("#ic-table-body"), detail = $("#ic-detail");
+  function logId(row) { return "IC-" + String(row.id || "").replace(/-/g,"").slice(0,4).toUpperCase(); }
+  function filteredRows() {
+    const q = search.value.trim().toLowerCase();
+    return rows.filter(row => {
+      const date = String(row.log_date || "").slice(0,10);
+      return (!q || [logId(row),row.id,row.agent_name,row.category,row.details].join(" ").toLowerCase().includes(q)) &&
+        (!from.value || date >= from.value) && (!to.value || date <= to.value);
+    }).sort((a,b) => String(b.log_date||"").localeCompare(String(a.log_date||"")));
+  }
+  function drawDetail(row) {
+    if (!row) {
+      detail.innerHTML = '<div class="bc-ic-detail-empty"><span>◎</span><strong>Select an interaction</strong><p>Choose a record to review its details.</p></div>';
+      return;
+    }
+    detail.innerHTML = '<div class="bc-ic-detail-head"><div><span>SELECTED RECORD</span><strong>'+escapeHtml(logId(row))+'</strong></div>' +
+      (canManage ? '<div class="bc-ic-detail-actions"><button type="button" id="ic-edit-selected">Edit</button><button type="button" id="ic-delete-selected">Delete</button></div>' : '') +
+      '</div><div class="bc-ic-detail-agent"><span class="bc-ic-agent-avatar">'+escapeHtml((row.agent_name||"?").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase())+'</span><div><strong>'+escapeHtml(row.agent_name||"Unassigned")+'</strong><small>Agent</small></div></div>' +
+      '<div class="bc-ic-detail-fields"><div><span>DATE</span><strong>'+escapeHtml(formatDate(row.log_date))+'</strong></div><div><span>CATEGORY</span><strong>'+escapeHtml(row.category||"—")+'</strong></div><div><span>IC EXTENSION / MINUTES</span><strong>'+escapeHtml(row.extension_minutes == null || row.extension_minutes === "" ? "—" : row.extension_minutes+" min")+'</strong></div></div>' +
+      '<div class="bc-ic-detail-notes"><span>INTERACTION DETAILS</span><p>'+escapeHtml(row.details||"No details recorded.")+'</p></div><div class="bc-ic-detail-foot">TEAM BC · '+escapeHtml(teamDisplay(activeTeam()))+'</div>';
+    $("#ic-edit-selected")?.addEventListener("click",()=>showRecordForm("ic-logs",row));
+    $("#ic-delete-selected")?.addEventListener("click",()=>deleteRecord("ic-logs",row.id));
+  }
+  function draw() {
+    const filtered = filteredRows();
+    const reported = filtered.filter(r=>String(r.category||"").toLowerCase()==="reported").length;
+    const notReported = filtered.filter(r=>String(r.category||"").toLowerCase()==="not reported").length;
+    const durations = filtered.map(r=>Number(r.extension_minutes)).filter(n=>Number.isFinite(n)&&n>=0);
+    const avg = durations.length ? Math.round(durations.reduce((sum,n)=>sum+n,0)/durations.length) : null;
+    $("#ic-stats").innerHTML = [
+      ["Interactions",filtered.length,"total"],
+      ["Reported",reported,"reported"],
+      ["Not reported",notReported,"pending"],
+      ["Avg. extension",avg == null ? "—" : avg+" min","average"]
+    ].map(([label,value,kind])=>'<article class="bc-ic-stat bc-ic-stat-'+kind+'"><strong>'+escapeHtml(value)+'</strong><span>'+escapeHtml(label)+'</span></article>').join("");
+    $("#ic-result-count").textContent = filtered.length+" result"+(filtered.length===1?"":"s");
+    body.innerHTML = filtered.map(row=>'<tr data-ic-id="'+escapeHtml(row.id)+'" class="'+(String(row.id)===String(selectedId)?"is-selected":"")+'"><td class="bc-ic-id">'+escapeHtml(logId(row))+'</td><td>'+escapeHtml(row.agent_name||"—")+'</td><td><span class="bc-ic-category">'+escapeHtml(row.category||"—")+'</span></td><td>'+escapeHtml(row.extension_minutes==null||row.extension_minutes===""?"—":row.extension_minutes+" min")+'</td><td>'+escapeHtml(formatDate(row.log_date))+'</td><td><button type="button" class="bc-ic-view" aria-label="View '+escapeHtml(logId(row))+'">›</button></td></tr>').join("");
+    $("#ic-empty").hidden = filtered.length>0;
+    if (!filtered.some(r=>String(r.id)===String(selectedId))) selectedId=filtered[0]?.id??null;
+    drawDetail(filtered.find(r=>String(r.id)===String(selectedId))||null);
+  }
+  body.addEventListener("click",event=>{
+    const row=event.target.closest("tr[data-ic-id]");
+    if(row){selectedId=row.dataset.icId;draw();}
+  });
+  [search,from,to].forEach(el=>el.addEventListener(el===search?"input":"change",draw));
+  function exportCsv() {
+    const filtered=filteredRows();
+    const columns=["Log ID","Agent name","Date","Category","IC extension / minutes","Details"];
+    const values=filtered.map(row=>[logId(row),row.agent_name||"",row.log_date||"",row.category||"",row.extension_minutes??"",row.details||""]);
+    const csv=[columns,...values].map(line=>line.map(value=>'"'+String(value).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+    const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+    const url=URL.createObjectURL(blob),link=document.createElement("a");
+    link.href=url;link.download="team-bc-ic-logs.csv";document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
+  }
+  $("#ic-export-csv").addEventListener("click",exportCsv);
+  if (canManage) {
+    const add=document.createElement("button");add.type="button";add.className="bc-ic-add";add.textContent="+ Add IC log";
+    add.addEventListener("click",()=>showRecordForm("ic-logs"));
+    content.querySelector(".bc-ic-panel-head").appendChild(add);
+  }
+  draw();
+}
+
 async function renderRecordsPage(page, content) {
   const config = pageConfig[page];
   const today = new Date();
@@ -1128,6 +1211,7 @@ async function renderPage(page) {
     if (page === "overview") await renderOverview(content);
     else if (page === "agents") await renderAgentsPage(content);
     else if (page === "coaching") await renderCoachingPage(content);
+    else if (page === "ic-logs") await renderICLogsPage(content);
     else if (page === "bc-ai") await renderBCAIPage(content);
     else if (page === "bc-ai-comment-template") await renderBCAICommentTemplates(content);
     else if (page === "team-requests") await renderTeamRequests(content);
