@@ -575,8 +575,8 @@ async function renderCoachingPage(content) {
     $("#coaching-add-session").addEventListener("click",()=>showRecordForm("coaching"));
     $("#coaching-bulk-import").addEventListener("click",showBulkCoachingImport);
   }
-  $("#coaching-prev-week").addEventListener("click",()=>{weekOffset--;drawWeek();drawSessions();});
-  $("#coaching-next-week").addEventListener("click",()=>{weekOffset++;drawWeek();drawSessions();});
+  $("#coaching-prev-week").addEventListener("click",()=>{weekOffset--;const date=new Date(selectedDate+"T12:00:00");date.setDate(date.getDate()-7);selectedDate=localDateKey(date);drawWeek();drawSessions();});
+  $("#coaching-next-week").addEventListener("click",()=>{weekOffset++;const date=new Date(selectedDate+"T12:00:00");date.setDate(date.getDate()+7);selectedDate=localDateKey(date);drawWeek();drawSessions();});
   drawWeek();drawSessions();
 }
 
