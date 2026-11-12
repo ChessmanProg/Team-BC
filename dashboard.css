@@ -1689,3 +1689,6 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
   }
   #workspace .bc-ai-panel .bc-ai-ball.is-grabbed{transform:translate(-50%,-50%) scale(1.12)}
 }
+
+/* Keep pointer-drag coordinates aligned with the ball's top-left position. */
+#workspace .bc-ai-panel .bc-ai-ball.is-grabbed{transform:none}
