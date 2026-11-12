@@ -1967,7 +1967,7 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
     repeating-linear-gradient(108deg,transparent 0 10px,rgba(225,239,246,.58) 10px 11px,transparent 11px 21px);
   clip-path:polygon(0 0,100% 0,72% 100%,28% 100%);
   filter:drop-shadow(0 1px 2px rgba(190,225,242,.18));
-  z-index:-1;
+  z-index:0;
 }
 @media(max-width:760px){
   #workspace .bc-ai-panel .bc-ai-backboard{right:10%;top:25px;height:108px;width:20px}
