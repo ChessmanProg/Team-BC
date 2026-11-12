@@ -2042,3 +2042,34 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-ai-panel .bc-ai-flight-path path{fill:none;stroke:#69f4c8;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:.1 7;filter:drop-shadow(0 0 3px rgba(105,244,200,.95)) drop-shadow(0 0 8px rgba(105,244,200,.55));animation:bcAiFlightDash .55s linear infinite}
 #workspace .bc-ai-panel .bc-ai-court.shot-missed .bc-ai-flight-path path{stroke:#fbbf24;filter:drop-shadow(0 0 4px rgba(251,191,36,.8))}
 @keyframes bcAiFlightDash{to{stroke-dashoffset:-7}}
+
+
+/* BC AI flight-path reference match: taller court, low-left release, high dotted arc. */
+#workspace .bc-ai-panel .bc-ai-court{
+  height:420px!important;min-height:420px!important;overflow:hidden;
+}
+#workspace .bc-ai-panel .bc-ai-instructions{
+  left:32px;top:50%;max-width:43%;gap:9px;
+}
+#workspace .bc-ai-panel .bc-ai-ball{
+  left:27%;right:auto;top:auto;bottom:26px;transform:none;
+  font-size:50px;line-height:1;z-index:7;
+}
+#workspace .bc-ai-panel .bc-ai-flight-path{
+  position:absolute;inset:0;width:100%;height:100%;
+  z-index:6;display:block;overflow:visible;pointer-events:none;
+  opacity:0;transition:opacity .15s ease;
+}
+#workspace .bc-ai-panel .bc-ai-flight-path.is-visible{opacity:1}
+#workspace .bc-ai-panel .bc-ai-flight-path path{
+  fill:none;stroke:#69f4c8;stroke-width:3.5;stroke-linecap:round;
+  stroke-dasharray:0 9;filter:drop-shadow(0 0 3px rgba(105,244,200,.95)) drop-shadow(0 0 9px rgba(105,244,200,.7));
+  animation:bcAiFlightDash .55s linear infinite;
+}
+#workspace .bc-ai-panel .bc-ai-court.shot-missed .bc-ai-flight-path path{stroke:#fbbf24}
+@keyframes bcAiFlightDash{to{stroke-dashoffset:-9}}
+@media(max-width:760px){
+ #workspace .bc-ai-panel .bc-ai-court{height:330px!important;min-height:330px!important}
+ #workspace .bc-ai-panel .bc-ai-instructions{left:16px;max-width:48%}
+ #workspace .bc-ai-panel .bc-ai-ball{left:25%;bottom:22px;font-size:42px}
+}
