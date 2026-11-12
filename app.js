@@ -976,7 +976,8 @@ async function renderBCAIPage(content) {
       endPosition = {x:endCenter.x-ball.offsetWidth/2,y:endCenter.y-ball.offsetHeight/2};
     }
     const endCenter = {x:endPosition.x+ball.offsetWidth/2,y:endPosition.y+ball.offsetHeight/2};
-    const lift = Math.min(100,28+pullDistance*.24);
+    const flightDistance = Math.hypot(endCenter.x-startCenter.x,endCenter.y-startCenter.y);
+    const lift = Math.min(courtRect.height*.72,Math.max(105,flightDistance*.48));
     const control = {x:(startCenter.x+endCenter.x)/2,y:(startCenter.y+endCenter.y)/2-lift};
     const flightSvg = $("#bc-ai-flight-path"), flightLine = $("#bc-ai-flight-line");
     flightSvg.setAttribute("viewBox","0 0 "+courtRect.width+" "+courtRect.height);

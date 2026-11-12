@@ -2039,6 +2039,6 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 /* BC AI: show the complete ball-flight arc and its landing point. */
 #workspace .bc-ai-panel .bc-ai-flight-path{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:4;pointer-events:none;opacity:0;transition:opacity .18s ease}
 #workspace .bc-ai-panel .bc-ai-flight-path.is-visible{opacity:1}
-#workspace .bc-ai-panel .bc-ai-flight-path path{fill:none;stroke:#67e8f9;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:7 7;filter:drop-shadow(0 0 4px rgba(103,232,249,.8));animation:bcAiFlightDash .45s linear infinite}
+#workspace .bc-ai-panel .bc-ai-flight-path path{fill:none;stroke:#69f4c8;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:.1 7;filter:drop-shadow(0 0 3px rgba(105,244,200,.95)) drop-shadow(0 0 8px rgba(105,244,200,.55));animation:bcAiFlightDash .55s linear infinite}
 #workspace .bc-ai-panel .bc-ai-court.shot-missed .bc-ai-flight-path path{stroke:#fbbf24;filter:drop-shadow(0 0 4px rgba(251,191,36,.8))}
-@keyframes bcAiFlightDash{to{stroke-dashoffset:-14}}
+@keyframes bcAiFlightDash{to{stroke-dashoffset:-7}}
