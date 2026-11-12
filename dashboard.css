@@ -2002,3 +2002,27 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
   #workspace .bc-ai-panel .bc-ai-hoop{width:80px;height:21px}
   #workspace .bc-ai-panel .bc-ai-net{width:58px;height:60px}
 }
+
+
+/* Corrective sizing: the previous 112px rim was still too large.
+   Reduce the visible rim substantially while keeping it centered over the net. */
+#workspace .bc-ai-panel .bc-ai-hoop{
+  width:78px;
+  height:19px;
+  border-width:2px;
+}
+#workspace .bc-ai-panel .bc-ai-hoop::before{
+  inset:2px 4px 3px;
+}
+#workspace .bc-ai-panel .bc-ai-net{
+  width:58px;
+  height:62px;
+}
+@media(max-width:760px){
+  #workspace .bc-ai-panel .bc-ai-hoop{width:68px;height:17px}
+  #workspace .bc-ai-panel .bc-ai-net{width:50px;height:54px}
+}
+@media(max-width:480px){
+  #workspace .bc-ai-panel .bc-ai-hoop{width:58px;height:15px}
+  #workspace .bc-ai-panel .bc-ai-net{width:44px;height:48px}
+}
