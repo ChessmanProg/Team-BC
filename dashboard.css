@@ -2026,3 +2026,11 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
   #workspace .bc-ai-panel .bc-ai-hoop{width:58px;height:15px}
   #workspace .bc-ai-panel .bc-ai-net{width:44px;height:48px}
 }
+
+
+/* BC AI pull-to-aim guide and shot feedback */
+#workspace .bc-ai-panel .bc-ai-aim-guide{position:absolute;z-index:7;display:block;height:0;border-top:2px dashed #67e8f9;transform-origin:left center;pointer-events:none;filter:drop-shadow(0 0 4px rgba(103,232,249,.8))}
+#workspace .bc-ai-panel .bc-ai-aim-guide:after{content:"";position:absolute;right:-1px;top:-5px;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:8px solid #67e8f9}
+#workspace .bc-ai-panel .bc-ai-aim-guide[hidden],#workspace .bc-ai-panel .bc-ai-power[hidden]{display:none}
+#workspace .bc-ai-panel .bc-ai-power{position:absolute;z-index:8;padding:3px 7px;border:1px solid rgba(103,232,249,.45);border-radius:20px;background:rgba(7,22,32,.94);color:#a5f3fc;font-size:8px;font-weight:800;letter-spacing:.04em;white-space:nowrap;pointer-events:none;transform:translateX(-50%)}
+#workspace .bc-ai-panel .bc-ai-court.shot-missed .bc-ai-score-flash{opacity:1;transform:translate(-50%,0) scale(1);color:#fbbf24}
