@@ -1563,3 +1563,35 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 @media(max-width:1050px) { #workspace .bc-ic-layout { grid-template-columns:1fr; } }
 @media(max-width:720px) { #workspace .bc-ic-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } #workspace .bc-ic-toolbar { align-items:stretch; } #workspace .bc-ic-date-range { justify-content:center; } #workspace .bc-ic-date-range input { width:110px; } }
 @media(max-width:420px) { #workspace .bc-ic-stats { gap:8px; } #workspace .bc-ic-stat { align-items:flex-start; flex-direction:column; gap:4px; padding:12px; } }
+
+
+/* Figma 5:254 — Quick Links resource library */
+#workspace .bc-quicklinks{display:flex;flex-direction:column;gap:20px;min-width:0}
+#workspace .bc-quicklinks-toolbar{display:flex;align-items:center;gap:14px}
+#workspace .bc-quicklinks-search{display:flex;align-items:center;gap:12px;flex:1;min-width:0;padding:13px 18px;border:1px solid #2a3a47;border-radius:10px;background:rgba(19,33,44,.78);color:#96a9ba}
+#workspace .bc-quicklinks-search>span{font-size:22px;line-height:1}
+#workspace .bc-quicklinks-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#e4eff6;font:inherit;font-size:13px}
+#workspace .bc-quicklinks-search input::placeholder{color:#96a9ba}
+#workspace .bc-quicklinks-add{flex:none;border:1px solid #2588ff;border-radius:8px;background:#1675f8;color:#fff;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer}
+#workspace .bc-quicklinks-filters{display:flex;flex-wrap:wrap;gap:10px}
+#workspace .bc-quicklinks-filters button{border:1px solid #344a59;border-radius:7px;background:#1a2b39;color:#c9d9e6;padding:9px 14px;font-size:12px;cursor:pointer}
+#workspace .bc-quicklinks-filters button.is-active{border-color:#1675f8;background:#1675f8;color:#fff}
+#workspace .bc-quicklinks-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
+#workspace .bc-quicklinks-group{min-width:0}
+#workspace .bc-quicklinks-group-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 14px}
+#workspace .bc-quicklinks-group-head h2{margin:0;color:#e1ecf4;font-size:16px;font-weight:650}
+#workspace .bc-quicklinks-group-head>span{color:#6b869b;font-size:11px}
+#workspace .bc-quicklinks-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+#workspace .bc-quicklink-card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-width:0;padding:20px;border:1px solid #2a3a47;border-radius:12px;background:rgba(19,33,44,.78)}
+#workspace .bc-quicklink-card-top{display:flex;align-items:center;justify-content:space-between;width:100%}
+#workspace .bc-quicklink-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:10px;background:rgba(16,185,129,.1);color:#62d7b1;font-size:24px}
+#workspace .bc-quicklink-external{color:#7893a6;font-size:18px}
+#workspace .bc-quicklink-card h3{margin:0;color:#e4eff6;font-size:17px;line-height:1.35}
+#workspace .bc-quicklink-card>p{margin:0;color:#96a9ba;font-size:13px;line-height:1.55;min-height:40px}
+#workspace .bc-quicklink-domain{color:#6c899b;font-size:10px;overflow-wrap:anywhere}
+#workspace .bc-quicklink-card-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+#workspace .bc-quicklink-card-actions a{display:inline-flex;align-items:center;gap:6px;border-radius:7px;background:#1675f8;color:#fff;text-decoration:none;padding:9px 13px;font-size:12px;font-weight:600}
+#workspace .bc-quicklink-card-actions button{border:1px solid #344a59;border-radius:7px;background:#1a2b39;color:#c9d9e6;padding:8px 10px;font-size:11px;cursor:pointer}
+#workspace .bc-quicklinks-empty{padding:16px;border:1px dashed #344a59;border-radius:10px;color:#96a9ba;font-size:12px;line-height:1.5}
+@media(max-width:1100px){#workspace .bc-quicklinks-groups{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){#workspace .bc-quicklinks-toolbar{align-items:stretch;flex-direction:column}#workspace .bc-quicklinks-add{align-self:flex-start}#workspace .bc-quicklinks-groups{grid-template-columns:minmax(0,1fr)}}
