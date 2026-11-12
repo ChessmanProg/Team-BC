@@ -1641,3 +1641,54 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-ai-panel .bc-ai-photo-actions button{min-height:24px;padding:4px 6px!important;border-radius:5px;font-size:8px}
 @media(max-width:1000px){#workspace .bc-ai-panel .bc-ai-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:640px){#workspace .bc-ai-panel .bc-ai-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}#workspace .bc-ai-panel .panel-heading h2{font-size:19px}#workspace .bc-ai-panel .bc-ai-court{min-height:158px;height:158px}#workspace .bc-ai-panel .bc-ai-instructions{left:14px;max-width:68%}#workspace .bc-ai-panel .bc-ai-instructions strong{font-size:20px}#workspace .bc-ai-panel .bc-ai-backboard{right:18px}#workspace .bc-ai-panel .bc-ai-hoop{right:20px}#workspace .bc-ai-panel .bc-ai-ball{right:24%;bottom:25px;font-size:28px}}
+
+
+/* BC AI court: side-facing hoop and centered shooting ball */
+#workspace .bc-ai-panel .bc-ai-backboard{
+  right:6.4%;
+  transform:perspective(90px) rotateY(-12deg);
+  transform-origin:center;
+}
+#workspace .bc-ai-panel .bc-ai-hoop{
+  right:5.7%;
+  width:48px;
+  height:12px;
+  border-radius:50%;
+  transform:perspective(80px) rotateY(68deg) rotateZ(-5deg);
+  transform-origin:center;
+  box-shadow:0 0 8px rgba(245,158,11,.22);
+}
+#workspace .bc-ai-panel .bc-ai-net{
+  left:10px;
+  right:10px;
+  top:6px;
+  height:38px;
+  transform:skewX(-8deg) scaleX(.78);
+  transform-origin:top center;
+}
+#workspace .bc-ai-panel .bc-ai-ball{
+  left:27%;
+  right:auto;
+  top:50%;
+  bottom:auto;
+  transform:translate(-50%,-50%);
+  font-size:32px;
+}
+#workspace .bc-ai-panel .bc-ai-ball.is-grabbed{
+  transform:translate(-50%,-50%) scale(1.12);
+}
+@media(max-width:640px){
+  #workspace .bc-ai-panel .bc-ai-backboard{right:18px}
+  #workspace .bc-ai-panel .bc-ai-hoop{right:20px}
+  #workspace .bc-ai-panel .bc-ai-ball{
+    left:27%;
+    right:auto;
+    top:50%;
+    bottom:auto;
+    font-size:28px;
+  }
+  #workspace .bc-ai-panel .bc-ai-ball.is-grabbed{transform:translate(-50%,-50%) scale(1.12)}
+}
+
+/* Keep pointer-drag coordinates aligned with the ball's top-left position. */
+#workspace .bc-ai-panel .bc-ai-ball.is-grabbed{transform:none}
