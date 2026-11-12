@@ -809,7 +809,7 @@ function showRecordForm(page, row=null) {
       message($("#record-notice"), row ? "Changes saved." : "Record added.");
       editingRecordId = null;
       if (page === "coaching" && $("#coaching-dashboard")) await renderPage("coaching");
-      else if (page === "ic-logs") await renderPage("ic-logs");
+      else if (page === "ic-logs" || page === "quick-links") await renderPage(page);
       else await refreshRecordList(page);
     } catch (error) {
       message($("#record-form-notice"), friendlyError(error));
@@ -827,7 +827,7 @@ async function deleteRecord(page, id) {
     if (error) throw error;
     message($("#record-notice"), "Record deleted.");
     if (page === "coaching" && $("#coaching-dashboard")) await renderPage("coaching");
-    else if (page === "ic-logs") await renderPage("ic-logs");
+    else if (page === "ic-logs" || page === "quick-links") await renderPage(page);
     else await refreshRecordList(page);
   } catch (error) { message($("#record-notice"), friendlyError(error)); }
 }
@@ -1193,6 +1193,87 @@ async function renderTeamRequests(content) {
     list.appendChild(item);
   }
 }
+
+async function renderQuickLinksPage(content) {
+  const links = await fetchRows("team_quick_links");
+  recordsCache = links;
+  const canManage = canManageActiveTeam();
+  const categories = ["Internal Docs", "Tools", "Portals"];
+  function categoryFor(row) {
+    const text = ((row.title || "") + " " + (row.url || "") + " " + (row.description || "")).toLowerCase();
+    if (/documentation|\bdocs?\b|guideline|handbook|playbook|policy|sop|knowledge base/.test(text)) return "Internal Docs";
+    if (/portal|sign.?in|login|account|dashboard|workspace/.test(text)) return "Portals";
+    return "Tools";
+  }
+  function safeUrl(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "#";
+    return /^https?:\/\//i.test(raw) ? raw : "https://" + raw;
+  }
+  function domainFor(value) {
+    try { return new URL(safeUrl(value)).hostname.replace(/^www\./i, ""); }
+    catch (_) { return String(value || "").replace(/^https?:\/\//i, "").split("/")[0]; }
+  }
+  content.innerHTML =
+    '<section class="bc-quicklinks" id="quick-links-dashboard">' +
+      '<div class="bc-quicklinks-toolbar">' +
+        '<label class="bc-quicklinks-search"><span aria-hidden="true">⌕</span><input id="quick-links-search" type="search" placeholder="Search docs, tools, and portals..." aria-label="Search quick links"></label>' +
+        (canManage ? '<button type="button" class="bc-quicklinks-add" id="quick-links-add">+ Add link</button>' : '') +
+      '</div>' +
+      '<div class="bc-quicklinks-filters" role="group" aria-label="Filter resources">' +
+        '<button type="button" class="is-active" data-link-category="all">All resources</button>' +
+        categories.map((category) => '<button type="button" data-link-category="' + category + '">' + category + '</button>').join("") +
+      '</div>' +
+      '<div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p>' +
+      '<div class="bc-quicklinks-groups" id="quick-links-groups"></div>' +
+    '</section>';
+  if (canManage) $("#quick-links-add").addEventListener("click", () => showRecordForm("quick-links"));
+  let selectedCategory = "all";
+  function draw() {
+    const query = $("#quick-links-search").value.trim().toLowerCase();
+    const filtered = links.filter((row) => {
+      const matchesQuery = !query || [row.title, row.url, row.description, categoryFor(row)].join(" ").toLowerCase().includes(query);
+      return matchesQuery && (selectedCategory === "all" || categoryFor(row) === selectedCategory);
+    });
+    const groups = selectedCategory === "all" ? categories : [selectedCategory];
+    const host = $("#quick-links-groups");
+    host.innerHTML = groups.map((category) => {
+      const rows = filtered.filter((row) => categoryFor(row) === category);
+      return '<section class="bc-quicklinks-group" data-category="' + category + '">' +
+        '<div class="bc-quicklinks-group-head"><h2>' + category + '</h2><span>' + String(rows.length).padStart(2,"0") + '</span></div>' +
+        (rows.length ? '<div class="bc-quicklinks-grid">' + rows.map((row) => {
+          const icon = category === "Internal Docs" ? "▤" : category === "Portals" ? "◫" : "⌘";
+          return '<article class="bc-quicklink-card">' +
+            '<div class="bc-quicklink-card-top"><span class="bc-quicklink-icon">' + icon + '</span><span class="bc-quicklink-external" aria-hidden="true">↗</span></div>' +
+            '<h3>' + escapeHtml(row.title || "Untitled link") + '</h3>' +
+            '<p>' + escapeHtml(row.description || "Open this saved team resource.") + '</p>' +
+            '<span class="bc-quicklink-domain">' + escapeHtml(domainFor(row.url)) + '</span>' +
+            '<div class="bc-quicklink-card-actions"><a href="' + escapeHtml(safeUrl(row.url)) + '" target="_blank" rel="noopener noreferrer">Launch <span aria-hidden="true">↗</span></a>' +
+            (canManage ? '<button type="button" data-link-edit="' + escapeHtml(row.id) + '">Edit</button><button type="button" data-link-delete="' + escapeHtml(row.id) + '">Delete</button>' : '') +
+            '</div></article>';
+        }).join("") + '</div>' : '<p class="bc-quicklinks-empty">' + (query ? "No matching links in this category." : "No saved links in this category yet.") + '</p>') +
+      '</section>';
+    }).join("");
+  }
+  $("#quick-links-search").addEventListener("input", draw);
+  content.querySelectorAll("[data-link-category]").forEach((button) => button.addEventListener("click", () => {
+    selectedCategory = button.dataset.linkCategory;
+    content.querySelectorAll("[data-link-category]").forEach((item) => item.classList.toggle("is-active", item === button));
+    draw();
+  }));
+  $("#quick-links-groups").addEventListener("click", async (event) => {
+    const edit = event.target.closest("[data-link-edit]");
+    const remove = event.target.closest("[data-link-delete]");
+    if (edit) {
+      const row = links.find((item) => String(item.id) === edit.dataset.linkEdit);
+      if (row) showRecordForm("quick-links", row);
+    } else if (remove) {
+      await deleteRecord("quick-links", remove.dataset.linkDelete);
+    }
+  });
+  draw();
+}
+
 async function renderPage(page) {
   if (!activeTeamKey) return showTeamSelection();
   currentPage = page;
@@ -1214,6 +1295,7 @@ async function renderPage(page) {
     else if (page === "agents") await renderAgentsPage(content);
     else if (page === "coaching") await renderCoachingPage(content);
     else if (page === "ic-logs") await renderICLogsPage(content);
+    else if (page === "quick-links") await renderQuickLinksPage(content);
     else if (page === "bc-ai") await renderBCAIPage(content);
     else if (page === "bc-ai-comment-template") await renderBCAICommentTemplates(content);
     else if (page === "team-requests") await renderTeamRequests(content);
