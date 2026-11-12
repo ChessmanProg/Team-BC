@@ -902,6 +902,7 @@ async function renderBCAIPage(content) {
     ballStart = {x:rect.left - courtRect.left, y:rect.top - courtRect.top};
     dragStart = {x:event.clientX, y:event.clientY};
     ball.style.left = ballStart.x + "px"; ball.style.top = ballStart.y + "px";
+    flightSvg.classList.remove("is-preview");
     ball.style.right = "auto"; ball.style.bottom = "auto";
     ball.classList.add("is-grabbed"); draggingBall = true;
     ball.setPointerCapture(event.pointerId);
@@ -950,6 +951,7 @@ async function renderBCAIPage(content) {
     draggingBall = false; ball.classList.remove("is-grabbed"); court.classList.remove("is-dragging");
     aimGuide.hidden = true; powerLabel.hidden = true;
     ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
+    requestAnimationFrame(drawFlightPreview);
   });
   ball.addEventListener("keydown", (event) => {
     if ((event.key === "Enter" || event.key === " ") && !busy) {
@@ -1023,6 +1025,7 @@ async function renderBCAIPage(content) {
       busy = false; input.disabled = false; ball.classList.remove("is-uploading");
       ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
       if (ball.getAnimations) ball.getAnimations().forEach(animation=>animation.cancel());
+      requestAnimationFrame(drawFlightPreview);
     }
   }
   async function loadBCAIGallery() {
