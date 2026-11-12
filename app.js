@@ -977,7 +977,7 @@ async function renderBCAIPage(content) {
     }
     const endCenter = {x:endPosition.x+ball.offsetWidth/2,y:endPosition.y+ball.offsetHeight/2};
     const flightDistance = Math.hypot(endCenter.x-startCenter.x,endCenter.y-startCenter.y);
-    const lift = Math.min(courtRect.height*.72,Math.max(105,flightDistance*.48));
+    const lift = Math.min(courtRect.height*.78,Math.max(150,flightDistance*.62));
     const control = {x:(startCenter.x+endCenter.x)/2,y:(startCenter.y+endCenter.y)/2-lift};
     const flightSvg = $("#bc-ai-flight-path"), flightLine = $("#bc-ai-flight-line");
     flightSvg.setAttribute("viewBox","0 0 "+courtRect.width+" "+courtRect.height);
@@ -1001,7 +1001,7 @@ async function renderBCAIPage(content) {
         $("#bc-ai-score-flash").textContent = "OFF TARGET — BALL LANDED HERE";
         const reason = pullDistance < 28 ? "Pull farther back for more power." : "The ball landed away from the hoop. Adjust your pull direction and try again.";
         message(notice, "Missed shot. " + reason + " Your photo is still selected and has NOT been uploaded.");
-        setTimeout(() => flightSvg.classList.remove("is-visible"),2200);
+        setTimeout(() => flightSvg.classList.remove("is-visible"),4500);
         return;
       }
       const safeName = chosenFile.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(-90) || "photo";
