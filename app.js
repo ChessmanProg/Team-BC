@@ -331,7 +331,8 @@ const pageInfo = {
   "quick-links": ["Quick Links", "Save useful team links in one place."],
   "bc-ai": ["BC AI", "Shoot your photo into the hoop to upload it."],
   "bc-ai-comment-template": ["BC AI COMMENT TEMPLATE", "Create, organize, and copy your team comment templates."],
-  "team-requests": ["Team requests", "Review requests to join this team."]
+  "team-requests": ["Team requests", "Review requests to join this team."],
+  "work-requests": ["Work Requests", "Track team requests from intake through completion."]
 };
 const pageConfig = {
   agents: { table:"team_agents", singular:"agent", plural:"agents", fields:[
@@ -1173,6 +1174,111 @@ async function renderBCAICommentTemplates(content) {
   categoryFilter.addEventListener("change",renderList);
   try{await loadTemplates();}catch(error){host.innerHTML='<div class="empty-state">Could not load templates. Run the BC AI Comment Template SQL setup in your Supabase project, then refresh this page.<br><small>'+escapeHtml(friendlyError(error))+'</small></div>';}
 }
+async function renderWorkRequests(content) {
+  const canManage = canManageActiveTeam();
+  let requests = [];
+  let agents = [];
+  const statuses = [
+    {key:"new",label:"New Requests"},
+    {key:"under_review",label:"Under Review"},
+    {key:"approved",label:"Approved"},
+    {key:"completed",label:"Completed"}
+  ];
+  const priorities = ["low","medium","high","urgent"];
+  const statusLabel = (value) => statuses.find((item) => item.key === value)?.label || "New Requests";
+  const dateLabel = (value) => value ? new Date(value + "T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}) : "";
+  async function load() {
+    const [requestResult, agentResult] = await Promise.all([
+      supabaseClient.from("team_work_requests").select("*").eq("team_key",activeTeamKey).order("created_at",{ascending:false}),
+      supabaseClient.from("team_agents").select("agent_name").eq("team_key",activeTeamKey).order("agent_name")
+    ]);
+    if (requestResult.error) throw requestResult.error;
+    if (agentResult.error) throw agentResult.error;
+    requests = requestResult.data || [];
+    agents = [...new Set((agentResult.data || []).map((row) => row.agent_name).filter(Boolean))];
+  }
+  content.innerHTML =
+    '<section class="bc-work-requests" id="work-requests-board">' +
+      '<div class="bc-work-toolbar"><div><p class="bc-work-eyebrow">TEAM WORKSPACE</p><h2>Work Requests</h2><p>Track requests from the moment they arrive until the work is completed.</p></div><button type="button" class="bc-work-add" id="work-request-add">＋ New Request</button></div>' +
+      '<div class="bc-work-stats" id="work-request-stats"></div>' +
+      '<div class="bc-work-filters"><label><span>⌕</span><input id="work-request-search" type="search" placeholder="Search requests..." aria-label="Search work requests"></label><select id="work-request-priority" aria-label="Filter by priority"><option value="all">All priorities</option>' + priorities.map((p) => '<option value="' + p + '">' + p[0].toUpperCase() + p.slice(1) + '</option>').join("") + '</select></div>' +
+      '<div id="work-request-form-host"></div><p class="notice" id="work-request-notice" role="status"></p>' +
+      '<div class="bc-work-columns" id="work-request-columns"></div>' +
+    '</section>';
+  const formHost = $("#work-request-form-host");
+  function showForm() {
+    formHost.innerHTML =
+      '<form class="bc-work-form" id="work-request-form"><div class="bc-work-form-heading"><div><span>NEW REQUEST</span><h3>What needs to get done?</h3></div><button type="button" class="bc-work-close" id="work-request-cancel" aria-label="Close form">×</button></div>' +
+      '<label>Request title<input name="title" maxlength="160" required placeholder="e.g. Review weekly performance report"></label>' +
+      '<label>Description<textarea name="description" maxlength="3000" rows="3" placeholder="Add context, requirements, or helpful details..."></textarea></label>' +
+      '<div class="bc-work-form-grid"><label>Priority<select name="priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="urgent">Urgent</option></select></label>' +
+      '<label>Assign to<select name="assignee"><option value="">Unassigned</option>' + agents.map((name) => '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>').join("") + '</select></label>' +
+      '<label>Due date<input name="due_date" type="date"></label></div><div class="bc-work-form-actions"><button type="submit" class="bc-work-add">Create Request</button><button type="button" class="bc-work-cancel" id="work-request-cancel-bottom">Cancel</button></div></form>';
+    const form = $("#work-request-form");
+    const close = () => { formHost.innerHTML = ""; };
+    $("#work-request-cancel").addEventListener("click",close);
+    $("#work-request-cancel-bottom").addEventListener("click",close);
+    form.addEventListener("submit",async(event)=>{
+      event.preventDefault();
+      const submit=form.querySelector('[type="submit"]');submit.disabled=true;
+      const payload={team_key:activeTeamKey,title:form.elements.title.value.trim(),description:form.elements.description.value.trim(),priority:form.elements.priority.value,status:"new",assignee:form.elements.assignee.value||null,due_date:form.elements.due_date.value||null,created_by:activeUser.id};
+      try{
+        const {error}=await supabaseClient.from("team_work_requests").insert(payload);
+        if(error)throw error;
+        close();message($("#work-request-notice"),"Your request has been added to the board.");await refresh();
+      }catch(error){message($("#work-request-notice"),"Could not create request. "+friendlyError(error));submit.disabled=false;}
+    });
+  }
+  async function updateRequest(id,patch) {
+    const {error}=await supabaseClient.from("team_work_requests").update({...patch,updated_at:new Date().toISOString()}).eq("id",id).eq("team_key",activeTeamKey);
+    if(error){message($("#work-request-notice"),friendlyError(error));return false;}
+    await refresh();return true;
+  }
+  function draw() {
+    const query=$("#work-request-search").value.trim().toLowerCase();
+    const priority=$("#work-request-priority").value;
+    const filtered=requests.filter((row)=> (!query||[row.title,row.description,row.assignee||""].join(" ").toLowerCase().includes(query))&&(priority==="all"||row.priority===priority));
+    $("#work-request-stats").innerHTML =
+      '<article><span>Total requests</span><strong>'+requests.length+'</strong></article>'+
+      '<article><span>New</span><strong>'+requests.filter(r=>r.status==="new").length+'</strong></article>'+
+      '<article><span>In progress</span><strong>'+requests.filter(r=>r.status==="under_review").length+'</strong></article>'+
+      '<article><span>Completed</span><strong>'+requests.filter(r=>r.status==="completed").length+'</strong></article>';
+    $("#work-request-columns").innerHTML=statuses.map((status,index)=>{
+      const rows=filtered.filter((row)=>row.status===status.key);
+      return '<section class="bc-work-column"><header><div><span class="bc-work-column-index">0'+(index+1)+'</span><h3>'+status.label+'</h3></div><span class="bc-work-count">'+rows.length+'</span></header>'+
+        (rows.length?rows.map((row)=>{
+          const priorityClass="priority-"+row.priority;
+          return '<article class="bc-work-card" data-request-id="'+row.id+'"><div class="bc-work-card-top"><span class="bc-work-priority '+priorityClass+'">'+escapeHtml(row.priority)+'</span><span class="bc-work-date">'+escapeHtml(new Date(row.created_at).toLocaleDateString(undefined,{month:"short",day:"numeric"}))+'</span></div>'+
+            '<h4>'+escapeHtml(row.title)+'</h4><p class="bc-work-description">'+escapeHtml(row.description||"No additional details provided.")+'</p>'+
+            '<div class="bc-work-card-meta"><span class="bc-work-assignee-mark">'+(row.assignee?"↗":"＋")+'</span><span>'+(row.assignee?escapeHtml(row.assignee):"Unassigned")+'</span></div>'+
+            (row.due_date?'<div class="bc-work-due">Due '+escapeHtml(dateLabel(row.due_date))+'</div>':'')+
+            (canManage?'<div class="bc-work-card-controls"><label>Status<select data-work-status="'+row.id+'">'+statuses.map(s=>'<option value="'+s.key+'" '+(s.key===row.status?"selected":"")+'>'+s.label+'</option>').join("")+'</select></label><label>Assignee<select data-work-assignee="'+row.id+'"><option value="">Unassigned</option>'+agents.map(name=>'<option value="'+escapeHtml(name)+'" '+(name===row.assignee?"selected":"")+'>'+escapeHtml(name)+'</option>').join("")+'</select></label><button type="button" class="bc-work-delete" data-work-delete="'+row.id+'">Delete</button></div>':'')+
+            '</article>';
+        }).join(""):'<div class="bc-work-empty"><span>✦</span><p>'+(query||priority!=="all"?"No matching requests.":"Nothing here yet.")+'</p></div>')+
+      '</section>';
+    }).join("");
+  }
+  async function refresh(){try{await load();draw();}catch(error){message($("#work-request-notice"),friendlyError(error));}}
+  $("#work-request-add").addEventListener("click",showForm);
+  $("#work-request-search").addEventListener("input",draw);
+  $("#work-request-priority").addEventListener("change",draw);
+  $("#work-request-columns").addEventListener("change",async(event)=>{
+    const status=event.target.closest("[data-work-status]");
+    const assignee=event.target.closest("[data-work-assignee]");
+    if(status)await updateRequest(Number(status.dataset.workStatus),{status:status.value});
+    if(assignee)await updateRequest(Number(assignee.dataset.workAssignee),{assignee:assignee.value||null});
+  });
+  $("#work-request-columns").addEventListener("click",async(event)=>{
+    const remove=event.target.closest("[data-work-delete]");
+    if(!remove||!confirm("Delete this work request?"))return;
+    remove.disabled=true;
+    const {error}=await supabaseClient.from("team_work_requests").delete().eq("id",Number(remove.dataset.workDelete)).eq("team_key",activeTeamKey);
+    if(error){message($("#work-request-notice"),friendlyError(error));remove.disabled=false;return;}
+    message($("#work-request-notice"),"Request deleted.");await refresh();
+  });
+  await refresh();
+}
+
 async function renderTeamRequests(content) {
   if (!canManageActiveTeam()) throw new Error("Only this team's admins can review requests.");
   const { data: requests, error } = await supabaseClient.from("team_join_requests")
@@ -1299,6 +1405,7 @@ async function renderPage(page) {
     else if (page === "bc-ai") await renderBCAIPage(content);
     else if (page === "bc-ai-comment-template") await renderBCAICommentTemplates(content);
     else if (page === "team-requests") await renderTeamRequests(content);
+    else if (page === "work-requests") await renderWorkRequests(content);
     else await renderRecordsPage(page, content);
   } catch (error) {
     content.innerHTML = '<section class="content-panel"><p class="notice">' + escapeHtml(friendlyError(error)) + '</p><button class="small-button" id="retry-load">Try again</button></section>';
