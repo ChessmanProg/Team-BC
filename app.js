@@ -839,7 +839,7 @@ async function renderBCAIPage(content) {
       '<div class="bc-ai-court-lines" aria-hidden="true"></div><div class="bc-ai-backboard"></div><div class="bc-ai-hoop"><span class="bc-ai-net"></span></div>' +
       '<div class="bc-ai-instructions"><strong>Pull. Aim. Release!</strong><span>Drag the ball back, then let go</span><small>Choose a JPG, PNG, WEBP or GIF · Max 10 MB</small></div>' +
       '<div class="bc-ai-ball" id="bc-ai-ball" role="button" tabindex="0" aria-label="Pull basketball back and release to shoot">🏀</div>' +
-      '<div class="bc-ai-aim-guide" id="bc-ai-aim-guide" aria-hidden="true"></div><div class="bc-ai-power" id="bc-ai-power" aria-live="polite"></div>' +
+      '<svg class="bc-ai-flight-path" id="bc-ai-flight-path" aria-hidden="true"><path id="bc-ai-flight-line" /></svg><div class="bc-ai-aim-guide" id="bc-ai-aim-guide" aria-hidden="true"></div><div class="bc-ai-power" id="bc-ai-power" aria-live="polite"></div>' +
       '<div class="bc-ai-selected" id="bc-ai-selected" hidden></div>' +
       '<div class="bc-ai-score-flash" id="bc-ai-score-flash" aria-live="polite"></div>' +
     '</div><div class="bc-ai-controls"><button type="button" class="small-button" id="bc-ai-browse">Choose photo</button></div>' +
@@ -966,32 +966,42 @@ async function renderBCAIPage(content) {
     const targetLength = Math.hypot(toHoop.x,toHoop.y) || 1;
     const alignment = (launch.x*toHoop.x + launch.y*toHoop.y) / (launchLength*targetLength);
     const isSuccessfulShot = pullDistance >= 28 && alignment >= 0.82;
-    if (!isSuccessfulShot) {
-      court.classList.remove("shot-made"); court.classList.add("shot-missed");
-      $("#bc-ai-score-flash").textContent = "NO SCORE — TRY AGAIN";
-      const reason = pullDistance < 28 ? "Pull farther back to build enough power." : "The aim guide missed the hoop. Pull in the opposite direction and aim toward the ring.";
-      message(notice, "Missed shot. " + reason + " Your photo is still selected and has NOT been uploaded.");
-      ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
-      return;
+    const courtRect = court.getBoundingClientRect();
+    const startCenter = {x:release.x+ball.offsetWidth/2,y:release.y+ball.offsetHeight/2};
+    let endPosition;
+    if (isSuccessfulShot) endPosition = {x:target.x,y:target.y};
+    else {
+      const travel = Math.max(85,Math.min(courtRect.width*.58,75+pullDistance*1.15));
+      const endCenter = {x:Math.max(18,Math.min(courtRect.width-18,startCenter.x+(launch.x/launchLength)*travel)),y:Math.max(18,Math.min(courtRect.height-18,startCenter.y+(launch.y/launchLength)*travel))};
+      endPosition = {x:endCenter.x-ball.offsetWidth/2,y:endCenter.y-ball.offsetHeight/2};
     }
+    const endCenter = {x:endPosition.x+ball.offsetWidth/2,y:endPosition.y+ball.offsetHeight/2};
+    const lift = Math.min(100,28+pullDistance*.24);
+    const control = {x:(startCenter.x+endCenter.x)/2,y:(startCenter.y+endCenter.y)/2-lift};
+    const flightSvg = $("#bc-ai-flight-path"), flightLine = $("#bc-ai-flight-line");
+    flightSvg.setAttribute("viewBox","0 0 "+courtRect.width+" "+courtRect.height);
+    flightLine.setAttribute("d","M "+startCenter.x+" "+startCenter.y+" Q "+control.x+" "+control.y+" "+endCenter.x+" "+endCenter.y);
+    flightSvg.classList.add("is-visible");
     busy = true; input.disabled = true; ball.classList.add("is-uploading");
     court.classList.remove("shot-made","shot-missed");
-    message(notice, "You released it… shot in the air!");
-    const startX = release.x, startY = release.y;
-    const dx = target.x-startX, dy = target.y-startY;
-    const lift = Math.min(95, 30 + pullDistance*.22);
-    const duration = Math.max(420, Math.min(850, 850-pullDistance*1.2));
+    message(notice, isSuccessfulShot ? "Watch the ball fly toward the hoop…" : "Watch the shot travel — that one is off target.");
+    const duration = Math.max(520,Math.min(1050,1050-pullDistance*1.1));
+    const keyframes = [0,.25,.5,.75,1].map((t) => {
+      const inverse=1-t;
+      const x=inverse*inverse*startCenter.x+2*inverse*t*control.x+t*t*endCenter.x;
+      const y=inverse*inverse*startCenter.y+2*inverse*t*control.y+t*t*endCenter.y;
+      return {left:(x-ball.offsetWidth/2)+"px",top:(y-ball.offsetHeight/2)+"px",transform:"rotate("+(t*560)+"deg) scale("+(1-t*.42)+")",opacity:1,offset:t};
+    });
     try {
-      if (ball.animate) {
-        const animation = ball.animate([
-          {left:startX+"px",top:startY+"px",transform:"rotate(0deg) scale(1)",opacity:1},
-          {left:(startX+dx*.48)+"px",top:(startY+dy*.48-lift)+"px",transform:"rotate(260deg) scale(.88)",opacity:1,offset:.48},
-          {left:target.x+"px",top:target.y+"px",transform:"rotate(560deg) scale(.58)",opacity:.85}
-        ], {duration,easing:"cubic-bezier(.2,.7,.25,1)",fill:"forwards"});
-        await animation.finished;
-      } else {
-        ball.style.left=target.x+"px"; ball.style.top=target.y+"px";
-        await new Promise(resolve=>setTimeout(resolve,duration));
+      if (ball.animate) { const animation=ball.animate(keyframes,{duration,easing:"linear",fill:"forwards"}); await animation.finished; }
+      else { ball.style.left=endPosition.x+"px"; ball.style.top=endPosition.y+"px"; await new Promise(resolve=>setTimeout(resolve,duration)); }
+      if (!isSuccessfulShot) {
+        court.classList.add("shot-missed");
+        $("#bc-ai-score-flash").textContent = "OFF TARGET — BALL LANDED HERE";
+        const reason = pullDistance < 28 ? "Pull farther back for more power." : "The ball landed away from the hoop. Adjust your pull direction and try again.";
+        message(notice, "Missed shot. " + reason + " Your photo is still selected and has NOT been uploaded.");
+        setTimeout(() => flightSvg.classList.remove("is-visible"),2200);
+        return;
       }
       const safeName = chosenFile.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(-90) || "photo";
       const path = activeTeamKey + "/" + activeUser.id + "/" + Date.now() + "-" + safeName;
@@ -1002,10 +1012,12 @@ async function renderBCAIPage(content) {
       message(notice, "Great shot! Your photo was uploaded successfully.");
       chosenFile = null; input.value = ""; selected.hidden = true; selected.textContent = ""; court.classList.remove("has-photo");
       await loadBCAIGallery();
+      setTimeout(() => flightSvg.classList.remove("is-visible"),2200);
     } catch (error) {
       court.classList.remove("shot-made"); court.classList.add("shot-missed");
       $("#bc-ai-score-flash").textContent = "REBOUND — TRY AGAIN";
       message(notice, "Upload failed: " + friendlyError(error) + " Your photo is still selected, so try again.");
+      setTimeout(() => flightSvg.classList.remove("is-visible"),2200);
     } finally {
       busy = false; input.disabled = false; ball.classList.remove("is-uploading");
       ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
