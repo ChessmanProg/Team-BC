@@ -1224,7 +1224,7 @@ async function renderQuickLinksPage(content) {
         '<button type="button" class="is-active" data-link-category="all">All resources</button>' +
         categories.map((category) => '<button type="button" data-link-category="' + category + '">' + category + '</button>').join("") +
       '</div>' +
-      '<div id="quick-links-form-host"></div><p class="notice" id="record-notice" role="status"></p>' +
+      '<div id="record-form-host"></div><p class="notice" id="record-notice" role="status"></p>' +
       '<div class="bc-quicklinks-groups" id="quick-links-groups"></div>' +
     '</section>';
   if (canManage) $("#quick-links-add").addEventListener("click", () => showRecordForm("quick-links"));
