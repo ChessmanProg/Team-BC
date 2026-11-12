@@ -839,6 +839,7 @@ async function renderBCAIPage(content) {
       '<div class="bc-ai-court-lines" aria-hidden="true"></div><div class="bc-ai-backboard"></div><div class="bc-ai-hoop"><span class="bc-ai-net"></span></div>' +
       '<div class="bc-ai-instructions"><strong>Pull. Aim. Release!</strong><span>Drag the ball back, then let go</span><small>Choose a JPG, PNG, WEBP or GIF · Max 10 MB</small></div>' +
       '<div class="bc-ai-ball" id="bc-ai-ball" role="button" tabindex="0" aria-label="Pull basketball back and release to shoot">🏀</div>' +
+      '<div class="bc-ai-aim-guide" id="bc-ai-aim-guide" aria-hidden="true"></div><div class="bc-ai-power" id="bc-ai-power" aria-live="polite"></div>' +
       '<div class="bc-ai-selected" id="bc-ai-selected" hidden></div>' +
       '<div class="bc-ai-score-flash" id="bc-ai-score-flash" aria-live="polite"></div>' +
     '</div><div class="bc-ai-controls"><button type="button" class="small-button" id="bc-ai-browse">Choose photo</button></div>' +
@@ -846,6 +847,7 @@ async function renderBCAIPage(content) {
     '<div class="bc-ai-gallery-heading"><h3>Uploaded photos</h3><button type="button" class="small-button" id="bc-ai-refresh">Refresh</button></div><div class="bc-ai-gallery" id="bc-ai-gallery"><p class="muted">Loading photos…</p></div></section>';
   const input = $("#bc-ai-photo-input"), replaceInput = $("#bc-ai-replace-input"), court = $("#bc-ai-court"), ball = $("#bc-ai-ball");
   const hoop = court.querySelector(".bc-ai-hoop"), selected = $("#bc-ai-selected"), notice = $("#bc-ai-notice");
+  const aimGuide = $("#bc-ai-aim-guide"), powerLabel = $("#bc-ai-power");
   let chosenFile = null, busy = false, pendingReplacePath = null, pointerOffset = {x:0,y:0}, draggingBall = false, dragStart = {x:0,y:0}, ballStart = {x:0,y:0};
   function chooseFile(file) {
     if (!file) return;
@@ -904,7 +906,8 @@ async function renderBCAIPage(content) {
     ball.classList.add("is-grabbed"); draggingBall = true;
     ball.setPointerCapture(event.pointerId);
     court.classList.add("is-dragging");
-    message(notice, chosenFile ? "Pull the ball back, then release to shoot!" : "Choose a photo first. Then pull the ball back and release.");
+    aimGuide.hidden = false; powerLabel.hidden = false;
+    message(notice, chosenFile ? "Aim the guide toward the hoop. Pull farther for more power, then release." : "Choose a photo first. Then pull the ball back and release.");
   });
   ball.addEventListener("pointermove", (event) => {
     if (!draggingBall) return;
@@ -912,10 +915,21 @@ async function renderBCAIPage(content) {
     const x = Math.max(0, Math.min(rect.width - ball.offsetWidth, event.clientX - rect.left - pointerOffset.x));
     const y = Math.max(0, Math.min(rect.height - ball.offsetHeight, event.clientY - rect.top - pointerOffset.y));
     ball.style.left = x + "px"; ball.style.top = y + "px";
+    const centerX = x + ball.offsetWidth / 2, centerY = y + ball.offsetHeight / 2;
+    const pullX = event.clientX - dragStart.x, pullY = event.clientY - dragStart.y;
+    const launchX = -pullX, launchY = -pullY;
+    const magnitude = Math.hypot(launchX, launchY) || 1;
+    const angle = Math.atan2(launchY, launchX) * 180 / Math.PI;
+    const guideLength = Math.max(34, Math.min(116, magnitude * 1.35));
+    aimGuide.style.left = centerX + "px"; aimGuide.style.top = centerY + "px";
+    aimGuide.style.width = guideLength + "px"; aimGuide.style.transform = "rotate(" + angle + "deg)";
+    powerLabel.style.left = centerX + "px"; powerLabel.style.top = (centerY + 20) + "px";
+    powerLabel.textContent = "AIM  ·  POWER " + Math.min(100, Math.round(magnitude / 1.25)) + "%";
   });
   ball.addEventListener("pointerup", async (event) => {
     if (!draggingBall) return;
     draggingBall = false; ball.classList.remove("is-grabbed"); court.classList.remove("is-dragging");
+    aimGuide.hidden = true; powerLabel.hidden = true;
     const courtRect = court.getBoundingClientRect(), ballRect = ball.getBoundingClientRect(), hoopRect = hoop.getBoundingClientRect();
     const release = {x:ballRect.left-courtRect.left, y:ballRect.top-courtRect.top};
     const hoopTarget = {x:hoopRect.left-courtRect.left+(hoopRect.width-ballRect.width)/2, y:hoopRect.top-courtRect.top+(hoopRect.height-ballRect.height)/2};
@@ -930,10 +944,11 @@ async function renderBCAIPage(content) {
       ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
       return;
     }
-    await shootBall(release, hoopTarget, pullDistance);
+    await shootBall(release, hoopTarget, pullDistance, dragStart, {x:event.clientX,y:event.clientY});
   });
   ball.addEventListener("pointercancel", () => {
     draggingBall = false; ball.classList.remove("is-grabbed"); court.classList.remove("is-dragging");
+    aimGuide.hidden = true; powerLabel.hidden = true;
     ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
   });
   ball.addEventListener("keydown", (event) => {
@@ -943,8 +958,22 @@ async function renderBCAIPage(content) {
       else message(notice, "Use your mouse or finger to pull the basketball back, then release.");
     }
   });
-  async function shootBall(release, target, pullDistance) {
+  async function shootBall(release, target, pullDistance, pullOrigin, pullEnd) {
     if (!chosenFile || busy) return;
+    const launch = {x:pullOrigin.x-pullEnd.x, y:pullOrigin.y-pullEnd.y};
+    const toHoop = {x:target.x-(release.x+ball.offsetWidth/2), y:target.y-(release.y+ball.offsetHeight/2)};
+    const launchLength = Math.hypot(launch.x,launch.y) || 1;
+    const targetLength = Math.hypot(toHoop.x,toHoop.y) || 1;
+    const alignment = (launch.x*toHoop.x + launch.y*toHoop.y) / (launchLength*targetLength);
+    const isSuccessfulShot = pullDistance >= 28 && alignment >= 0.82;
+    if (!isSuccessfulShot) {
+      court.classList.remove("shot-made"); court.classList.add("shot-missed");
+      $("#bc-ai-score-flash").textContent = "NO SCORE — TRY AGAIN";
+      const reason = pullDistance < 28 ? "Pull farther back to build enough power." : "The aim guide missed the hoop. Pull in the opposite direction and aim toward the ring.";
+      message(notice, "Missed shot. " + reason + " Your photo is still selected and has NOT been uploaded.");
+      ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
+      return;
+    }
     busy = true; input.disabled = true; ball.classList.add("is-uploading");
     court.classList.remove("shot-made","shot-missed");
     message(notice, "You released it… shot in the air!");
