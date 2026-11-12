@@ -1595,3 +1595,49 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-quicklinks-empty{padding:16px;border:1px dashed #344a59;border-radius:10px;color:#96a9ba;font-size:12px;line-height:1.5}
 @media(max-width:1100px){#workspace .bc-quicklinks-groups{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){#workspace .bc-quicklinks-toolbar{align-items:stretch;flex-direction:column}#workspace .bc-quicklinks-add{align-self:flex-start}#workspace .bc-quicklinks-groups{grid-template-columns:minmax(0,1fr)}}
+
+
+/* Figma 5:317 — BC AI Photo Court */
+#workspace .bc-ai-panel{padding:0;border:0;background:transparent;box-shadow:none;overflow:visible}
+#workspace .bc-ai-panel:before{display:none}
+#workspace .bc-ai-panel .panel-heading{margin:0 0 14px;gap:12px}
+#workspace .bc-ai-panel .panel-heading h2{margin:0 0 3px;color:#f2f7fa;font-size:22px;line-height:1.2}
+#workspace .bc-ai-panel .panel-heading h2:before{content:'◉';display:inline-block;margin-right:11px;color:#21d4a0;font-size:23px}
+#workspace .bc-ai-panel .panel-heading p{margin:0;color:#91a3b1;font-size:11px}
+#workspace .bc-ai-panel .bc-ai-court{min-height:158px;height:158px;border:1px solid rgba(16,185,129,.5);border-radius:11px;background:linear-gradient(90deg,#101d27,#101d27);box-shadow:inset 0 0 38px rgba(16,185,129,.04);cursor:default}
+#workspace .bc-ai-panel .bc-ai-court:before{left:42%;right:-4%;bottom:-85px;height:200px;border:1px solid rgba(16,185,129,.16);border-radius:0;background:transparent;transform:skewX(-24deg)}
+#workspace .bc-ai-panel .bc-ai-court:after{left:65%;bottom:28px;width:180px;height:80px;border:1px solid rgba(16,185,129,.13);border-radius:50%;transform:none}
+#workspace .bc-ai-panel .bc-ai-court-lines{opacity:.35;background:linear-gradient(90deg,transparent 63.5%,rgba(16,185,129,.16) 63.6%,transparent 63.8%),linear-gradient(0deg,transparent 74%,rgba(16,185,129,.14) 74.2%,transparent 74.5%)}
+#workspace .bc-ai-panel .bc-ai-backboard{top:20px;right:6%;width:42px;height:34px;border:2px solid #0ea5e9;border-radius:3px;background:rgba(14,165,233,.04);box-shadow:none}
+#workspace .bc-ai-panel .bc-ai-hoop{top:52px;right:5.7%;width:48px;height:10px;border:2px solid #f59e0b;border-top-width:2px;box-shadow:none}
+#workspace .bc-ai-panel .bc-ai-net{left:5px;right:5px;top:5px;height:38px;border-color:rgba(193,219,230,.45);background:repeating-linear-gradient(70deg,transparent 0 8px,rgba(193,219,230,.4) 8px 9px,transparent 9px 16px)}
+#workspace .bc-ai-panel .bc-ai-instructions{left:20px;top:50%;transform:translateY(-50%);gap:7px;max-width:60%}
+#workspace .bc-ai-panel .bc-ai-instructions:before{content:'YOUR NEXT SHOT STARTS HERE';color:#56dabb;font-size:7px;font-weight:700;letter-spacing:.07em}
+#workspace .bc-ai-panel .bc-ai-instructions strong{color:#f0f5f8;font-size:25px;letter-spacing:-.6px}
+#workspace .bc-ai-panel .bc-ai-instructions span{color:#a9bac6;font-size:10px}
+#workspace .bc-ai-panel .bc-ai-instructions small{display:inline-flex;width:max-content;max-width:100%;padding:5px 12px;border:1px solid #2b414b;border-radius:20px;background:#172630;color:#91a5b3;font-size:8px}
+#workspace .bc-ai-panel .bc-ai-ball{right:30%;bottom:34px;font-size:32px}
+#workspace .bc-ai-panel .bc-ai-selected{left:20px;bottom:9px;padding:5px 8px;border-radius:6px;font-size:9px}
+#workspace .bc-ai-panel .bc-ai-controls{margin:9px 0 8px}
+#workspace .bc-ai-panel .bc-ai-controls button{min-width:108px;min-height:34px;padding:8px 18px;border:1px solid rgba(66,227,186,.75);border-radius:7px;background:linear-gradient(100deg,#10b981,#0ea5e9);color:#052b25;font-size:10px;font-weight:700}
+#workspace .bc-ai-panel #bc-ai-notice{margin:0;color:#8fa2b0;font-size:9px;line-height:1.5}
+#workspace .bc-ai-panel .bc-ai-gallery-heading{margin-top:16px}
+#workspace .bc-ai-panel .bc-ai-gallery-heading h3{color:#e8f0f5;font-size:14px}
+#workspace .bc-ai-panel .bc-ai-gallery-heading button{padding:7px 10px;border:1px solid #293947;border-radius:6px;background:#17212d;color:#c7d4de;font-size:9px}
+#workspace .bc-ai-panel .bc-ai-gallery{grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:0;align-items:start}
+#workspace .bc-ai-panel .bc-ai-photo-card{border:1px solid rgba(48,66,79,.8);border-radius:9px;background:rgba(19,27,38,.94);box-shadow:0 5px 16px rgba(0,0,0,.12)}
+#workspace .bc-ai-panel .bc-ai-photo-card img{height:82px}
+#workspace .bc-ai-panel .bc-ai-photo-card span{padding:7px 8px;font-size:8px}
+#workspace .bc-ai-panel .bc-ai-comments{padding:7px;border-top:1px solid #263746}
+#workspace .bc-ai-panel .bc-ai-comments-heading{margin-bottom:6px}
+#workspace .bc-ai-panel .bc-ai-comments-heading strong{font-size:8px;color:#70dfbd}
+#workspace .bc-ai-panel .bc-ai-comments-heading span{font-size:7px}
+#workspace .bc-ai-panel .bc-ai-comments-list{max-height:62px;gap:4px}
+#workspace .bc-ai-panel .bc-ai-no-comments{font-size:7px}
+#workspace .bc-ai-panel .bc-ai-comment-form{gap:5px;margin-top:6px}
+#workspace .bc-ai-panel .bc-ai-comment-form textarea{min-height:32px;padding:6px;border-radius:5px;font-size:8px}
+#workspace .bc-ai-panel .bc-ai-comment-form button{min-height:24px;padding:4px 7px!important;border-radius:5px;font-size:8px}
+#workspace .bc-ai-panel .bc-ai-photo-actions{gap:5px;padding:0 7px 7px}
+#workspace .bc-ai-panel .bc-ai-photo-actions button{min-height:24px;padding:4px 6px!important;border-radius:5px;font-size:8px}
+@media(max-width:1000px){#workspace .bc-ai-panel .bc-ai-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){#workspace .bc-ai-panel .bc-ai-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}#workspace .bc-ai-panel .panel-heading h2{font-size:19px}#workspace .bc-ai-panel .bc-ai-court{min-height:158px;height:158px}#workspace .bc-ai-panel .bc-ai-instructions{left:14px;max-width:68%}#workspace .bc-ai-panel .bc-ai-instructions strong{font-size:20px}#workspace .bc-ai-panel .bc-ai-backboard{right:18px}#workspace .bc-ai-panel .bc-ai-hoop{right:20px}#workspace .bc-ai-panel .bc-ai-ball{right:24%;bottom:25px;font-size:28px}}
