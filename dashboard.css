@@ -1692,3 +1692,62 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 
 /* Keep pointer-drag coordinates aligned with the ball's top-left position. */
 #workspace .bc-ai-panel .bc-ai-ball.is-grabbed{transform:none}
+
+
+/* Team work requests — four-stage workflow board */
+#workspace .bc-work-requests{display:grid;gap:18px;color:#e7eef4}
+.bc-work-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.bc-work-eyebrow{margin:0 0 7px;color:#5ee0b8;font-size:10px;font-weight:800;letter-spacing:1.8px}
+.bc-work-toolbar h2{margin:0;color:#f3f7fa;font-size:25px;letter-spacing:-.7px}
+.bc-work-toolbar p:not(.bc-work-eyebrow){margin:6px 0 0;color:#91a2b1;font-size:12px}
+.bc-work-add{border:1px solid rgba(71,224,184,.4);border-radius:10px;background:linear-gradient(110deg,#10b981,#0ea5e9);color:#062d27;font-weight:800;padding:11px 16px;cursor:pointer;white-space:nowrap}
+.bc-work-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.bc-work-stats article{padding:14px 16px;border:1px solid #253747;border-radius:12px;background:rgba(15,27,39,.84)}
+.bc-work-stats span{display:block;color:#8ea2b1;font-size:10px}
+.bc-work-stats strong{display:block;margin-top:7px;color:#f2f7fa;font-size:23px}
+.bc-work-filters{display:flex;gap:10px;align-items:center}
+.bc-work-filters label{display:flex;align-items:center;gap:9px;flex:1;max-width:420px;padding:0 12px;border:1px solid #2a3c4b;border-radius:9px;background:#101d29;color:#8ea3b3}
+.bc-work-filters label span{font-size:20px}
+.bc-work-filters input,.bc-work-filters select,.bc-work-form input,.bc-work-form textarea,.bc-work-form select{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#e8f0f5;padding:11px 0;font:inherit;font-size:12px}
+.bc-work-filters select{width:auto;min-width:145px;padding:11px 12px;border:1px solid #2a3c4b;border-radius:9px;background:#101d29}
+.bc-work-filters option,.bc-work-form option,.bc-work-card-controls option{background:#132330;color:#e8f0f5}
+.bc-work-columns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}
+.bc-work-column{min-width:0;padding:11px;border:1px solid #263a49;border-radius:13px;background:rgba(11,22,32,.76)}
+.bc-work-column>header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 2px 12px;border-bottom:1px solid #253746}
+.bc-work-column>header>div{display:flex;align-items:center;gap:7px;min-width:0}
+.bc-work-column-index{color:#5bdcba;font-size:9px;font-weight:800}
+.bc-work-column h3{margin:0;color:#e8f0f5;font-size:12px;font-weight:750}
+.bc-work-count{display:grid;place-items:center;min-width:23px;height:23px;padding:0 6px;border-radius:8px;background:#1b3040;color:#9fb4c2;font-size:10px}
+.bc-work-card{margin-top:10px;padding:12px;border:1px solid #2a3d4c;border-radius:10px;background:linear-gradient(145deg,rgba(23,38,51,.98),rgba(15,27,39,.98));box-shadow:0 7px 18px rgba(0,0,0,.12)}
+.bc-work-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.bc-work-priority{padding:4px 7px;border-radius:5px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.bc-work-priority.priority-low{background:rgba(59,130,246,.14);color:#8dbbff}
+.bc-work-priority.priority-medium{background:rgba(148,163,184,.14);color:#bdcbd7}
+.bc-work-priority.priority-high{background:rgba(245,158,11,.15);color:#f5c36b}
+.bc-work-priority.priority-urgent{background:rgba(239,68,68,.15);color:#ff9292}
+.bc-work-date{color:#718697;font-size:9px}
+.bc-work-card h4{margin:10px 0 5px;color:#f1f6f9;font-size:12px;line-height:1.45}
+.bc-work-description{margin:0;color:#91a4b3;font-size:10px;line-height:1.55;overflow-wrap:anywhere}
+.bc-work-card-meta{display:flex;align-items:center;gap:7px;margin-top:12px;color:#b4c2cc;font-size:9px}
+.bc-work-assignee-mark{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#203a49;color:#68dfbd;font-size:12px}
+.bc-work-due{margin-top:8px;color:#91a4b3;font-size:9px}
+.bc-work-card-controls{display:grid;gap:7px;margin-top:11px;padding-top:10px;border-top:1px solid #2a3d4c}
+.bc-work-card-controls label{display:grid;gap:4px;color:#8096a6;font-size:9px}
+.bc-work-card-controls select{width:100%;padding:7px 8px;border:1px solid #304556;border-radius:6px;background:#122431;color:#dce7ed;font-size:10px}
+.bc-work-delete{justify-self:start;padding:5px 0;border:0;background:none;color:#ed8b8b;font-size:9px;cursor:pointer}
+.bc-work-empty{display:grid;justify-items:center;gap:7px;padding:25px 8px;color:#718798;text-align:center}
+.bc-work-empty span{color:#4b8f83;font-size:18px}
+.bc-work-empty p{margin:0;font-size:10px}
+.bc-work-form{display:grid;gap:12px;padding:17px;border:1px solid #2e4c57;border-radius:13px;background:#101f2b}
+.bc-work-form-heading{display:flex;align-items:center;justify-content:space-between}
+.bc-work-form-heading span{color:#60dbb8;font-size:9px;font-weight:800;letter-spacing:1.3px}
+.bc-work-form-heading h3{margin:5px 0 0;color:#f1f6f9;font-size:17px}
+.bc-work-close{border:0;background:none;color:#9aabba;font-size:24px;cursor:pointer}
+.bc-work-form>label,.bc-work-form-grid label{display:grid;gap:6px;color:#a7b7c3;font-size:10px;font-weight:650}
+.bc-work-form input,.bc-work-form textarea,.bc-work-form select{padding:10px;border:1px solid #2a4050;border-radius:7px;background:#0c1924;color:#e8f0f5}
+.bc-work-form textarea{resize:vertical}
+.bc-work-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.bc-work-form-actions{display:flex;gap:9px;align-items:center}
+.bc-work-cancel{padding:10px 14px;border:1px solid #344858;border-radius:9px;background:transparent;color:#c1ced7;font-size:11px;cursor:pointer}
+@media(max-width:1100px){.bc-work-columns{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.bc-work-toolbar{align-items:flex-start;flex-direction:column}.bc-work-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.bc-work-columns{grid-template-columns:1fr}.bc-work-filters{align-items:stretch;flex-direction:column}.bc-work-filters label{max-width:none}.bc-work-filters select{width:100%}.bc-work-form-grid{grid-template-columns:1fr}}
