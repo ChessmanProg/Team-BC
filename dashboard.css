@@ -2081,8 +2081,8 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
   aspect-ratio:2.38/1;overflow:hidden;
 }
 #workspace .bc-ai-panel .bc-ai-ball{
-  left:27%!important;right:auto!important;bottom:26px!important;
-  top:auto!important;font-size:48px!important;z-index:7;
+  left:27%;right:auto;bottom:26px;
+  top:auto;font-size:48px!important;z-index:7;
 }
 #workspace .bc-ai-panel .bc-ai-instructions{
   left:32px!important;top:50%!important;max-width:43%!important;
@@ -2103,7 +2103,7 @@ body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page="quick-link
 #workspace .bc-ai-panel .bc-ai-flight-path.is-preview path{stroke-width:3.2;stroke-dasharray:.1 7}
 @media(max-width:760px){
  #workspace .bc-ai-panel .bc-ai-court{height:min(72vw,390px)!important;min-height:310px!important}
- #workspace .bc-ai-panel .bc-ai-ball{left:25%!important;bottom:22px!important;font-size:40px!important}
+ #workspace .bc-ai-panel .bc-ai-ball{left:25%;bottom:22px;font-size:40px!important}
  #workspace .bc-ai-panel .bc-ai-instructions{left:16px!important;max-width:48%!important}
  #workspace .bc-ai-panel .bc-ai-backboard{right:6%!important;top:17%!important}
  #workspace .bc-ai-panel .bc-ai-hoop{right:6.5%!important;top:45%!important}
