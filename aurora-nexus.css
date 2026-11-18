@@ -281,3 +281,8 @@ html[data-nexus-focus="on"] #workspace .infinity-art,html[data-nexus-focus="on"]
 html[data-nexus-focus="on"] #workspace .infinity-hero{min-height:0;background:#11182c}
 html[data-nexus-focus="on"] #workspace .infinity-copy{max-width:100%}
 @media(max-width:600px){#workspace .infinity-hero{min-height:170px;padding:18px}#workspace .infinity-copy{max-width:65%}#workspace .infinity-art{right:2%;width:32%}body #workspace .bc-template-card{padding:15px}}
+
+/* Unified Quantum BC branding; preserve accessible button labels. */
+body .brand .brand-mark,body #workspace .side-brand .brand-mark{background:transparent url("./favicon.svg?v=quantum-bc") center/contain no-repeat!important;color:transparent!important;border:0!important;box-shadow:0 0 18px #a58aff55;border-radius:15px;min-width:42px;min-height:42px}
+body #workspace .quantum-core,.quantum-dialog .quantum-center{background:transparent url("./favicon.svg?v=quantum-bc") center/contain no-repeat!important;color:transparent!important;border:0!important;box-shadow:0 0 22px #a58aff66}
+body #workspace .quantum-core>*{opacity:0}
