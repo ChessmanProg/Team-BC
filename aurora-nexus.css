@@ -286,3 +286,48 @@ html[data-nexus-focus="on"] #workspace .infinity-copy{max-width:100%}
 body .brand .brand-mark,body #workspace .side-brand .brand-mark{background:transparent url("./favicon.svg?v=quantum-bc") center/contain no-repeat!important;color:transparent!important;border:0!important;box-shadow:0 0 18px #a58aff55;border-radius:15px;min-width:42px;min-height:42px}
 body #workspace .quantum-core,.quantum-dialog .quantum-center{background:transparent url("./favicon.svg?v=quantum-bc") center/contain no-repeat!important;color:transparent!important;border:0!important;box-shadow:0 0 22px #a58aff66}
 body #workspace .quantum-core>*{opacity:0}
+
+/* Quantum Universe: all rules scoped to eight opt-in rooms. */
+#workspace[data-universe] .universe-identity{position:relative;isolation:isolate;display:flex;align-items:center;gap:18px;overflow:hidden;min-height:112px;margin:0 0 22px;padding:20px 26px;border:1px solid color-mix(in srgb,var(--universe-accent) 58%,transparent);border-radius:22px;background:radial-gradient(ellipse at 85% 50%,color-mix(in srgb,var(--universe-accent) 30%,transparent),transparent 58%),linear-gradient(110deg,#10162d,#17132b);box-shadow:0 0 28px color-mix(in srgb,var(--universe-accent) 18%,transparent),inset 0 1px #ffffff20}
+#workspace[data-universe] .universe-mark{flex:none;display:grid;place-items:center;width:60px;height:60px;border:1px solid var(--universe-accent);border-radius:18px;background:#171b36;color:var(--universe-accent);box-shadow:0 0 22px color-mix(in srgb,var(--universe-accent) 35%,transparent)}
+#workspace[data-universe] .universe-mark svg{width:32px;height:32px}
+#workspace[data-universe] .universe-words{display:grid;gap:4px;z-index:1}
+#workspace[data-universe] .universe-words small{font-size:10px;letter-spacing:.18em;color:var(--universe-accent);font-weight:750}
+#workspace[data-universe] .universe-words strong{font-size:clamp(19px,3vw,32px);line-height:1.15;color:#f5f2ff}
+#workspace[data-universe] .universe-words span{font-size:12px;color:#c8cce5}
+#workspace[data-universe] .universe-art{position:absolute;right:5%;width:180px;height:180px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.7;z-index:-1}
+#workspace[data-universe] .universe-art i{position:absolute;inset:20%;border:1px solid var(--universe-accent);border-radius:50%;box-shadow:0 0 16px color-mix(in srgb,var(--universe-accent) 35%,transparent)}
+#workspace[data-universe] .universe-art i:nth-child(2){inset:9%;border-color:var(--universe-secondary);transform:rotate(35deg) scaleY(.48)}
+#workspace[data-universe] .universe-art i:nth-child(3){inset:34%;background:radial-gradient(circle at 30% 20%,#fff,var(--universe-accent) 35%,#15152e 80%);box-shadow:0 0 28px var(--universe-accent)}
+#workspace[data-universe] .nexus-section-marker{color:var(--universe-accent)}
+#workspace[data-universe] #nav .nav-item.active{box-shadow:inset 0 -2px var(--universe-accent),0 0 15px color-mix(in srgb,var(--universe-accent) 35%,transparent)}
+#workspace[data-universe="overview"] :is(.bc-overview-kpi,.bc-overview-panel,.nexus-tile){border-color:#a98bff66;background-image:linear-gradient(145deg,#292044cc,#101a32e8);box-shadow:inset 0 1px #ffffff20,0 8px 24px #0004}
+#workspace[data-universe="overview"] .bc-kpi-icon{color:#8beaff;filter:drop-shadow(0 0 7px #45dcff88)}
+#workspace[data-universe="agents"] :is(.bc-agent-card,.bc-agent-profile,.bc-agent-directory){border-color:#4de9d355;background-image:linear-gradient(145deg,#163b40dd,#101b35ee);box-shadow:inset 0 1px #ffffff18,0 8px 24px #0004}
+#workspace[data-universe="agents"] .bc-agent-avatar{outline:1px solid #79f9e0;outline-offset:3px;box-shadow:0 0 16px #4de9d355}
+#workspace[data-universe="agents"] .bc-agent-card:is(.is-selected,.active,[aria-selected="true"]){border-color:#4de9d3;box-shadow:0 0 20px #4de9d344}
+#workspace[data-universe="coaching"] :is(.bc-coaching-summary,.bc-coaching-schedule,.bc-coaching-resources,.bc-coaching-guidelines){border-color:#c3a0ff66;background-image:linear-gradient(145deg,#302443df,#161a35ee)}
+#workspace[data-universe="coaching"] .bc-coaching-session-list{border-inline-start:2px solid #c3a0ff77;padding-inline-start:12px}
+#workspace[data-universe="coaching"] .bc-coaching-session-time{color:#ffd19a}
+#workspace[data-universe="coaching"] .bc-coaching-summary-count{border:1px solid #ffc17b88;border-radius:18px;padding:12px;box-shadow:0 0 20px #ffc17b22}
+#workspace[data-universe="ic-logs"] :is(.bc-ic-stat,.bc-ic-table-panel,.bc-ic-detail){border-color:#55efac55;background-image:linear-gradient(145deg,#153a36df,#10243aee)}
+#workspace[data-universe="ic-logs"] .bc-ic-stat strong{font-variant-numeric:tabular-nums;text-shadow:0 0 14px #55efac55}
+#workspace[data-universe="ic-logs"] .bc-ic-table tr.is-selected{outline:1px solid #55efac88;outline-offset:-1px}
+#workspace[data-universe="quick-links"] .bc-quicklink-card{border-color:#8295ff77;background-image:radial-gradient(ellipse at 15% 0%,#633b9b66,transparent 65%),linear-gradient(145deg,#1e2545,#12152e)}
+#workspace[data-universe="quick-links"] .bc-quicklink-icon{border-radius:50%;outline:1px solid #ff82d499;outline-offset:4px;box-shadow:0 0 18px #8295ff88}
+#workspace[data-universe="quick-links"] .bc-quicklink-card-actions a{color:#d7c9ff}
+#workspace[data-universe="bc-ai"] .bc-ai-panel{border-color:#ffad6877;background-image:linear-gradient(145deg,#34233cbb,#15182bdd)}
+#workspace[data-universe="bc-ai"] .bc-ai-court{outline:1px solid #ffad6899;box-shadow:0 0 24px #ffad6833}
+#workspace[data-universe="bc-ai"] .bc-ai-gallery-heading{border-bottom:1px solid #ffad6855;padding-bottom:10px}
+#workspace[data-universe="work-requests"] :is(.bc-work-column,.bc-work-card,.bc-work-stat){border-color:#ffbf7255;background-image:linear-gradient(145deg,#2b293fdd,#152b35ee)}
+#workspace[data-universe="work-requests"] .bc-work-column-index{color:#ffcf94}
+#workspace[data-universe="work-requests"] .bc-work-count{box-shadow:0 0 12px #65e6c044}
+#workspace[data-universe="team-requests"] .content-panel{border-color:#f2cc7877;background-image:linear-gradient(145deg,#302c36e8,#151d37ee);box-shadow:inset 0 1px #f2cc7833,0 10px 25px #0004}
+#workspace[data-universe="team-requests"] .content-panel h2{color:#ffe1a1}
+#workspace[data-universe="team-requests"] .content-panel .primary{border-color:#f2cc78;background:#735a28;color:#fff6df}
+@keyframes universe-enter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:no-preference){html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace[data-universe] .universe-identity{animation:universe-enter .28s ease-out}}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace[data-universe] :is(.bc-agent-card,.bc-quicklink-card,.bc-work-card){transition:box-shadow .2s,border-color .2s}html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace[data-universe] :is(.bc-agent-card,.bc-quicklink-card,.bc-work-card):hover{border-color:var(--universe-accent);box-shadow:0 0 20px color-mix(in srgb,var(--universe-accent) 25%,transparent)}}
+html[data-nexus-focus="on"] #workspace[data-universe] .universe-art{display:none}
+html[data-nexus-focus="on"] #workspace[data-universe] .universe-identity{min-height:0;background:#141a2e;box-shadow:none}
+@media(max-width:600px){#workspace[data-universe] .universe-identity{padding:14px;gap:12px;min-height:90px}#workspace[data-universe] .universe-mark{width:44px;height:44px}#workspace[data-universe] .universe-mark svg{width:24px;height:24px}#workspace[data-universe] .universe-art{right:-35px;opacity:.25}}
