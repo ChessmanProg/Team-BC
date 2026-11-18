@@ -1,0 +1,128 @@
+/* Team BC — Aurora Glass, isolated presentation layer. No data or permissions changes. */
+:root{--bc-mint:#68f5c1;--bc-sky:#78d9ff;--bc-lilac:#c3a6ff;--bc-amber:#ffcc85;--bc-rose:#ffa0c9;--bc-ease:cubic-bezier(.2,.75,.25,1)}
+@keyframes bcRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bcFade{from{opacity:.25}to{opacity:1}}
+@keyframes bcAurora{0%,100%{transform:translate3d(-2%,0,0) scale(1)}50%{transform:translate3d(3%,-3%,0) scale(1.08)}}
+@keyframes bcHalo{0%,100%{box-shadow:0 0 0 0 rgba(104,245,193,.35)}50%{box-shadow:0 0 0 7px rgba(104,245,193,0)}}
+@keyframes bcOrbit{to{transform:rotate(360deg)}}
+@keyframes bcFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes bcShimmer{from{background-position:0% 50%}to{background-position:200% 50%}}
+@keyframes bcSpark{0%,100%{opacity:.35}50%{opacity:.9}}
+/* Login: preserve all form controls, layout breakpoints and the original ocean footage. */
+body:has(#login-panel:not(.hidden)) .hero h1 span{color:#94f7d7;background:linear-gradient(100deg,#8cf7cb,#83dcff,#d3b7ff,#8cf7cb);background-size:200% 100%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:bcShimmer 9s linear infinite}
+body:has(#login-panel:not(.hidden)) .hero{animation:bcRise .6s var(--bc-ease) both}
+body:has(#login-panel:not(.hidden)) .features li{animation:bcRise .55s var(--bc-ease) both;transition:translate .25s,filter .25s}
+body:has(#login-panel:not(.hidden)) .features li:nth-child(2){animation-delay:.12s}
+body:has(#login-panel:not(.hidden)) .features li:nth-child(3){animation-delay:.24s}
+body:has(#login-panel:not(.hidden)) .features li:hover{translate:5px 0;filter:brightness(1.2)}
+body .glass.login{animation:bcRise .65s var(--bc-ease) both}
+body:has(#login-panel:not(.hidden)) .glass.login{border-radius:24px;border-color:rgba(130,224,255,.38);background:linear-gradient(150deg,rgba(17,37,58,.94),rgba(9,23,37,.86));box-shadow:0 26px 70px #0007,0 0 40px #79d9ff12,inset 0 1px #ffffff16}
+body:has(#login-panel:not(.hidden)) .login .primary{background:linear-gradient(110deg,#1877ca,#6354c6);border-radius:12px;box-shadow:0 8px 26px #3778dc35}
+body .login :is(.primary,.google-signin-button){transition:translate .2s,box-shadow .2s,filter .2s}
+body .login :is(.primary,.google-signin-button):hover{translate:0 -2px;filter:brightness(1.1)}
+body .login :is(.primary,.google-signin-button):active{translate:0 1px}
+body .team-card{transition:translate .25s,box-shadow .25s,border-color .25s}
+body .team-card:hover{translate:0 -4px;box-shadow:0 16px 32px #0005;border-color:#79d9ff88}
+body .team-card-icon{animation:bcFloat 4s ease-in-out infinite}
+/* Distinct page colors, expressed consistently in navigation and glass highlights. */
+#workspace{--bc-accent:var(--bc-mint);--bc-rgb:104,245,193}
+#workspace:has(.nav-item[data-page="agents"].active){--bc-accent:#a9e780;--bc-rgb:169,231,128}
+#workspace:has(.nav-item[data-page="coaching"].active){--bc-accent:var(--bc-lilac);--bc-rgb:195,166,255}
+#workspace:has(.nav-item[data-page="ic-logs"].active){--bc-accent:var(--bc-sky);--bc-rgb:120,217,255}
+#workspace:has(.nav-item[data-page="quick-links"].active){--bc-accent:var(--bc-amber);--bc-rgb:255,204,133}
+#workspace:has(.nav-item[data-page="bc-ai"].active){--bc-accent:#ffab75;--bc-rgb:255,171,117}
+#workspace:has(.nav-item[data-page="bc-ai-comment-template"].active){--bc-accent:var(--bc-rose);--bc-rgb:255,160,201}
+#workspace:has(.nav-item[data-page="work-requests"].active){--bc-accent:#a3afff;--bc-rgb:163,175,255}
+#workspace:has(.nav-item[data-page="team-requests"].active){--bc-accent:#7ee3d6;--bc-rgb:126,227,214}
+body:has(#workspace:not(.hidden)) #workspace .sidebar{background:linear-gradient(165deg,rgba(10,25,40,.97),rgba(9,18,31,.94) 65%,rgba(13,28,42,.96));border-right:1px solid rgba(167,205,255,.16);box-shadow:12px 0 48px #0004}
+body #workspace .side-brand{font-family:Inter,system-ui,sans-serif;font-size:20px;font-weight:800;letter-spacing:-.04em;color:#eef8ff}
+body #workspace .side-brand .brand-mark{border-radius:14px;background:linear-gradient(145deg,#9bf5ce,#3e9fc3);color:#082d38;font-size:15px;font-weight:900;box-shadow:0 7px 18px #5ddbc642}
+body #workspace .side-brand .brand-mark::before{content:none}
+body #workspace .side-label{color:#a3b5cc}
+body #workspace .nav-item{transition:background .24s,color .24s,translate .24s,box-shadow .24s,border-color .24s;letter-spacing:0}
+body #workspace .nav-item[data-page]{--nav-accent:var(--bc-mint)}
+body #workspace .nav-item[data-page="agents"]{--nav-accent:#a9e780}
+body #workspace .nav-item[data-page="coaching"]{--nav-accent:var(--bc-lilac)}
+body #workspace .nav-item[data-page="ic-logs"]{--nav-accent:var(--bc-sky)}
+body #workspace .nav-item[data-page="quick-links"]{--nav-accent:var(--bc-amber)}
+body #workspace .nav-item[data-page="bc-ai"]{--nav-accent:#ffab75}
+body #workspace .nav-item[data-page="bc-ai-comment-template"]{--nav-accent:var(--bc-rose)}
+body #workspace .nav-item[data-page="work-requests"]{--nav-accent:#a3afff}
+body #workspace .nav-item[data-page="team-requests"]{--nav-accent:#7ee3d6}
+body #workspace .nav-item[data-page]{color:var(--nav-accent)}
+body #workspace .nav-item[data-page] span{color:#e1eaf7}
+body:has(#workspace:not(.hidden)) #workspace .nav-item.active{background:linear-gradient(100deg,rgba(var(--bc-rgb),.22),rgba(var(--bc-rgb),.065))!important;border-color:rgba(var(--bc-rgb),.32)!important;box-shadow:inset 3px 0 var(--bc-accent),0 6px 22px #0003!important}
+body #workspace .nav-item.active::before{background:var(--bc-accent);box-shadow:0 0 12px var(--bc-accent)}
+body #workspace .nav-item:hover{translate:3px 0;transform:none}
+body #workspace .nav-item:active{translate:1px 0}
+body #workspace .workspace-main::after{content:"";position:fixed;z-index:-1;inset:0 0 0 18%;pointer-events:none;background:radial-gradient(ellipse at 75% 13%,rgba(var(--bc-rgb),.14),transparent 35%),radial-gradient(ellipse at 20% 65%,rgba(127,105,255,.12),transparent 38%);animation:bcAurora 13s ease-in-out infinite}
+body #workspace .topbar{gap:12px;display:flex;align-items:center;flex-wrap:wrap;border-bottom-color:rgba(177,211,245,.15)}
+body #workspace .topbar>.muted{display:inline;font-size:12px;margin-right:auto;color:#b8cbe2}
+body #workspace .topbar #crumb{color:var(--bc-accent)}
+body #workspace .preview-pill{background:rgba(var(--bc-rgb),.1);border-color:rgba(var(--bc-rgb),.28);color:var(--bc-accent)}
+body #workspace .page-head{border-bottom:0}
+body #workspace .page-head>div:first-child{display:block;min-width:0}
+body #workspace .page-head .eyebrow{display:block;font-size:9px;color:var(--bc-accent);letter-spacing:.15em;margin:0 0 6px}
+body #workspace .page-head h1{font-size:clamp(23px,3vw,34px);font-weight:800;letter-spacing:-.045em;color:#f3f8ff}
+body #workspace .page-head .muted{color:#b0c4d9;line-height:1.5;font-size:12px}
+body #workspace .workspace-account{flex-wrap:wrap;max-width:100%;overflow-wrap:anywhere}
+#bc-motion-toggle{display:inline-flex;align-items:center;gap:7px;min-height:32px;padding:6px 11px;border:1px solid rgba(var(--bc-rgb),.35);border-radius:999px;background:#101f32;color:#e9f5ff;font:600 11px system-ui,sans-serif;cursor:pointer;white-space:nowrap;transition:background .2s,border-color .2s}
+#bc-motion-toggle:hover{background:rgba(var(--bc-rgb),.15)}
+#bc-motion-toggle .bc-motion-dot{width:7px;height:7px;border-radius:50%;background:var(--bc-accent);box-shadow:0 0 9px var(--bc-accent)}
+#bc-motion-toggle[aria-pressed="false"] .bc-motion-dot{background:#a6b2c5;box-shadow:none}
+#bc-motion-toggle:focus-visible,#workspace :is(button,a,input,select,textarea):focus-visible{outline:2px solid var(--bc-accent);outline-offset:3px}
+ /* Overview: luminous hero, four individually tinted metric cards and dimensional surfaces. */
+body #workspace .bc-overview-heading{position:relative;isolation:isolate;overflow:hidden;align-items:center;min-height:154px;padding:24px 28px;border:1px solid #9cefd940;border-radius:23px;background:radial-gradient(ellipse at 90% 0%,#66e6c32b,transparent 48%),linear-gradient(115deg,#122f3be8,#17253fe0 60%,#193f42e8);box-shadow:0 15px 40px #0004,inset 0 1px #ffffff14}
+body #workspace .bc-overview-heading::before{content:"";position:absolute;z-index:-1;right:6%;top:-53px;width:200px;height:200px;border:1px solid #95f8df55;border-radius:36%;box-shadow:0 0 0 16px #85eac914,0 0 0 34px #8baff40c;animation:bcOrbit 28s linear infinite}
+body #workspace .bc-overview-heading::after{content:"";position:absolute;z-index:-1;right:24%;bottom:8%;width:9px;height:9px;border-radius:50%;background:#bcffe8;box-shadow:0 0 18px #8af8d9,80px -70px 0 -2px #d5bfff;animation:bcSpark 5s ease-in-out infinite}
+body #workspace .bc-overview-heading h2{font-size:clamp(29px,4vw,46px);font-weight:800;letter-spacing:-.05em;color:#f5fbff}
+body #workspace .bc-overview-subtitle{color:#c1d9e5;max-width:440px;line-height:1.5}
+body #workspace .bc-live-status{background:#0c263b;color:#b2fbe0;border-color:#8ff4d24d}
+body #workspace .bc-live-status i{animation:bcHalo 2.5s infinite}
+body #workspace .bc-overview-kpi{--card-accent:#68f5c1;--card-rgb:104,245,193;position:relative;overflow:hidden;border-color:rgba(var(--card-rgb),.28);background:radial-gradient(ellipse at 100% 0%,rgba(var(--card-rgb),.16),transparent 58%),linear-gradient(145deg,#172b3beF,#102134f2);border-radius:19px;padding:20px 21px;box-shadow:0 12px 25px #0003,inset 0 1px #ffffff10}
+body #workspace .bc-overview-kpi:nth-child(2){--card-accent:#c3a6ff;--card-rgb:195,166,255}
+body #workspace .bc-overview-kpi:nth-child(3){--card-accent:#78d9ff;--card-rgb:120,217,255}
+body #workspace .bc-overview-kpi:nth-child(4){--card-accent:#ffcc85;--card-rgb:255,204,133}
+body #workspace .bc-overview-kpi::after{content:"";position:absolute;height:2px;bottom:0;left:18px;right:18px;background:linear-gradient(90deg,transparent,var(--card-accent),transparent);opacity:.6;pointer-events:none}
+body #workspace .bc-overview-kpi .bc-kpi-icon{color:var(--card-accent);background:rgba(var(--card-rgb),.15);border:1px solid rgba(var(--card-rgb),.24);width:39px;height:39px;border-radius:12px;box-shadow:0 6px 15px rgba(var(--card-rgb),.12);transition:rotate .3s,scale .3s}
+body #workspace .bc-overview-kpi:hover .bc-kpi-icon{rotate:-9deg;scale:1.08}
+body #workspace .bc-overview-kpi strong{font-size:clamp(29px,3.3vw,43px);font-weight:800;letter-spacing:-.055em}
+body #workspace .bc-overview-kpi small,body #workspace .bc-kpi-top{color:#b7c8da}
+body #workspace :is(.bc-overview-panel,.bc-overview-welcome,.bc-agent-profile,.bc-agent-summary article,.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-ic-stat,.bc-ic-table-panel,.bc-ic-detail,.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-work-stats article,.bc-work-column){border-radius:16px;border-color:rgba(var(--bc-rgb),.21);background:radial-gradient(ellipse at 100% 0%,rgba(var(--bc-rgb),.055),transparent 55%),linear-gradient(150deg,rgba(24,40,55,.94),rgba(13,25,40,.95));box-shadow:0 10px 24px #0003,inset 0 1px #ffffff0d}
+body #workspace .bc-overview-quote{background:radial-gradient(ellipse at 95% 5%,#bda0ff25,transparent 65%),linear-gradient(150deg,#25334aeF,#152237f2);border-color:#c3a6ff38}
+body #workspace .bc-quote-spark{display:inline-block;color:#d1b9ff;animation:bcFloat 4s ease-in-out infinite}
+body #workspace .bc-overview-welcome{background:linear-gradient(110deg,#123b3be8,#17263ce8);border-color:#68f5c13b}
+body #workspace .bc-team-emblem{border-radius:14px;background:linear-gradient(135deg,#9ef7d3,#71b4ef);color:#163041;border:0;box-shadow:0 8px 20px #68f5c12d}
+body #workspace :is(.bc-overview-kpi,.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-ic-stat){transition:translate .25s var(--bc-ease),box-shadow .25s,border-color .25s}
+@media(hover:hover) and (pointer:fine){
+body #workspace :is(.bc-overview-kpi,.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-ic-stat):hover{translate:0 -3px;border-color:rgba(var(--bc-rgb),.52);box-shadow:0 14px 32px #0005,0 0 20px rgba(var(--bc-rgb),.07)}
+}
+body #workspace :is(.bc-agent-card.is-selected,.bc-agent-card[aria-pressed="true"]){border-color:var(--bc-accent);box-shadow:inset 0 0 0 1px rgba(var(--bc-rgb),.35),0 10px 28px #0004}
+body #workspace :is(.action-button,.small-button,.bc-work-add,.bc-quicklinks-add,.bc-agent-invite,.bc-coaching-schedule-button,.bc-coaching-bulk-button,.bc-ic-export){transition:translate .2s,filter .2s,box-shadow .2s}
+body #workspace :is(.action-button,.small-button,.bc-work-add,.bc-quicklinks-add,.bc-agent-invite,.bc-coaching-schedule-button,.bc-coaching-bulk-button,.bc-ic-export):hover:not(:disabled){translate:0 -1px;filter:brightness(1.12)}
+body #workspace :is(.action-button,.small-button,.bc-work-add,.bc-quicklinks-add,.bc-agent-invite,.bc-coaching-schedule-button,.bc-coaching-bulk-button,.bc-ic-export):active:not(:disabled){translate:0 1px}
+body #workspace :is(.bc-agent-avatar,.bc-quicklink-icon,.bc-ic-agent-avatar){box-shadow:0 5px 15px rgba(var(--bc-rgb),.14)}
+/* Safe visual-only reveal. No transforms on the game or its coordinate containers. */
+#workspace .bc-reveal{animation:bcFade .36s ease both}
+#workspace .bc-reveal-card{animation:bcRise .42s var(--bc-ease) both;animation-delay:var(--bc-delay,0ms)}
+#workspace .bc-load-in{animation:bcFade .2s ease both}
+@media(max-width:640px){
+body #workspace .page-head>div:first-child{width:100%}
+body #workspace .page-head{gap:12px}
+body #workspace .workspace-account{margin-left:0;align-items:flex-start}
+body #workspace .bc-overview-heading{min-height:130px;padding:20px;align-items:flex-start}
+body #workspace .bc-overview-heading::before{right:-75px;opacity:.45}
+body #workspace .bc-overview-kpi{padding:16px}
+body #workspace .workspace-main::after{inset:0}
+#bc-motion-toggle{font-size:10px}
+}
+/* Explicit motion preference affects decoration, not functional game feedback. */
+html[data-bc-motion="off"] :is(.bc-reveal,.bc-reveal-card,.bc-load-in,.bc-live-status i,.bc-quote-spark,.team-card-icon,.hero,.hero h1 span,.features li,.glass.login,.ocean i,.ocean span,.daily-quote-card,.quote-orbit,.quote-orb,.quote-sparkle),
+html[data-bc-motion="off"] #workspace :is(.workspace-main,.bc-overview-heading)::before,
+html[data-bc-motion="off"] #workspace :is(.workspace-main,.bc-overview-heading)::after,
+html[data-bc-motion="off"] body:has(#login-panel:not(.hidden)),
+html[data-bc-motion="off"] body:has(#login-panel:not(.hidden))::before,
+html[data-bc-motion="off"] .daily-quote-card::before,html[data-bc-motion="off"] .daily-quote-card::after{animation:none!important;transition:none!important}
+html[data-bc-motion="off"] .ocean-video{visibility:hidden!important}
+html[data-bc-motion="off"] #workspace :is(.nav-item,.bc-overview-kpi,.bc-agent-card,.bc-coaching-session-card,.bc-quicklink-card,.bc-work-card,.bc-template-card,.bc-ic-stat,.action-button,.small-button){transition:none!important;translate:none!important;transform:none!important}
+@media(prefers-reduced-motion:reduce){#workspace :is(.bc-reveal,.bc-reveal-card,.bc-load-in,.bc-live-status i,.bc-quote-spark),body :is(.hero,.hero h1 span,.features li,.glass.login,.team-card-icon){animation:none!important}#workspace :is(.workspace-main,.bc-overview-heading)::before,#workspace :is(.workspace-main,.bc-overview-heading)::after{animation:none!important}}
