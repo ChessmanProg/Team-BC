@@ -331,3 +331,12 @@ body #workspace .quantum-core>*{opacity:0}
 html[data-nexus-focus="on"] #workspace[data-universe] .universe-art{display:none}
 html[data-nexus-focus="on"] #workspace[data-universe] .universe-identity{min-height:0;background:#141a2e;box-shadow:none}
 @media(max-width:600px){#workspace[data-universe] .universe-identity{padding:14px;gap:12px;min-height:90px}#workspace[data-universe] .universe-mark{width:44px;height:44px}#workspace[data-universe] .universe-mark svg{width:24px;height:24px}#workspace[data-universe] .universe-art{right:-35px;opacity:.25}}
+
+/* Basketball: one court-local SVG trajectory, stable during aiming. */
+body #workspace .bc-ai-panel .bc-ai-ball{touch-action:none;user-select:none;transform-origin:center center}
+body #workspace .bc-ai-panel .bc-ai-aim-guide{display:none!important}
+body #workspace .bc-ai-panel .bc-ai-flight-path{box-sizing:border-box;padding:0;border:0;transform:none;max-width:none;max-height:none}
+body #workspace .bc-ai-panel .bc-ai-flight-path.is-preview path{animation:none;stroke:#69f4c8;stroke-dasharray:1 9;stroke-linecap:round}
+body #workspace .bc-ai-panel .bc-ai-flight-path.is-off-target path{stroke:#fbbf24}
+@media(prefers-reduced-motion:reduce){body #workspace .bc-ai-panel .bc-ai-flight-path path{animation:none}}
+html[data-bc-motion="off"] #workspace .bc-ai-panel .bc-ai-flight-path path,html[data-nexus-focus="on"] #workspace .bc-ai-panel .bc-ai-flight-path path{animation:none}
