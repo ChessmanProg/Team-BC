@@ -216,3 +216,31 @@ body #workspace :is(.primary,.bc-coaching-schedule-button,.bc-quicklinks-add,.bc
 html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace :is(.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-ai-photo-card,.request-row){transition:border-color .2s,box-shadow .2s,background-color .2s}
 }
 html[data-nexus-focus="on"] body:has(#workspace:not(.hidden)) #workspace:has(.nav-item.active) .workspace-main{background:#0a1425!important}
+
+/* Quantum dock: progressive enhancement, original controls remain in the DOM. */
+body #workspace.quantum-ready.app-shell:not(.hidden){display:block!important;grid-template-columns:none!important;--nexus-sidebar:0px}
+body:has(#workspace:not(.hidden)) #workspace.quantum-ready .sidebar.quantum-dock{position:fixed;inset:auto auto max(12px,env(safe-area-inset-bottom)) 50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 24px);min-height:0;height:auto;display:flex;flex-direction:row;align-items:center;gap:8px;padding:8px;border:1px solid #a28cff88;border-radius:23px;background:linear-gradient(125deg,#171c38f5,#211336f5);box-shadow:0 12px 38px #0009,0 0 24px #965bff44,inset 0 1px #c9baff44;overflow:visible;z-index:30}
+body #workspace.quantum-ready .sidebar .side-brand,body #workspace.quantum-ready .sidebar .side-label,body #workspace.quantum-ready .sidebar-bottom{display:none}
+body #workspace.quantum-ready #nav{display:flex;flex-direction:row;align-items:center;gap:5px;overflow-x:auto;overflow-y:hidden;min-width:0;padding:8px 4px;margin:0;scrollbar-width:thin}
+body #workspace.quantum-ready #nav .nav-item{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;flex:none;width:64px;min-height:58px;height:auto;margin:0;padding:5px 3px;border-radius:13px;text-align:center}
+body #workspace.quantum-ready #nav .nav-item.hidden{display:none!important}
+body #workspace.quantum-ready #nav .nav-item[data-page]>span:not(.nexus-nav-icon){font-size:9px;line-height:1.15;white-space:normal;overflow-wrap:anywhere}
+body #workspace.quantum-ready #nav .nav-item.active{box-shadow:inset 0 -2px #ff83dc,0 0 14px #a34aff44}
+body #workspace.quantum-ready #nav .nexus-nav-icon{width:29px;height:29px;flex-basis:29px}
+body #workspace.quantum-ready .workspace-main{margin-left:0;width:100%;max-width:none;padding-bottom:130px}
+#workspace .quantum-core{flex:none;display:grid;place-items:center;align-content:center;gap:2px;width:62px;height:62px;border-radius:50%;border:1px solid #c3caff;background:radial-gradient(circle at 30% 20%,#a3eaff,#6365e9 40%,#a235b8 75%,#24143c);color:white;font:800 13px system-ui;box-shadow:0 0 18px #8c7dff88,inset 0 0 14px #d7bfff55;cursor:pointer}
+#workspace .quantum-core .nexus-icon svg{width:20px;height:20px}
+#workspace .quantum-core:focus-visible{outline:2px solid white;outline-offset:3px}
+.quantum-dialog{color:#f2efff;background:radial-gradient(ellipse at center,#392064,#0d1027 68%);border:1px solid #ad8dff99;border-radius:26px;width:min(530px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:18px;box-shadow:0 0 50px #9860ff55,0 25px 80px #000b;overflow:auto;margin:auto}
+.quantum-dialog::backdrop{background:#030617b8;backdrop-filter:blur(5px)}
+.quantum-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}.quantum-heading h2{font:750 19px system-ui;margin:0}
+.quantum-ring{position:relative;aspect-ratio:1;width:min(100%,440px);margin:8px auto;--radius:35%;background:repeating-radial-gradient(circle,transparent 0 15%,#a891ff25 15.3% 15.7%,transparent 16% 24%);border-radius:50%}
+.quantum-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:24%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,#a8eaff,#6759d9 45%,#ad39bf 75%,#24143c);box-shadow:0 0 35px #b17cff99;color:white;font:900 26px system-ui;border:1px solid #c4b4ff}
+.quantum-planet{position:absolute;left:calc(50% + var(--qx)*var(--radius));top:calc(50% + var(--qy)*var(--radius));transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:21%;min-height:55px;aspect-ratio:1.1;border:1px solid var(--planet);border-radius:17px;background:linear-gradient(145deg,#272443,#10152c);color:#f4f1ff;font:600 clamp(9px,2.5vw,12px) system-ui;cursor:pointer;box-shadow:0 0 13px color-mix(in srgb,var(--planet) 28%,transparent)}
+.quantum-planet .nexus-icon{color:var(--planet)}.quantum-planet .nexus-icon svg{width:22px;height:22px}
+.quantum-planet[aria-current="page"]{background:#45316b;box-shadow:0 0 22px var(--planet)}
+.quantum-account{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.quantum-close,.quantum-account-button{display:flex;align-items:center;gap:7px;border:1px solid #a98bff66;border-radius:10px;background:#211d3c;color:#f1edff;padding:10px 13px;font:600 12px system-ui;cursor:pointer}
+.quantum-dialog button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace.quantum-ready #nav .nav-item:hover .nexus-nav-icon{transform:scale(1.18) rotate(-5deg)}html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) .quantum-planet:hover{transform:translate(-50%,-50%) scale(1.08)}}
+@media(max-width:600px){body #workspace.quantum-ready #nav .nav-item{width:52px;min-height:54px}body #workspace.quantum-ready .sidebar.quantum-dock{gap:4px;padding:5px;border-radius:18px}#workspace .quantum-core{width:49px;height:49px}body #workspace.quantum-ready .workspace-main{padding-bottom:115px}.quantum-dialog{padding:12px}}
