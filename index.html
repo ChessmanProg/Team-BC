@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./figma-signin.css">
 
   <link rel="stylesheet" href="./aurora-motion.css?v=1">
+  <link rel="stylesheet" href="./aurora-nexus.css?v=2">
 </head>
 <body>
   <video class="ocean-video" aria-hidden="true" autoplay muted loop playsinline poster="./ocean-background.png"><source src="./ocean-background.mp4" type="video/mp4"></video>
@@ -88,7 +89,7 @@
       <div class="sidebar-bottom"><button id="back-teams" class="nav-item">⇄ <span>Change team</span></button><button id="back-login" class="nav-item">← <span>Sign out</span></button></div>
     </aside>
     <div class="workspace-main">
-      <div class="topbar"><span class="muted">Team BC / <b id="crumb">Overview</b></span><button type="button" id="bc-motion-toggle" aria-pressed="true" aria-label="Toggle ambient motion"><span class="bc-motion-dot" aria-hidden="true"></span><span class="bc-motion-text">Motion on</span></button><span class="preview-pill" id="workspace-role">member</span></div>
+      <div class="topbar"><span class="muted">Team BC / <b id="crumb">Overview</b></span><div class="nexus-tools" id="nexus-tools"><button type="button" id="bc-motion-toggle" aria-pressed="true" aria-label="Toggle ambient motion"><span class="bc-motion-dot" aria-hidden="true"></span><span class="bc-motion-text">Motion on</span></button></div><span class="preview-pill" id="workspace-role">member</span></div>
       <div class="page-head"><div><p class="eyebrow">TEAM WORKSPACE</p><h1 id="page-title">Team dashboard</h1><p class="muted" id="page-subtitle">A clear view of the work happening across your team.</p></div>
         <div class="workspace-account"><span id="workspace-user"></span><button type="button" class="small-button" id="change-password-toggle">Change password</button><select id="team-switch" class="hidden" aria-hidden="true" tabindex="-1"></select></div>
       </div>
@@ -99,6 +100,7 @@
   </section>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./app.js?v=bc-ai-reference-preview-20261113"></script>
-  <script src="./aurora-motion.js?v=1"></script>
+  <script src="./aurora-motion.js?v=2"></script>
+  <script src="./aurora-nexus.js?v=2"></script>
 </body>
 </html>
