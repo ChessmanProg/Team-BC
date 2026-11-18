@@ -244,3 +244,40 @@ body #workspace.quantum-ready .workspace-main{margin-left:0;width:100%;max-width
 .quantum-dialog button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace.quantum-ready #nav .nav-item:hover .nexus-nav-icon{transform:scale(1.18) rotate(-5deg)}html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) .quantum-planet:hover{transform:translate(-50%,-50%) scale(1.08)}}
 @media(max-width:600px){body #workspace.quantum-ready #nav .nav-item{width:52px;min-height:54px}body #workspace.quantum-ready .sidebar.quantum-dock{gap:4px;padding:5px;border-radius:18px}#workspace .quantum-core{width:49px;height:49px}body #workspace.quantum-ready .workspace-main{padding-bottom:115px}.quantum-dialog{padding:12px}}
+
+/* Neon Infinity / Liquid Glass — template studio only */
+body #workspace .bc-template-panel{background:linear-gradient(145deg,#141027e8,#090e22e8);border:1px solid #a88aff55;padding:clamp(14px,2.5vw,30px);border-radius:24px}
+#workspace .infinity-hero{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;min-height:220px;padding:clamp(20px,4vw,42px);margin:20px 0;border-radius:24px;border:1px solid #c18aff77;background:radial-gradient(ellipse at 76% 50%,#7139a77a,transparent 52%),radial-gradient(ellipse at 5% 100%,#175ca16b,transparent 65%),linear-gradient(120deg,#11152e,#211039);box-shadow:inset 0 1px #fff2,0 0 30px #a35cff22}
+#workspace .infinity-hero::before{content:"";position:absolute;inset:0;z-index:-1;background-image:radial-gradient(circle,#b7b8ff99 1px,transparent 1.6px),radial-gradient(circle,#f5aaff88 1px,transparent 1.5px);background-size:47px 53px,83px 71px;background-position:12px 6px,29px 17px;opacity:.55}
+#workspace .infinity-copy{position:relative;z-index:1;max-width:62%}
+#workspace .infinity-eyebrow{color:#cbb5ff;font-size:11px;letter-spacing:.19em;font-weight:750}
+#workspace .infinity-copy h3{font-size:clamp(25px,4vw,46px);line-height:1.1;margin:12px 0;color:#f7efff;text-shadow:0 0 28px #b17bff88}
+#workspace .infinity-copy p{color:#d4c9ed;font-size:14px;margin:0}
+#workspace .infinity-art{position:absolute;right:5%;top:50%;width:clamp(120px,28%,270px);aspect-ratio:1;transform:translateY(-50%);display:grid;place-items:center;pointer-events:none}
+#workspace .infinity-crystal{width:49%;height:74%;clip-path:polygon(50% 0,100% 35%,85% 78%,50% 100%,15% 78%,0 35%);background:conic-gradient(from 35deg at 50% 48%,#9df5ff,#6756ed,#ff83d7,#6638b5,#b9eaff,#9df5ff);filter:brightness(1.2);position:relative}
+#workspace .infinity-crystal::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#fff3 50%,#08062a55 50%);clip-path:polygon(50% 0,100% 35%,50% 48%,85% 78%,50% 100%,15% 78%,50% 48%,0 35%)}
+#workspace .infinity-orbit{position:absolute;width:100%;height:45%;border:1px solid #a9bfff99;border-radius:50%;transform:rotate(-28deg);box-shadow:0 0 14px #8a8dff55}
+#workspace .infinity-orbit:nth-child(2){transform:rotate(35deg);border-color:#f99bff88}
+#workspace .infinity-glint{position:absolute;inset:15%;border-radius:50%;background:radial-gradient(circle,#dcbaff44,transparent 70%);z-index:-1}
+#workspace .infinity-categories{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 16px}
+#workspace .infinity-chip{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:999px;border:1px solid color-mix(in srgb,var(--chip) 42%,transparent);background:#17182e;color:#e9e5ff;font:600 12px system-ui;cursor:pointer}
+#workspace .infinity-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--chip);box-shadow:0 0 9px var(--chip)}
+#workspace .infinity-chip[aria-pressed="true"]{background:color-mix(in srgb,var(--chip) 23%,#16152d);border-color:var(--chip);box-shadow:0 0 15px color-mix(in srgb,var(--chip) 30%,transparent)}
+#workspace .infinity-count{color:#bcb3d9;font-size:12px;min-height:1em;margin:8px 0}
+body #workspace #comment-template-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));gap:16px;align-items:stretch}
+#workspace #comment-template-list>.empty-state,#workspace #comment-template-list>.muted{grid-column:1/-1}
+body #workspace .bc-template-card{--infinity-card:#b59aff;display:flex;flex-direction:column;min-width:0;padding:20px;gap:12px;border-radius:20px;background:radial-gradient(ellipse at 100% 0%,color-mix(in srgb,var(--infinity-card) 19%,transparent),transparent 60%),linear-gradient(145deg,#1c1b37,#0c1127);border:1px solid color-mix(in srgb,var(--infinity-card) 55%,transparent);box-shadow:inset 0 1px #fff2,0 10px 28px #0004}
+body #workspace .bc-template-card h3{font-size:17px;line-height:1.35;overflow-wrap:anywhere}
+body #workspace .bc-template-category{color:var(--infinity-card);border-color:color-mix(in srgb,var(--infinity-card) 45%,transparent);background:color-mix(in srgb,var(--infinity-card) 10%,#11142b);font-size:11px;padding:5px 10px}
+body #workspace .bc-template-copy{flex:1;background:#090d20aa;border:1px solid #a99aff25;border-radius:12px;padding:14px;margin:0;color:#e3e1f5;font-size:14px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+body #workspace .bc-template-actions button{min-height:40px;font-size:12px;padding:9px 14px!important}
+body #workspace .bc-template-actions .primary{background:linear-gradient(105deg,#385ed8,#9a45c9,#c83788);border-color:#d5a6ff99;box-shadow:0 0 16px #a94cff44}
+body #workspace .bc-template-actions .danger{color:#ffb5ca;border-color:#ff709966;background:#35162d}
+body #workspace .bc-template-toolbar :is(input,select){min-height:44px;font-size:14px;border-radius:12px;background:#10152d;border-color:#a38bff66}
+@keyframes infinity-float{0%,100%{transform:translateY(-5px)}50%{transform:translateY(6px)}}
+@media(prefers-reduced-motion:no-preference){html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace .infinity-crystal{animation:infinity-float 5s ease-in-out infinite}}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace .bc-template-card{transition:transform .2s,box-shadow .2s,border-color .2s}html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace .bc-template-card:hover{transform:translateY(-3px);border-color:var(--infinity-card);box-shadow:0 0 24px color-mix(in srgb,var(--infinity-card) 24%,transparent)}}
+html[data-nexus-focus="on"] #workspace .infinity-art,html[data-nexus-focus="on"] #workspace .infinity-hero::before{display:none}
+html[data-nexus-focus="on"] #workspace .infinity-hero{min-height:0;background:#11182c}
+html[data-nexus-focus="on"] #workspace .infinity-copy{max-width:100%}
+@media(max-width:600px){#workspace .infinity-hero{min-height:170px;padding:18px}#workspace .infinity-copy{max-width:65%}#workspace .infinity-art{right:2%;width:32%}body #workspace .bc-template-card{padding:15px}}
