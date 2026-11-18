@@ -186,4 +186,41 @@ new MutationObserver(refresh).observe(crumb,{attributes:true,attributeFilter:["d
 new MutationObserver(()=>{syncFocus();refresh()}).observe(ws,{attributes:true,attributeFilter:["class","style"]});
 new MutationObserver(()=>{syncNav();if(dialog.open)drawCommands()}).observe(nav,{subtree:true,attributes:true,attributeFilter:["class","hidden","disabled","aria-hidden"]});
 syncFocus();refresh();
+
+/* Quantum navigation: move original controls, retaining their listeners and role visibility. */
+const sidebar=ws.querySelector(".sidebar"), bottom=sidebar?.querySelector(".sidebar-bottom");
+if(sidebar&&bottom&&typeof HTMLDialogElement!=="undefined"){
+ const dock=element("div","quantum-dock"), core=button("quantum-core","BC","overview");
+ core.setAttribute("aria-label","Open quantum navigation");core.setAttribute("aria-haspopup","dialog");
+ const orbitDialog=element("dialog","quantum-dialog");orbitDialog.setAttribute("aria-label","Quantum workspace navigation");
+ const heading=element("div","quantum-heading");heading.append(element("h2","","Quantum navigation"));
+ const exit=button("quantum-close","Close");exit.addEventListener("click",()=>orbitDialog.close());heading.append(exit);
+ const ring=element("div","quantum-ring"), center=element("div","quantum-center","BC");center.setAttribute("aria-hidden","true");
+ const account=element("div","quantum-account");orbitDialog.append(heading,ring,account);document.body.append(orbitDialog);
+ const labels={overview:"Overview",agents:"Agents",coaching:"Coaching","ic-logs":"IC Logs","quick-links":"Links","bc-ai":"BC AI","bc-ai-comment-template":"Templates","work-requests":"Requests","team-requests":"Team"};
+ function drawOrbit(){
+  ring.replaceChildren(center);account.replaceChildren();
+  const available=navButtons();
+  available.forEach((original,i)=>{
+   const page=original.dataset.page,b=button("quantum-planet",labels[page]||page,page);
+   const angle=2*Math.PI*i/available.length-Math.PI/2;
+   b.style.setProperty("--qx",String(Math.cos(angle)));b.style.setProperty("--qy",String(Math.sin(angle)));
+   b.style.setProperty("--planet",descriptions[page]?.[2]||"#9caaff");
+   if(original.classList.contains("active"))b.setAttribute("aria-current","page");
+   b.addEventListener("click",()=>{orbitDialog.close();go(page)});ring.append(b);
+  });
+  for(const [id,label,icon] of [["back-teams","Change team","switch"],["back-login","Sign out","logout"]]){
+   const original=document.getElementById(id);if(!original||original.disabled||original.hidden||original.classList.contains("hidden"))continue;
+   const b=button("quantum-account-button",label,icon);b.addEventListener("click",()=>{orbitDialog.close();original.click()});account.append(b);
+  }
+ }
+ core.addEventListener("click",()=>{if(!workspaceOpen())return;drawOrbit();orbitDialog.showModal()});
+ orbitDialog.addEventListener("close",()=>{if(workspaceOpen())core.focus()});
+ orbitDialog.addEventListener("click",e=>{if(e.target===orbitDialog){const b=orbitDialog.getBoundingClientRect();if(e.clientX<b.left||e.clientX>b.right||e.clientY<b.top||e.clientY>b.bottom)orbitDialog.close()}});
+ new MutationObserver(()=>{if(!workspaceOpen()&&orbitDialog.open)orbitDialog.close()}).observe(ws,{attributes:true,attributeFilter:["class","style"]});
+ new MutationObserver(()=>{if(orbitDialog.open){orbitDialog.close()}}).observe(nav,{subtree:true,attributes:true,attributeFilter:["class","hidden","disabled","aria-hidden"]});
+ // Keep nav inside its original sidebar so existing selectors and delegated events remain valid.
+ sidebar.prepend(core);sidebar.classList.add("quantum-dock");ws.classList.add("quantum-ready");
+}
+
 })();
