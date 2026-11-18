@@ -1,0 +1,136 @@
+/* Aurora Nexus — additive presentation layer. No backend access. */
+#workspace{--nexus-sidebar:254px;--nexus-panel:#101b2c;--nexus-text:#eef7ff;--nexus-dim:#aec1d4;--nexus-edge:rgba(var(--bc-rgb),.24)}
+#workspace.app-shell{grid-template-columns:var(--nexus-sidebar) minmax(0,1fr)!important}
+body:has(#workspace:not(.hidden)) #workspace .sidebar{width:var(--nexus-sidebar);padding:22px 15px 18px;overflow-y:auto;overflow-x:hidden;z-index:12;background:linear-gradient(165deg,rgba(12,25,43,.96),rgba(10,18,33,.92));backdrop-filter:blur(12px)}
+body #workspace .side-brand{min-height:62px;padding:0 7px 16px;gap:12px;letter-spacing:-.03em}
+body #workspace .side-brand strong{font:800 19px/1.2 Inter,system-ui,sans-serif;color:#f1fbff}
+body #workspace .side-brand strong::after{content:none}
+body #workspace .side-brand .brand-mark{flex:none;width:44px;height:44px;display:grid;border:1px solid #9dffe777;background:linear-gradient(145deg,#ccffed,#79e4da 55%,#74a4f4);color:#0c2d3b}
+body #workspace .side-label{font-size:10px;font-weight:700;letter-spacing:.17em;margin:20px 9px 9px}
+body #workspace .nav-item{min-height:46px;height:auto;padding:8px 10px;gap:10px;font-size:13px;line-height:1.3;border-radius:12px}
+body #workspace .nav-item[data-page]>span:not(.nexus-nav-icon){color:#deebf7;font-weight:600;white-space:normal;overflow-wrap:anywhere}
+body #workspace .nexus-nav-icon{display:grid;place-items:center;width:31px;height:31px;flex:0 0 31px;border-radius:10px;background:color-mix(in srgb,var(--nav-accent,#8ed6f4) 12%,transparent);color:var(--nav-accent,#8ed6f4);border:1px solid color-mix(in srgb,var(--nav-accent,#8ed6f4) 20%,transparent);transition:transform .2s,background .2s}
+.nexus-nav-icon svg,.nexus-icon svg{width:17px;height:17px;display:block;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+body #workspace .nav-item.active .nexus-nav-icon{background:color-mix(in srgb,var(--nav-accent) 24%,transparent);box-shadow:0 0 16px color-mix(in srgb,var(--nav-accent) 17%,transparent)}
+@media(hover:hover) and (pointer:fine){body #workspace .nav-item:hover .nexus-nav-icon{transform:rotate(-7deg) scale(1.06)}}
+body #workspace .sidebar-bottom{margin-top:auto;padding-top:12px}
+body #workspace .workspace-main{min-width:0;padding:22px clamp(18px,3vw,44px) 36px;max-width:none}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item[data-page].active) .workspace-main{background-image:linear-gradient(145deg,rgba(6,15,29,.77),rgba(8,23,41,.45) 52%,rgba(9,15,30,.72))!important;background-attachment:scroll}
+body #workspace .workspace-main::before{inset:0 0 0 var(--nexus-sidebar);opacity:.22;animation:none}
+body #workspace .workspace-main::after{inset:0 0 0 var(--nexus-sidebar);opacity:.8;background:radial-gradient(ellipse at 88% 12%,rgba(var(--bc-rgb),.19),transparent 37%),radial-gradient(ellipse at 15% 75%,rgba(126,109,255,.17),transparent 43%);animation:none}
+body #workspace .topbar{position:relative;inset:auto;min-height:48px;padding:0 0 12px;gap:9px;align-items:center;flex-direction:row;flex-wrap:wrap;border-bottom:1px solid #a8d9ff24}
+body #workspace .topbar>.muted{font-size:12px;opacity:1;color:#a9bfd6;flex:1 1 160px;min-width:0}
+body #workspace #workspace-role{color:var(--bc-accent);border:1px solid var(--nexus-edge);background:#101f2fd9;padding:7px 11px;font-size:11px;max-width:100%;overflow-wrap:anywhere}
+body #workspace .page-head{position:relative;inset:auto;min-height:0;margin:0;padding:22px 0 18px;z-index:2;align-items:center;gap:18px}
+body #workspace .page-head>div:first-child{flex:1 1 220px;min-width:0}
+body #workspace .page-head h1{font-size:clamp(24px,3.1vw,36px);line-height:1.15;margin:0 0 7px;overflow-wrap:anywhere}
+body #workspace .workspace-account{flex:0 1 auto;margin-left:auto;min-width:0;justify-content:flex-end;gap:9px}
+body #workspace #workspace-user{font-size:12px;overflow-wrap:anywhere}
+body #workspace #change-password-toggle{min-height:35px;white-space:normal}
+#workspace .nexus-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+#workspace .nexus-tool,#bc-motion-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:35px;border:1px solid #a9d7ff35;border-radius:10px;background:#112238e8;color:#e8f4ff;padding:7px 10px;font:600 11px/1.2 system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+#workspace .nexus-tool:hover{background:rgba(var(--bc-rgb),.14);border-color:var(--bc-accent)}
+#workspace .nexus-tool[aria-pressed="true"]{background:rgba(var(--bc-rgb),.17);border-color:var(--bc-accent);color:var(--bc-accent)}
+#workspace .nexus-tool kbd{color:#c0d3e7;font:10px system-ui,sans-serif;border:1px solid #a5c7e538;padding:3px 5px;border-radius:5px}
+#workspace .nexus-tool:active{translate:0 1px}
+#workspace .nexus-icon{display:grid;place-items:center;flex:none}
+#workspace .nexus-icon svg{width:15px;height:15px}
+#workspace .nexus-section-marker{display:inline-flex;align-items:center;gap:8px;color:var(--bc-accent);font-size:10px;font-weight:750;letter-spacing:.15em;margin:0 0 8px;text-transform:uppercase}
+#workspace .nexus-section-marker .nexus-icon{width:24px;height:24px;border-radius:8px;background:rgba(var(--bc-rgb),.12);border:1px solid var(--nexus-edge)}
+#workspace .nexus-section-marker .nexus-icon svg{width:13px;height:13px}
+body #workspace .page-head .eyebrow{display:none}
+body #workspace .bc-overview{gap:18px;padding-top:0}
+body #workspace .bc-overview-heading{min-height:244px;padding:32px clamp(20px,3.5vw,38px);border-radius:26px;align-items:flex-start;display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,32%);gap:16px;background:radial-gradient(ellipse at 86% 40%,#546ae540,transparent 50%),radial-gradient(ellipse at 7% 0%,#39cebd34,transparent 50%),linear-gradient(125deg,#101f34f5,#122944e8 58%,#172742e6);border:1px solid #b4eaff36;box-shadow:0 22px 55px #0005,inset 0 1px #ffffff18}
+body #workspace .bc-overview-heading::before,body #workspace .bc-overview-heading::after{content:none}
+body #workspace .bc-overview-heading h2{font-size:clamp(34px,4.4vw,60px);line-height:1.04;max-width:600px;letter-spacing:-.065em;margin:14px 0 10px}
+body #workspace .bc-overview-subtitle{font-size:14px;line-height:1.65;color:#c0d6e6}
+body #workspace .bc-overview-heading>.bc-live-status{position:absolute;right:22px;top:20px;z-index:1;color:#c0fce8}
+body #workspace .bc-overview-heading .nexus-hero-copy{position:relative;z-index:1;min-width:0;align-self:center}
+#workspace .nexus-hero-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+#workspace .nexus-hero-actions button{border:1px solid #a3f5df70;border-radius:11px;padding:11px 14px;min-height:42px;background:linear-gradient(120deg,#a7f7db,#9cd7ff);color:#10283c;font:750 12px/1.2 system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+#workspace .nexus-hero-actions button+button{background:#132d44;border-color:#a5c9ef48;color:#e8f4ff}
+#workspace .nexus-hero-actions button:hover{filter:brightness(1.12)}
+#workspace .nexus-hero-actions button:active{translate:0 2px}
+#workspace .nexus-orbit{position:relative;isolation:isolate;width:min(100%,250px);aspect-ratio:1;align-self:center;justify-self:center;pointer-events:none;margin:17px 0 0}
+#workspace .nexus-orbit::before{content:"";position:absolute;inset:7%;border:1px solid #a4eaff33;border-radius:50%;box-shadow:0 0 40px #72ccff18,inset 0 0 30px #7ab9f91c;background:repeating-radial-gradient(circle,transparent 0 15px,#9acfff12 16px 17px)}
+#workspace .nexus-sphere{position:absolute;inset:23%;border-radius:50%;background:radial-gradient(circle at 32% 25%,#e1fffb 0%,#7fe5db 14%,#5683c9 38%,#4e468f 63%,#152a50 82%);box-shadow:inset -10px -14px 25px #0b153a98,inset 3px 3px 10px #dcfff6b8,0 0 45px #7bcbf963,0 20px 42px #0b163a9c;animation:nexus-float 7s ease-in-out infinite}
+#workspace .nexus-sphere::after{content:"BC";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:900 clamp(24px,4vw,42px)/1 system-ui,sans-serif;letter-spacing:-.075em;text-shadow:0 2px 15px #0e245b}
+#workspace .nexus-ring{position:absolute;inset:25% 3%;border:1px solid #c5f7ff99;border-radius:50%;transform:rotate(-28deg);box-shadow:0 0 13px #96dfff33}
+#workspace .nexus-ring:nth-of-type(2){transform:rotate(52deg);border-color:#c6a9ff7d;inset:10% 28%}
+#workspace .nexus-satellite{position:absolute;top:8%;left:47%;width:8px;height:8px;background:#e9fff4;border-radius:50%;box-shadow:0 0 18px 3px #9effd7;transform-origin:50% 110px;animation:nexus-twinkle 3.8s ease-in-out infinite}
+#workspace .nexus-satellite+ .nexus-satellite{top:auto;bottom:12%;left:17%;background:#c7b3ff;box-shadow:0 0 13px 2px #bfa1ff;animation-delay:-1.7s}
+@keyframes nexus-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes nexus-twinkle{0%,100%{opacity:.5}50%{opacity:1}}
+body #workspace .bc-overview-kpi{border-radius:20px;min-height:160px;background:radial-gradient(ellipse at 94% 4%,rgba(var(--card-rgb),.21),transparent 64%),linear-gradient(145deg,#14263deF,#0d1b30f5)}
+#workspace .nexus-kpi-link{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;margin:13px 0 0;padding:9px 0 0;background:none;border:0;border-top:1px solid rgba(var(--card-rgb),.19);color:var(--card-accent);font:650 11px/1.4 system-ui,sans-serif;text-align:left;cursor:pointer}
+#workspace .nexus-kpi-link:hover{text-decoration:underline}
+#workspace .nexus-kpi-link .nexus-icon{transition:translate .2s}
+#workspace .nexus-kpi-link:hover .nexus-icon{translate:3px 0}
+#workspace .nexus-launchpad{border:1px solid #a6c9fb2e;border-radius:22px;background:linear-gradient(145deg,#12243ce8,#0c192be8);padding:20px;min-width:0;box-shadow:0 15px 32px #0003,inset 0 1px #ffffff10}
+#workspace .nexus-launch-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+#workspace .nexus-launch-head h3{margin:0 0 4px;font-size:19px;letter-spacing:-.03em;color:#f0f7ff}
+#workspace .nexus-launch-head p{margin:0;color:#aec1d4;font-size:12px;line-height:1.5}
+#workspace .nexus-launch-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#workspace .nexus-tile{--tile:#78d9ff;position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:9px;text-align:left;min-width:0;min-height:120px;padding:14px;border:1px solid color-mix(in srgb,var(--tile) 27%,transparent);border-radius:15px;background:linear-gradient(150deg,color-mix(in srgb,var(--tile) 11%,#16243a),#102035);color:#f0f7ff;font:650 13px/1.35 system-ui,sans-serif;cursor:pointer;transition:translate .22s,border-color .22s,box-shadow .22s}
+#workspace .nexus-tile .nexus-icon{width:37px;height:37px;border-radius:11px;background:color-mix(in srgb,var(--tile) 14%,#14263d);border:1px solid color-mix(in srgb,var(--tile) 35%,transparent);color:var(--tile)}
+#workspace .nexus-tile .nexus-icon svg{width:19px;height:19px}
+#workspace .nexus-tile small{color:#b4c6d9;font:400 11px/1.4 system-ui,sans-serif}
+#workspace .nexus-tile::after{content:"↗";position:absolute;right:12px;top:13px;color:var(--tile);font-size:15px;pointer-events:none}
+@media(hover:hover) and (pointer:fine){#workspace .nexus-tile:hover{translate:0 -4px;border-color:var(--tile);box-shadow:0 12px 24px #0005,0 0 16px color-mix(in srgb,var(--tile) 13%,transparent)}}
+#workspace .nexus-tile:active{translate:0 1px}
+body #workspace .bc-overview-lower{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+body #workspace .bc-overview-panel{padding:22px;border-radius:20px}
+body #workspace .bc-overview-quote{background:radial-gradient(ellipse at 90% 12%,#a68bff2d,transparent 70%),linear-gradient(155deg,#222c4af5,#131e36f5);border-color:#c1a5ff44}
+body #workspace .bc-overview-quote blockquote{font-size:clamp(19px,2.2vw,26px);line-height:1.45;letter-spacing:-.025em}
+body #workspace .bc-overview-panel-head p,body #workspace .bc-overview-empty p{color:#aec1d4}
+#workspace .nexus-quote-action{border:1px solid #c4a6ff55;background:#30294d;color:#f0e6ff;font:600 11px system-ui,sans-serif;border-radius:9px;padding:8px 11px;cursor:pointer;min-height:34px;margin-top:12px}
+#workspace .nexus-quote-action:hover{background:#423563}
+body #workspace .bc-overview-welcome{border-radius:19px}
+body #workspace .bc-agent-profile{background:radial-gradient(ellipse at 85% 0%,#a9e78021,transparent 60%),linear-gradient(145deg,#20352feF,#101f2df5);border-radius:22px}
+body #workspace .bc-coaching-session-card{background:linear-gradient(140deg,#262c46ed,#121e34f5);border-left:3px solid #c3a6ff88}
+body #workspace .bc-ic-stat{background:radial-gradient(ellipse at 95% 0%,#78d9ff25,transparent 65%),linear-gradient(145deg,#163049ed,#0f2036f5)}
+body #workspace .bc-quicklink-card{background:linear-gradient(145deg,#322b32ed,#172237f5);border-color:#ffcc8540}
+body #workspace .bc-template-card{background:linear-gradient(145deg,#32283fed,#142038f5);border-color:#ffa0c93c}
+body #workspace .bc-work-column{border-top:3px solid var(--lane,#a3afff);background:linear-gradient(155deg,color-mix(in srgb,var(--lane,#a3afff) 8%,#111d31),#101c2e);border-radius:16px}
+body #workspace .bc-work-column:nth-child(2){--lane:#ffcc85}
+body #workspace .bc-work-column:nth-child(3){--lane:#78d9ff}
+body #workspace .bc-work-column:nth-child(4){--lane:#68f5c1}
+body #workspace .bc-work-column-index,body #workspace .bc-work-count{color:var(--lane,#a3afff)}
+body #workspace .bc-work-columns{gap:13px}
+body #workspace .bc-ai-panel .panel-heading h2{color:#ffd1a5}
+body #workspace .bc-ai-panel .bc-ai-gallery-heading h3{color:#ffdfbc}
+body #workspace :is(.bc-agents-toolbar,.bc-ic-toolbar,.bc-quicklinks-toolbar,.bc-work-toolbar){margin-bottom:8px}
+body #workspace .content-panel:before{pointer-events:none}
+#workspace .nexus-notice{position:fixed;right:18px;bottom:18px;z-index:10000;max-width:min(330px,calc(100vw - 36px));padding:12px 16px;border-radius:12px;border:1px solid #a2edd969;background:#11263af7;box-shadow:0 12px 30px #0006;color:#e7fff6;font:600 13px/1.5 system-ui,sans-serif}
+#nexus-command-dialog{width:min(520px,calc(100vw - 28px));max-height:min(650px,calc(100dvh - 40px));padding:0;margin:auto;border:1px solid #a8d2ff63;border-radius:23px;background:linear-gradient(150deg,#172b43,#0d182d 80%);color:#eaf5ff;box-shadow:0 35px 100px #000a;overflow:auto;font-family:Inter,system-ui,sans-serif}
+#nexus-command-dialog::backdrop{background:#030b19b8;backdrop-filter:blur(5px)}
+#nexus-command-dialog .nexus-command-header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:19px 19px 12px}
+#nexus-command-dialog h2{margin:0;font-size:19px;letter-spacing:-.03em}
+#nexus-command-dialog .nexus-command-header button{border:1px solid #a6c9f23a;border-radius:9px;min-width:35px;min-height:35px;background:#24364d;color:#f0f7ff;font:650 17px system-ui,sans-serif;cursor:pointer}
+#nexus-command-dialog .nexus-command-search{display:block;margin:0 19px 10px;color:#b4c8dd;font-size:12px}
+#nexus-command-dialog input{display:block;width:100%;margin-top:7px;padding:13px 14px;border:1px solid #91b9df62;border-radius:12px;background:#091729;color:#f4faff;font:14px system-ui,sans-serif}
+#nexus-command-dialog .nexus-command-list{display:grid;gap:4px;padding:0 12px 12px}
+#nexus-command-dialog .nexus-command-item{display:flex;align-items:center;gap:12px;text-align:left;width:100%;padding:10px 11px;border:1px solid transparent;border-radius:11px;background:transparent;color:#eaf5ff;font:650 13px/1.3 system-ui,sans-serif;cursor:pointer}
+#nexus-command-dialog .nexus-command-item:is(:hover,:focus-visible){background:#283b55;border-color:#8cc8fb54}
+#nexus-command-dialog .nexus-command-item .nexus-icon{color:var(--tile,#9ee7ff);width:33px;height:33px;border-radius:9px;background:color-mix(in srgb,var(--tile,#9ee7ff) 13%,#182b43)}
+#nexus-command-dialog .nexus-command-item small{display:block;color:#afc2d5;font:400 11px/1.4 system-ui,sans-serif;margin-top:4px}
+#nexus-command-dialog .nexus-command-item>span:last-child{margin-left:auto;color:#92b2cf}
+#nexus-command-dialog .nexus-command-empty{padding:16px;color:#afc2d5;font-size:13px}
+#nexus-command-dialog .nexus-command-foot{padding:11px 19px;border-top:1px solid #a1c6ef25;color:#afc2d5;font-size:11px;line-height:1.6}
+#nexus-command-dialog :is(button,input):focus-visible,#workspace .nexus-tool:focus-visible{outline:2px solid #a4eaff;outline-offset:2px}
+html[data-nexus-focus="on"] body:has(#workspace:not(.hidden)) .ocean-video{visibility:hidden!important}
+html[data-nexus-focus="on"] body:has(#workspace:not(.hidden)) #workspace .workspace-main{background:#0a1425!important}
+html[data-nexus-focus="on"] #workspace .workspace-main::before,html[data-nexus-focus="on"] #workspace .workspace-main::after{display:none}
+html[data-nexus-focus="on"] #workspace .nexus-orbit{visibility:hidden}
+html[data-nexus-focus="on"] #workspace .bc-overview-heading{grid-template-columns:minmax(0,1fr);min-height:210px}
+html[data-nexus-focus="on"] #workspace .nexus-orbit{display:none}
+html[data-nexus-focus="on"] #workspace .bc-overview-heading>.bc-live-status{position:static;justify-self:start}
+@media(max-width:1100px){#workspace{--nexus-sidebar:228px}#workspace .nexus-launch-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body #workspace .page-head{align-items:flex-start;flex-wrap:wrap}body #workspace .workspace-account{margin-left:0;justify-content:flex-start}body #workspace .bc-overview-lower{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:900px){#workspace{--nexus-sidebar:210px}body #workspace .sidebar{padding-inline:10px}body #workspace .side-brand{font-size:17px}body #workspace .bc-overview-heading{grid-template-columns:minmax(0,1fr) minmax(110px,28%);min-height:220px;padding:25px 20px}body #workspace .bc-overview-heading>.bc-live-status{position:static;grid-column:1/-1;justify-self:start;order:2}}
+@media(max-width:760px){#workspace.app-shell:not(.hidden){display:block!important}body #workspace .sidebar{position:relative;inset:auto;width:100%;padding:12px;min-height:0;overflow:visible}body #workspace .side-brand{min-height:49px;padding:0 4px 9px;border:0}body #workspace .side-brand .brand-mark{width:38px;height:38px}body #workspace .side-label{margin:6px 4px;font-size:9px}body #workspace #nav{display:flex;gap:6px;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:3px 3px 8px}body #workspace .nav-item{width:auto;flex:none;min-height:44px;white-space:nowrap;margin:0}body #workspace .nav-item[data-page]>span:not(.nexus-nav-icon){white-space:nowrap;font-size:12px}body #workspace .nav-item .nexus-nav-icon{width:28px;height:28px;flex-basis:28px}body #workspace .sidebar-bottom{display:flex;gap:5px;margin-top:5px;padding-top:6px}body #workspace .workspace-main{padding:15px 14px 28px;min-height:70vh}body #workspace .workspace-main::before,body #workspace .workspace-main::after{inset:0}body #workspace .topbar{justify-content:flex-start}body #workspace .topbar>.muted{flex-basis:100%}body #workspace .page-head{padding:18px 0 13px;flex-direction:column;align-items:stretch;gap:12px}body #workspace .page-head>div:first-child{flex:auto;width:100%}body #workspace .workspace-account{width:100%;flex:auto;align-items:flex-start;flex-direction:row}body #workspace .bc-overview-heading{min-height:210px}#workspace .nexus-orbit{max-width:160px}#workspace .nexus-tool kbd{display:none}}
+@media(max-width:480px){body #workspace .bc-overview-heading{grid-template-columns:minmax(0,1fr);min-height:0;padding:23px 17px}body #workspace .bc-overview-heading h2{font-size:40px}#workspace .nexus-orbit{display:none}body #workspace .bc-overview-heading>.bc-live-status{position:static}body #workspace .bc-overview-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}body #workspace .bc-overview-kpi{padding:13px;min-height:145px}body #workspace .bc-kpi-top{gap:4px;align-items:flex-start;font-size:11px}body #workspace .bc-overview-kpi .bc-kpi-icon{width:29px;height:29px;flex:none;font-size:14px;border-radius:8px}body #workspace .bc-overview-kpi strong{font-size:32px}#workspace .nexus-launchpad{padding:15px}#workspace .nexus-launch-grid{gap:8px}#workspace .nexus-tile{padding:12px;min-height:115px}#workspace .nexus-tools{gap:5px}#workspace .nexus-tool,#bc-motion-toggle{padding:7px 8px;min-height:38px}body #workspace .bc-overview-panel{padding:17px}}
+@media(max-width:340px){body #workspace .bc-overview-kpis,#workspace .nexus-launch-grid{grid-template-columns:minmax(0,1fr)}}
+html[data-bc-motion="off"] #workspace :is(.nexus-sphere,.nexus-satellite,.nexus-tool,.nexus-tile,.nexus-nav-icon,.nexus-kpi-link .nexus-icon,.nexus-hero-actions button,.bc-overview-kpi .bc-kpi-icon,.bc-coaching-resource-card,.bc-work-card,.bc-overview-quote),html[data-nexus-focus="on"] #workspace :is(.nexus-sphere,.nexus-satellite,.bc-live-status i,.bc-quote-spark){animation:none!important;transition:none!important;translate:none!important}
+html[data-bc-motion="off"] #workspace .nexus-nav-icon,html[data-bc-motion="off"] #workspace .bc-kpi-icon{transform:none!important;rotate:none!important;scale:none!important}
+html[data-bc-motion="off"] #workspace .quote-pagination i.is-active,html[data-bc-motion="off"] #workspace .daily-quote-mark{animation:none!important}
+@media(prefers-reduced-motion:reduce){#workspace :is(.nexus-sphere,.nexus-satellite,.nexus-tool,.nexus-tile,.nexus-nav-icon,.nexus-kpi-link .nexus-icon,.nexus-hero-actions button){animation:none!important;transition:none!important;translate:none!important;transform:none!important}}
