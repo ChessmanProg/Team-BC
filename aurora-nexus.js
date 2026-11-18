@@ -249,4 +249,32 @@ function infinityStudio(){
 }
 new MutationObserver(infinityStudio).observe(content,{childList:true});infinityStudio();
 
+
+/* Quantum Universe: decorative page identities, never applied to Infinity Studio. */
+const universe={
+ overview:["Mission Control","01","Live workspace overview","#a98bff","#45dcff"],
+ agents:["Digital Identity Vault","02","Team directory and profiles","#4de9d3","#719aff"],
+ coaching:["Chrono Station","03","Coaching schedule and resources","#c3a0ff","#ffc17b"],
+ "ic-logs":["Data Reactor","04","Interaction records and details","#55efac","#54dfff"],
+ "quick-links":["Portal Gateway","05","Team resources and shortcuts","#8295ff","#ff82d4"],
+ "bc-ai":["Cyber Basketball Arena","06","Photo court and gallery","#ffad68","#a98aff"],
+ "work-requests":["Cyber Mission Board","08","Request workflow","#ffbf72","#65e6c0"],
+ "team-requests":["Executive Command","09","Membership request review","#f2cc78","#82aaff"]
+};
+function universeSync(){
+ const page=crumb.dataset.page||"overview",info=universe[page],old=ws.querySelector(".universe-identity");
+ if(!info||!workspaceOpen()){delete ws.dataset.universe;ws.style.removeProperty("--universe-accent");ws.style.removeProperty("--universe-secondary");old?.remove();return}
+ if(ws.dataset.universe!==page){ws.dataset.universe=page;ws.style.setProperty("--universe-accent",info[3]);ws.style.setProperty("--universe-secondary",info[4]);}
+ if(old?.dataset.room===page)return;
+ old?.remove();
+ const identity=element("div","universe-identity");identity.dataset.room=page;
+ const mark=element("div","universe-mark");mark.append(glyph(page));mark.setAttribute("aria-hidden","true");
+ const words=element("div","universe-words");words.append(element("small","","QUANTUM UNIVERSE / "+info[1]),element("strong","",info[0]),element("span","",info[2]));
+ const art=element("div","universe-art");art.setAttribute("aria-hidden","true");art.append(element("i"),element("i"),element("i"));
+ identity.append(mark,words,art);content.before(identity);
+}
+new MutationObserver(universeSync).observe(crumb,{attributes:true,attributeFilter:["data-page"]});
+new MutationObserver(universeSync).observe(ws,{attributes:true,attributeFilter:["class"]});
+universeSync();
+
 })();
