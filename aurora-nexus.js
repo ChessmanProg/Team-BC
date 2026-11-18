@@ -3,14 +3,14 @@
 "use strict";
 const root=document.documentElement, ws=document.getElementById("workspace");
 const nav=document.getElementById("nav"), content=document.getElementById("page-content");
-const crumb=document.getElementById("crumb"), video=document.querySelector(".ocean-video");
+const crumb=document.getElementById("crumb");
 if(!ws||!nav||!content||!crumb)return;
 const icons={
  overview:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
  agents:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5"/>',
  coaching:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18m-13 5 2 2 4-4"/>',
  "ic-logs":'<path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h4"/><path d="M2 7h4m-4 10h4"/>',
- "quick-links":'<path d="m10 13 4-4m-6 6-2 2a4 4 0 0 0 6 6l4-4a4 4 0 0 0 0-6m0-4 2-2a4 4 0 0 0-6-6L8 5a4 4 0 0 0 0 6" transform="translate(0 -1) scale(.95)"/>',
+ "quick-links":'<path d="M10 13a4 4 0 0 0 6 .5l4-4a4 4 0 0 0-5.7-5.7l-2.1 2.1M14 11a4 4 0 0 0-6-.5l-4 4a4 4 0 0 0 5.7 5.7l2.1-2.1"/>',
  "bc-ai":'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M5.6 5.6a9 9 0 0 1 0 12.8m12.8-12.8a9 9 0 0 0 0 12.8"/>',
  "bc-ai-comment-template":'<path d="M4 5h16v12H9l-5 4zM8 9h8m-8 4h5"/>',
  "work-requests":'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16m6-16v16M6 8h1m5 4h1m5-4h1"/>',
@@ -96,6 +96,7 @@ const count=element("div","nexus-command-foot");count.setAttribute("role","statu
 dialog.append(dh,label,list,count);document.body.append(dialog);
 let lastFocus=null;
 function drawCommands(){
+ const focusedIndex=[...list.querySelectorAll("button")].indexOf(document.activeElement);
  const q=search.value.trim().toLocaleLowerCase();
  const results=navButtons().filter(b=>{
   const d=descriptions[b.dataset.page]||[b.textContent,""];
@@ -110,6 +111,7 @@ function drawCommands(){
   list.append(row);
  }
  if(!results.length)list.append(element("p","nexus-command-empty","No matching sections. Try a different search."));
+ if(focusedIndex>=0)list.querySelectorAll("button")[Math.min(focusedIndex,results.length-1)]?.focus();
  count.textContent=results.length+" available "+(results.length===1?"section":"sections")+" · ↑ ↓ to move · Enter to open · Esc to close";
 }
 function openCommand(){
