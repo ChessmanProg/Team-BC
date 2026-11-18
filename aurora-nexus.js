@@ -223,4 +223,30 @@ if(sidebar&&bottom&&typeof HTMLDialogElement!=="undefined"){
  sidebar.prepend(core);sidebar.classList.add("quantum-dock");ws.classList.add("quantum-ready");
 }
 
+
+/* Infinity Studio: UI enhancement only, uses existing category filter and rendered cards. */
+function infinityStudio(){
+ const panel=content.querySelector(".bc-template-panel");if(!panel||panel.dataset.infinityReady)return;
+ const filter=panel.querySelector("#template-category-filter"),search=panel.querySelector("#template-search"),list=panel.querySelector("#comment-template-list"),toolbar=panel.querySelector(".bc-template-toolbar");
+ if(!filter||!search||!list||!toolbar)return;panel.dataset.infinityReady="true";
+ const hero=element("section","infinity-hero"),copy=element("div","infinity-copy");
+ copy.append(element("div","infinity-eyebrow","BC AI / INFINITY STUDIO"),element("h3","","Your comment universe"),element("p","","Find the right words, ready to copy."));
+ const art=element("div","infinity-art");art.setAttribute("aria-hidden","true");art.append(element("i","infinity-orbit"),element("i","infinity-orbit"),element("i","infinity-crystal"),element("i","infinity-glint"));hero.append(copy,art);
+ const chips=element("div","infinity-categories");chips.setAttribute("aria-label","Template categories");
+ const count=element("p","infinity-count");count.setAttribute("role","status");
+ toolbar.before(hero,chips);toolbar.after(count);
+ const colors=["#a99aff","#63e6ff","#65efce","#ff86d3","#ffbd81","#8faaff","#d99aff"];
+ function update(){
+  const options=[...filter.options];if(chips.childElementCount!==options.length){
+   chips.replaceChildren();options.forEach((o,i)=>{const b=button("infinity-chip",o.textContent);b.dataset.value=o.value;b.style.setProperty("--chip",colors[i%colors.length]);b.addEventListener("click",()=>{filter.value=o.value;filter.dispatchEvent(new Event("change",{bubbles:true}));});chips.append(b)});
+  }
+  for(const b of chips.children)b.setAttribute("aria-pressed",String(b.dataset.value===filter.value));
+  const cards=[...list.querySelectorAll(".bc-template-card")];count.textContent=cards.length?cards.length+" matching "+(cards.length===1?"template":"templates"):"";
+  for(const card of cards){const tag=card.querySelector(".bc-template-category");const i=options.findIndex(o=>o.value===tag?.textContent);card.style.setProperty("--infinity-card",colors[Math.max(0,i)%colors.length]);}
+ }
+ const observer=new MutationObserver(update);observer.observe(list,{childList:true});observer.observe(filter,{childList:true});filter.addEventListener("change",update);update();
+ const cleanup=new MutationObserver(()=>{if(!panel.isConnected){observer.disconnect();cleanup.disconnect()}});cleanup.observe(content,{childList:true});
+}
+new MutationObserver(infinityStudio).observe(content,{childList:true});infinityStudio();
+
 })();
