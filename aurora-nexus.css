@@ -143,3 +143,27 @@ html[data-nexus-focus="on"] #workspace :is(.nexus-nav-icon,.bc-kpi-icon){transfo
 body #workspace .bc-overview-kpi .nexus-kpi-link{min-height:34px}
 body #workspace .nav-item .nexus-nav-icon{flex-shrink:0}
 @media(max-width:760px){body #workspace .sidebar-bottom{overflow-x:auto}body #workspace .sidebar-bottom .nav-item{min-width:0}}
+
+/* Neon Edition: reference-inspired holographic core and luminous glass surfaces. */
+body #workspace .bc-overview-heading{background:radial-gradient(ellipse at 77% 48%,#4330a955,transparent 55%),radial-gradient(ellipse at 4% 0%,#006c8550,transparent 55%),linear-gradient(135deg,#080e23f5,#15112df2 60%,#0b2039ee);border-color:#9c91ff66;box-shadow:0 20px 55px #02051580,inset 0 1px #c7b7ff40,0 0 25px #7454ff20;min-height:280px}
+body #workspace .bc-overview-heading h2{color:#f2f5ff;text-shadow:0 0 28px #9a8cff55}
+#workspace .nexus-orbit{width:min(100%,280px)}
+#workspace .nexus-orbit::before{inset:0;background:repeating-radial-gradient(circle,transparent 0 19px,#78bfff19 20px 21px);border-color:#73baff55;box-shadow:0 0 35px #7854ff30}
+#workspace .nexus-sphere{inset:20%;overflow:hidden;background:radial-gradient(circle at 36% 30%,#76e9ff80,transparent 48%),radial-gradient(circle at 70% 72%,#b34cff75,transparent 55%),#101a40;box-shadow:inset 0 0 25px #4ccaff99,0 0 28px #4ccaff66,0 0 65px #a04cff55;border:1px solid #a5eaff}
+#workspace .nexus-sphere::before{content:"";position:absolute;inset:0;border-radius:50%;background-image:radial-gradient(circle,#b9f9ff 0 1px,transparent 1.6px),repeating-linear-gradient(0deg,transparent 0 13px,#75d7ff35 14px 15px),repeating-linear-gradient(90deg,transparent 0 17px,#bda1ff30 18px 19px);background-size:8px 8px,100% 100%,100% 100%;mask-image:radial-gradient(ellipse,#000 20%,#0009 65%,transparent 75%);opacity:.8}
+#workspace .nexus-sphere::after{color:#eaffff;text-shadow:0 0 8px #8ceaff,0 0 25px #b28bff;font-weight:800}
+#workspace .nexus-ring{border-color:#6ee7ffbb;box-shadow:0 0 12px #4ddcff66}
+#workspace .nexus-ring:nth-of-type(2){border-color:#f093ff99;box-shadow:0 0 12px #d44dff55}
+body #workspace .bc-overview-kpi{--neon:#52e5ff;background:radial-gradient(ellipse at 100% 0%,color-mix(in srgb,var(--neon) 25%,transparent),transparent 65%),linear-gradient(145deg,#171b36f5,#0b1328f5);border:1px solid color-mix(in srgb,var(--neon) 46%,transparent);box-shadow:inset 0 1px color-mix(in srgb,var(--neon) 35%,transparent),0 10px 24px #02061755,0 0 16px color-mix(in srgb,var(--neon) 10%,transparent)}
+body #workspace .bc-overview-kpi:nth-child(2){--neon:#b58aff}
+body #workspace .bc-overview-kpi:nth-child(3){--neon:#ff79ce}
+body #workspace .bc-overview-kpi:nth-child(4){--neon:#6fffd2}
+body #workspace .bc-overview-kpi strong{color:#f5f7ff;text-shadow:0 0 18px color-mix(in srgb,var(--neon) 50%,transparent)}
+body #workspace .bc-overview-kpi .bc-kpi-icon{color:var(--neon);border:1px solid color-mix(in srgb,var(--neon) 50%,transparent);background:color-mix(in srgb,var(--neon) 14%,#12172e);box-shadow:0 0 14px color-mix(in srgb,var(--neon) 22%,transparent)}
+#workspace .nexus-launchpad{background:linear-gradient(135deg,#151b35f5,#10132af5);border-color:#9d8bff44}
+#workspace .nexus-tile{background:radial-gradient(ellipse at 100% 0%,color-mix(in srgb,var(--tile) 20%,transparent),transparent 75%),#11182f;border-color:color-mix(in srgb,var(--tile) 45%,transparent);box-shadow:inset 0 1px color-mix(in srgb,var(--tile) 22%,transparent)}
+body:has(#workspace:not(.hidden)) #workspace .sidebar{background:linear-gradient(165deg,#102c4bf5,#141633f5 60%,#0c152bf5);border-right:1px solid #80baff40;box-shadow:8px 0 35px #03091b55}
+body #workspace .nav-item.active{background:linear-gradient(100deg,#2856a060,#7035a33b);box-shadow:inset 3px 0 var(--nav-accent,#83e8ff),0 0 18px #5b77ff20}
+#nexus-command-dialog{background:radial-gradient(ellipse at 90% 0%,#6134a655,transparent 60%),linear-gradient(145deg,#211a3e,#10172e);border-color:#b79aff88;box-shadow:0 35px 100px #000b,0 0 40px #9a54ff30}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace .bc-overview-kpi:hover{border-color:var(--neon);box-shadow:0 14px 32px #02061788,0 0 24px color-mix(in srgb,var(--neon) 25%,transparent)}}
+@media(max-width:480px){body #workspace .bc-overview-heading{min-height:0}}
