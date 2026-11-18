@@ -894,102 +894,96 @@ async function renderBCAIPage(content) {
   ["dragenter","dragover"].forEach((name) => court.addEventListener(name, (event) => { event.preventDefault(); if (!draggingBall) court.classList.add("is-dragging"); }));
   ["dragleave","drop"].forEach((name) => court.addEventListener(name, (event) => { event.preventDefault(); court.classList.remove("is-dragging"); }));
   court.addEventListener("drop", (event) => chooseFile(event.dataTransfer?.files?.[0]));
-  ball.addEventListener("pointerdown", (event) => {
-    if (busy) return;
-    event.preventDefault();
-    const rect = ball.getBoundingClientRect(), courtRect = court.getBoundingClientRect();
-    pointerOffset = {x:event.clientX - rect.left, y:event.clientY - rect.top};
-    ballStart = {x:rect.left - courtRect.left, y:rect.top - courtRect.top};
-    dragStart = {x:event.clientX, y:event.clientY};
-    ball.style.left = ballStart.x + "px"; ball.style.top = ballStart.y + "px";
-    flightSvg.classList.remove("is-preview");
-    ball.style.right = "auto"; ball.style.bottom = "auto";
-    ball.classList.add("is-grabbed"); draggingBall = true;
-    ball.setPointerCapture(event.pointerId);
-    court.classList.add("is-dragging");
-    aimGuide.hidden = false; powerLabel.hidden = false;
-    message(notice, chosenFile ? "Aim the guide toward the hoop. Pull farther for more power, then release." : "Choose a photo first. Then pull the ball back and release.");
-  });
-  ball.addEventListener("pointermove", (event) => {
-    if (!draggingBall) return;
-    const rect = court.getBoundingClientRect();
-    const x = Math.max(0, Math.min(rect.width - ball.offsetWidth, event.clientX - rect.left - pointerOffset.x));
-    const y = Math.max(0, Math.min(rect.height - ball.offsetHeight, event.clientY - rect.top - pointerOffset.y));
-    ball.style.left = x + "px"; ball.style.top = y + "px";
-    const centerX = x + ball.offsetWidth / 2, centerY = y + ball.offsetHeight / 2;
-    const pullX = event.clientX - dragStart.x, pullY = event.clientY - dragStart.y;
-    const launchX = -pullX, launchY = -pullY;
-    const magnitude = Math.hypot(launchX, launchY) || 1;
-    const angle = Math.atan2(launchY, launchX) * 180 / Math.PI;
-    const guideLength = Math.max(34, Math.min(116, magnitude * 1.35));
-    aimGuide.style.left = centerX + "px"; aimGuide.style.top = centerY + "px";
-    aimGuide.style.width = guideLength + "px"; aimGuide.style.transform = "rotate(" + angle + "deg)";
-    powerLabel.style.left = centerX + "px"; powerLabel.style.top = (centerY + 20) + "px";
-    powerLabel.textContent = "AIM  ·  POWER " + Math.min(100, Math.round(magnitude / 1.25)) + "%";
-  });
-  ball.addEventListener("pointerup", async (event) => {
-    if (!draggingBall) return;
-    draggingBall = false; ball.classList.remove("is-grabbed"); court.classList.remove("is-dragging");
-    aimGuide.hidden = true; powerLabel.hidden = true;
-    const courtRect = court.getBoundingClientRect(), ballRect = ball.getBoundingClientRect(), hoopRect = hoop.getBoundingClientRect();
-    const release = {x:ballRect.left-courtRect.left, y:ballRect.top-courtRect.top};
-    const hoopTarget = {x:hoopRect.left-courtRect.left+(hoopRect.width-ballRect.width)/2, y:hoopRect.top-courtRect.top+(hoopRect.height-ballRect.height)/2};
-    const pullDistance = Math.hypot(event.clientX-dragStart.x, event.clientY-dragStart.y);
-    if (!chosenFile) {
-      message(notice, "Choose a photo first, then pull the ball back and release to shoot.");
-      ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
-      return;
-    }
-    if (pullDistance < 12) {
-      message(notice, "Pull the ball back a little, then release!");
-      ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
-      return;
-    }
-    await shootBall(release, hoopTarget, pullDistance, dragStart, {x:event.clientX,y:event.clientY});
-  });
-  ball.addEventListener("pointercancel", () => {
-    draggingBall = false; ball.classList.remove("is-grabbed"); court.classList.remove("is-dragging");
-    aimGuide.hidden = true; powerLabel.hidden = true;
-    ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
-    requestAnimationFrame(drawFlightPreview);
-  });
-  ball.addEventListener("keydown", (event) => {
-    if ((event.key === "Enter" || event.key === " ") && !busy) {
-      event.preventDefault();
-      if (!chosenFile) input.click();
-      else message(notice, "Use your mouse or finger to pull the basketball back, then release.");
-    }
-  });
-  async function shootBall(release, target, pullDistance, pullOrigin, pullEnd) {
-    if (!chosenFile || busy) return;
-    const launch = {x:pullOrigin.x-pullEnd.x, y:pullOrigin.y-pullEnd.y};
-    const toHoop = {x:target.x-(release.x+ball.offsetWidth/2), y:target.y-(release.y+ball.offsetHeight/2)};
-    const launchLength = Math.hypot(launch.x,launch.y) || 1;
-    const targetLength = Math.hypot(toHoop.x,toHoop.y) || 1;
-    const alignment = (launch.x*toHoop.x + launch.y*toHoop.y) / (launchLength*targetLength);
-    const isSuccessfulShot = pullDistance >= 28 && alignment >= 0.82;
-    const courtRect = court.getBoundingClientRect();
-    const startCenter = {x:release.x+ball.offsetWidth/2,y:release.y+ball.offsetHeight/2};
-    let endPosition;
-    if (isSuccessfulShot) endPosition = {x:target.x,y:target.y};
-    else {
-      const travel = Math.max(85,Math.min(courtRect.width*.58,75+pullDistance*1.15));
-      const endCenter = {x:Math.max(18,Math.min(courtRect.width-18,startCenter.x+(launch.x/launchLength)*travel)),y:Math.max(18,Math.min(courtRect.height-18,startCenter.y+(launch.y/launchLength)*travel))};
-      endPosition = {x:endCenter.x-ball.offsetWidth/2,y:endCenter.y-ball.offsetHeight/2};
-    }
-    const endCenter = {x:endPosition.x+ball.offsetWidth/2,y:endPosition.y+ball.offsetHeight/2};
-    const flightDistance = Math.hypot(endCenter.x-startCenter.x,endCenter.y-startCenter.y);
-    const lift = Math.min(courtRect.height*.78,Math.max(150,flightDistance*.62));
-    const control = {x:(startCenter.x+endCenter.x)/2,y:(startCenter.y+endCenter.y)/2-lift};
-    const flightSvg = $("#bc-ai-flight-path"), flightLine = $("#bc-ai-flight-line");
-    flightSvg.setAttribute("viewBox","0 0 "+courtRect.width+" "+courtRect.height);
-    flightLine.setAttribute("d","M "+startCenter.x+" "+startCenter.y+" Q "+control.x+" "+control.y+" "+endCenter.x+" "+endCenter.y);
+  const flightSvg = $("#bc-ai-flight-path"), flightLine = $("#bc-ai-flight-line");
+  let activePointer = null, hideFlightTimer = null;
+  function geometry() {
+    const rect=court.getBoundingClientRect(), h=hoop.getBoundingClientRect();
+    const sx=rect.width/court.offsetWidth||1, sy=rect.height/court.offsetHeight||1;
+    const left=rect.left+court.clientLeft*sx, top=rect.top+court.clientTop*sy;
+    return {width:court.clientWidth,height:court.clientHeight,sx,sy,left,top,
+      target:{x:(h.left+h.width/2-left)/sx,y:(h.top+h.height/2-top)/sy}};
+  }
+  function point(event,g){return {x:(event.clientX-g.left)/g.sx,y:(event.clientY-g.top)/g.sy};}
+  function center(g){const r=ball.getBoundingClientRect();return {x:(r.left+r.width/2-g.left)/g.sx,y:(r.top+r.height/2-g.top)/g.sy};}
+  function trajectory(start,launch,g){
+    const distance=Math.hypot(launch.x,launch.y), length=distance||1;
+    const dx=g.target.x-start.x,dy=g.target.y-start.y;
+    const alignment=(launch.x*dx+launch.y*dy)/(length*(Math.hypot(dx,dy)||1));
+    const made=distance>=28&&alignment>=.82;
+    const travel=Math.max(85,Math.min(g.width*.58,75+distance*1.15));
+    const end=made?g.target:{x:Math.max(18,Math.min(g.width-18,start.x+launch.x/length*travel)),y:Math.max(18,Math.min(g.height-18,start.y+launch.y/length*travel))};
+    const lift=Math.min(g.height*.78,Math.max(150,Math.hypot(end.x-start.x,end.y-start.y)*.62));
+    return {start,end,control:{x:(start.x+end.x)/2,y:(start.y+end.y)/2-lift},made,distance};
+  }
+  function drawPath(p,g,preview){
+    flightSvg.setAttribute("viewBox","0 0 "+g.width+" "+g.height);
+    flightSvg.setAttribute("preserveAspectRatio","none");
+    flightLine.setAttribute("d","M "+p.start.x+" "+p.start.y+" Q "+p.control.x+" "+p.control.y+" "+p.end.x+" "+p.end.y);
+    flightSvg.classList.toggle("is-preview",preview);
+    flightSvg.classList.toggle("is-off-target",!p.made);
     flightSvg.classList.add("is-visible");
+  }
+  function drawFlightPreview(){
+    if(!court.isConnected||busy||draggingBall)return;
+    flightSvg.classList.remove("is-visible","is-preview","is-off-target");
+  }
+  function resetDrag(){
+    draggingBall=false;activePointer=null;ball.classList.remove("is-grabbed");court.classList.remove("is-dragging");
+    aimGuide.hidden=true;powerLabel.hidden=true;
+    ball.style.left="";ball.style.top="";ball.style.right="";ball.style.bottom="";
+    drawFlightPreview();
+  }
+  function updateDrag(event){
+    const g=geometry(), p=point(event,g);
+    const x=Math.max(0,Math.min(g.width-ball.offsetWidth,p.x-pointerOffset.x));
+    const y=Math.max(0,Math.min(g.height-ball.offsetHeight,p.y-pointerOffset.y));
+    ball.style.left=x+"px";ball.style.top=y+"px";
+    const c={x:x+ball.offsetWidth/2,y:y+ball.offsetHeight/2};
+    const launch={x:dragStart.x-p.x,y:dragStart.y-p.y};
+    const shot=trajectory(c,launch,g);
+    if(shot.distance>=2)drawPath(shot,g,true);else flightSvg.classList.remove("is-visible");
+    powerLabel.style.left=c.x+"px";powerLabel.style.top=(c.y+20)+"px";
+    powerLabel.textContent="POWER "+Math.min(100,Math.round(shot.distance/1.25))+"%"+(shot.made?" · ON TARGET":"");
+    return shot;
+  }
+  aimGuide.hidden=true;powerLabel.hidden=true;
+  ball.addEventListener("pointerdown",event=>{
+    if(busy||draggingBall||event.button!==0)return;
+    event.preventDefault();clearTimeout(hideFlightTimer);
+    const g=geometry(),p=point(event,g),c=center(g);
+    ballStart={x:c.x-ball.offsetWidth/2,y:c.y-ball.offsetHeight/2};
+    pointerOffset={x:p.x-ballStart.x,y:p.y-ballStart.y};dragStart=p;
+    ball.style.left=ballStart.x+"px";ball.style.top=ballStart.y+"px";ball.style.right="auto";ball.style.bottom="auto";
+    flightSvg.classList.remove("is-visible","is-preview","is-off-target");
+    court.classList.remove("shot-made","shot-missed");
+    ball.classList.add("is-grabbed");draggingBall=true;activePointer=event.pointerId;
+    ball.setPointerCapture(event.pointerId);court.classList.add("is-dragging");powerLabel.hidden=false;
+    updateDrag(event);
+    message(notice,chosenFile?"Aim the dotted arc toward the hoop, then release.":"Choose a photo first. Then pull the ball back and release.");
+  });
+  ball.addEventListener("pointermove",event=>{if(draggingBall&&event.pointerId===activePointer)updateDrag(event);});
+  ball.addEventListener("pointerup",async event=>{
+    if(!draggingBall||event.pointerId!==activePointer)return;
+    const shot=updateDrag(event);
+    draggingBall=false;activePointer=null;ball.classList.remove("is-grabbed");court.classList.remove("is-dragging");powerLabel.hidden=true;
+    if(!chosenFile||shot.distance<12){message(notice,!chosenFile?"Choose a photo first, then pull the ball back and release to shoot.":"Pull the ball back a little, then release!");resetDrag();return;}
+    await shootBall(shot);
+  });
+  ball.addEventListener("pointercancel",event=>{if(event.pointerId===activePointer)resetDrag();});
+  ball.addEventListener("lostpointercapture",event=>{if(event.pointerId===activePointer)resetDrag();});
+  ball.addEventListener("keydown",event=>{
+    if((event.key==="Enter"||event.key===" ")&&!busy){event.preventDefault();if(!chosenFile)input.click();else message(notice,"Use your mouse or finger to pull the basketball back, then release.");}
+  });
+  async function shootBall(shot) {
+    if(!chosenFile||busy)return;
+    const {start:startCenter,end:endCenter,control,made:isSuccessfulShot,distance:pullDistance}=shot;
+    const endPosition={x:endCenter.x-ball.offsetWidth/2,y:endCenter.y-ball.offsetHeight/2};
+    drawPath(shot,geometry(),false);
     busy = true; input.disabled = true; ball.classList.add("is-uploading");
     court.classList.remove("shot-made","shot-missed");
     message(notice, isSuccessfulShot ? "Watch the ball fly toward the hoop…" : "Watch the shot travel — that one is off target.");
     const duration = Math.max(520,Math.min(1050,1050-pullDistance*1.1));
-    const keyframes = [0,.25,.5,.75,1].map((t) => {
+    const keyframes = Array.from({length:61},(_,i)=>i/60).map((t) => {
       const inverse=1-t;
       const x=inverse*inverse*startCenter.x+2*inverse*t*control.x+t*t*endCenter.x;
       const y=inverse*inverse*startCenter.y+2*inverse*t*control.y+t*t*endCenter.y;
@@ -1003,7 +997,7 @@ async function renderBCAIPage(content) {
         $("#bc-ai-score-flash").textContent = "OFF TARGET — BALL LANDED HERE";
         const reason = pullDistance < 28 ? "Pull farther back for more power." : "The ball landed away from the hoop. Adjust your pull direction and try again.";
         message(notice, "Missed shot. " + reason + " Your photo is still selected and has NOT been uploaded.");
-        setTimeout(() => flightSvg.classList.remove("is-visible"),4500);
+        hideFlightTimer = setTimeout(() => flightSvg.classList.remove("is-visible"),4500);
         return;
       }
       const safeName = chosenFile.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(-90) || "photo";
@@ -1015,17 +1009,16 @@ async function renderBCAIPage(content) {
       message(notice, "Great shot! Your photo was uploaded successfully.");
       chosenFile = null; input.value = ""; selected.hidden = true; selected.textContent = ""; court.classList.remove("has-photo");
       await loadBCAIGallery();
-      setTimeout(() => flightSvg.classList.remove("is-visible"),2200);
+      hideFlightTimer = setTimeout(() => flightSvg.classList.remove("is-visible"),2200);
     } catch (error) {
       court.classList.remove("shot-made"); court.classList.add("shot-missed");
       $("#bc-ai-score-flash").textContent = "REBOUND — TRY AGAIN";
       message(notice, "Upload failed: " + friendlyError(error) + " Your photo is still selected, so try again.");
-      setTimeout(() => flightSvg.classList.remove("is-visible"),2200);
+      hideFlightTimer = setTimeout(() => flightSvg.classList.remove("is-visible"),2200);
     } finally {
       busy = false; input.disabled = false; ball.classList.remove("is-uploading");
       ball.style.left=""; ball.style.top=""; ball.style.right=""; ball.style.bottom="";
       if (ball.getAnimations) ball.getAnimations().forEach(animation=>animation.cancel());
-      requestAnimationFrame(drawFlightPreview);
     }
   }
   async function loadBCAIGallery() {
