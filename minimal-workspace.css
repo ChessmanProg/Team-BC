@@ -1,0 +1,52 @@
+/* Minimal Cyberpunk — presentation only; preserve original controls and media. */
+body #workspace .workspace-main{padding-inline:clamp(20px,4vw,64px);padding-top:20px}
+body #workspace .workspace-main::before{opacity:.07!important}
+body #workspace .workspace-main::after{opacity:.23!important}
+body #workspace .page-head{padding-block:20px 24px}
+body #workspace .page-head h1{font-size:clamp(25px,2.5vw,34px);text-shadow:none}
+body #workspace .nexus-section-marker{display:none}
+body #workspace[data-universe] .universe-identity{min-height:0;margin:0 0 26px;padding:12px 16px;gap:12px;border:0;border-left:2px solid var(--universe-accent);border-radius:8px;background:#141b2b99;box-shadow:none}
+body #workspace[data-universe] .universe-mark{width:34px;height:34px;border:0;background:transparent;box-shadow:none}
+body #workspace[data-universe] .universe-mark svg{width:22px;height:22px}
+body #workspace[data-universe] .universe-words{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px 14px}
+body #workspace[data-universe] .universe-words small,body #workspace[data-universe] .universe-art{display:none}
+body #workspace[data-universe] .universe-words strong{font-size:16px;font-weight:650}
+body #workspace[data-universe] .universe-words span{font-size:12px;color:#b9c4d6}
+body #workspace :is(.bc-overview-kpi,.bc-overview-panel,.bc-overview-welcome,.nexus-tile,.nexus-launchpad,.bc-agent-card,.bc-agent-profile,.bc-agent-directory,.bc-coaching-summary,.bc-coaching-schedule,.bc-coaching-resources,.bc-coaching-guidelines,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-ic-stat,.bc-quicklink-card,.bc-template-card,.bc-work-column,.bc-work-card,.bc-ai-photo-card,.request-row){background:#151e30ed!important;border-color:#8496b52c!important;box-shadow:none!important;border-radius:14px}
+body #workspace :is(.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-ai-photo-card,.nexus-tile):hover{border-color:#a8b8d477!important;transform:none!important;translate:none!important}
+body #workspace :is(.bc-agent-card.is-selected,.bc-agent-card.active,.bc-agent-card[aria-selected=true]){border-color:var(--bc-accent)!important;background:#203044!important}
+body #workspace :is(.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-coaching-session-card){padding:18px}
+body #workspace :is(.bc-quicklink-card-actions,.bc-template-actions,.bc-work-card-controls){gap:8px}
+body #workspace :is(.primary,.bc-coaching-schedule-button,.bc-quicklinks-add,.bc-work-add,.bc-ic-export,.bc-coaching-join){background:#4b55a6!important;border-color:#a7b0f766!important;color:#fff!important;box-shadow:none!important}
+body #workspace :is(.small-button,.bc-quicklinks-filters button,.bc-work-filters button,.bc-quicklink-card-actions button,.bc-quicklink-card-actions a,.bc-agent-card-action,.bc-coaching-resource-open,.bc-ic-view,.nexus-tool,#bc-motion-toggle){background:#202b3d!important;border-color:#8b9db52e!important;box-shadow:none!important}
+body #workspace :is(.bc-quicklinks-filters button.is-active,.bc-work-filters button.is-active,.nexus-tool[aria-pressed=true],#bc-motion-toggle[aria-pressed=true]){background:#303d56!important;border-color:var(--bc-accent)!important}
+body #workspace .bc-overview-heading{min-height:170px;padding:24px;background:#172438e8!important;box-shadow:none!important;border-color:#8496b533!important;grid-template-columns:minmax(0,1fr) minmax(100px,20%)}
+body #workspace .bc-overview-heading h2{font-size:clamp(27px,3.5vw,44px);margin:8px 0}
+body #workspace .nexus-orbit{max-width:120px;margin:0;opacity:.8}
+body #workspace :is(.nexus-sphere,.nexus-satellite,.nexus-ring,.infinity-crystal){animation:none!important}
+body #workspace .bc-overview-kpi{min-height:120px}
+body #workspace .nexus-launch-grid{gap:14px}
+body #workspace .nexus-tile{min-height:96px}
+body #workspace .infinity-hero{min-height:100px;padding:18px 22px;margin:12px 0 20px;background:#1b2038!important;box-shadow:none;border-color:#8496b533}
+body #workspace .infinity-hero::before{opacity:.12}
+body #workspace .infinity-copy h3{font-size:24px;margin:6px 0;text-shadow:none}
+body #workspace .infinity-art{width:100px;opacity:.65}
+body #workspace .infinity-chip{box-shadow:none!important}
+body #workspace .bc-template-panel{padding:20px;background:#111a2b99;border-color:#8496b52c}
+body #workspace #comment-template-list{gap:20px}
+body:has(#workspace:not(.hidden)) #workspace.quantum-ready .sidebar.quantum-dock{background:#141c2bef;box-shadow:0 8px 28px #0006;border-color:#8a9bb444;border-radius:16px;padding:5px;gap:5px}
+body #workspace.quantum-ready #nav{padding:3px;gap:3px}
+body #workspace.quantum-ready #nav .nav-item{width:66px;min-height:48px;border-radius:9px}
+body #workspace.quantum-ready #nav .nexus-nav-icon{width:24px;height:24px;flex-basis:24px;background:transparent;border:0;box-shadow:none;transform:none!important}
+body #workspace.quantum-ready #nav .nav-item.active{background:#28354b!important;box-shadow:inset 0 -2px var(--bc-accent)!important}
+body #workspace .quantum-core{width:44px;height:44px;box-shadow:none!important}
+body #workspace.quantum-ready .workspace-main{padding-bottom:105px}
+body #workspace .bc-assistant-launch{width:82px;height:100px;right:16px;bottom:85px;font-size:11px}
+body #workspace .bc-assistant-launch::before{width:82px;height:85px;filter:drop-shadow(0 0 5px #d94bff66)}
+body #workspace .bc-assistant-launch::after{opacity:.35}
+body #workspace .bc-assistant:not([hidden]){box-shadow:0 12px 40px #0008;border-color:#8797b65c;background:#151d30}
+body #workspace .bc-assistant .bca-head{background:#20283e;box-shadow:none}
+body #workspace .bc-assistant .bca-head h2{text-shadow:none}
+body:has(#login-panel:not(.hidden)) .glass.login{box-shadow:0 20px 50px #0005;border-color:#8496b555}
+body:has(#login-panel:not(.hidden)) .hero h1 span{animation:none}
+@media(max-width:600px){body #workspace .workspace-main{padding-inline:14px}body #workspace.quantum-ready #nav .nav-item{width:53px;min-height:46px}body #workspace .quantum-core{width:38px;height:38px}body #workspace .bc-assistant-launch{width:68px;height:85px;right:8px;bottom:78px}body #workspace .bc-assistant-launch::before{width:68px;height:72px}body #workspace .bc-overview-heading{grid-template-columns:1fr}body #workspace .nexus-orbit{display:none}body #workspace .infinity-art{width:70px}}
