@@ -134,3 +134,12 @@ html[data-bc-motion="off"] #workspace :is(.nexus-sphere,.nexus-satellite,.nexus-
 html[data-bc-motion="off"] #workspace .nexus-nav-icon,html[data-bc-motion="off"] #workspace .bc-kpi-icon{transform:none!important;rotate:none!important;scale:none!important}
 html[data-bc-motion="off"] #workspace .quote-pagination i.is-active,html[data-bc-motion="off"] #workspace .daily-quote-mark{animation:none!important}
 @media(prefers-reduced-motion:reduce){#workspace :is(.nexus-sphere,.nexus-satellite,.nexus-tool,.nexus-tile,.nexus-nav-icon,.nexus-kpi-link .nexus-icon,.nexus-hero-actions button){animation:none!important;transition:none!important;translate:none!important;transform:none!important}}
+
+/* Focus mode suppresses cosmetic motion already in progress, including legacy reveals. */
+html[data-nexus-focus="on"] #workspace :is(.bc-reveal,.bc-reveal-card,.bc-load-in,.bc-overview-kpi,.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-quicklink-card,.bc-work-card,.bc-template-card,.bc-ic-stat,.nexus-tile,.nexus-nav-icon,.nav-item,.nexus-kpi-link .nexus-icon,.nexus-hero-actions button,.nexus-tool,.action-button,.small-button,.bc-quote-spark,.bc-live-status i){animation:none!important;transition:none!important;translate:none!important}
+html[data-nexus-focus="on"] #workspace :is(.nexus-nav-icon,.bc-kpi-icon){transform:none!important;rotate:none!important;scale:none!important}
+#workspace .nexus-notice[hidden]{display:none!important}
+#nexus-command-dialog .nexus-icon svg{width:17px;height:17px}
+body #workspace .bc-overview-kpi .nexus-kpi-link{min-height:34px}
+body #workspace .nav-item .nexus-nav-icon{flex-shrink:0}
+@media(max-width:760px){body #workspace .sidebar-bottom{overflow-x:auto}body #workspace .sidebar-bottom .nav-item{min-width:0}}
