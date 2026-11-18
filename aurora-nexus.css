@@ -167,3 +167,52 @@ body #workspace .nav-item.active{background:linear-gradient(100deg,#2856a060,#70
 #nexus-command-dialog{background:radial-gradient(ellipse at 90% 0%,#6134a655,transparent 60%),linear-gradient(145deg,#211a3e,#10172e);border-color:#b79aff88;box-shadow:0 35px 100px #000b,0 0 40px #9a54ff30}
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace .bc-overview-kpi:hover{border-color:var(--neon);box-shadow:0 14px 32px #02061788,0 0 24px color-mix(in srgb,var(--neon) 25%,transparent)}}
 @media(max-width:480px){body #workspace .bc-overview-heading{min-height:0}}
+
+/* Neon Interface — shared visual system across all workspace tabs.
+   Paint only: no game geometry, event targets, visibility or application logic. */
+#workspace{--ni-accent:#a78bfa;--ni-secondary:#ff65c8;--ni-glass:#0c1025;--ni-line:#a78bfa55;color-scheme:dark}
+#workspace:has(.nav-item[data-page="agents"].active){--ni-accent:#48f5d5;--ni-secondary:#6d8dff}
+#workspace:has(.nav-item[data-page="coaching"].active){--ni-accent:#b18aff;--ni-secondary:#f36bd8}
+#workspace:has(.nav-item[data-page="ic-logs"].active){--ni-accent:#57caff;--ni-secondary:#8975ff}
+#workspace:has(.nav-item[data-page="quick-links"].active){--ni-accent:#56edce;--ni-secondary:#a48aff}
+#workspace:has(.nav-item[data-page="bc-ai"].active){--ni-accent:#ff70c9;--ni-secondary:#758cff}
+#workspace:has(.nav-item[data-page="bc-ai-comment-template"].active){--ni-accent:#ed86ff;--ni-secondary:#ff70b0}
+#workspace:has(.nav-item[data-page="work-requests"].active){--ni-accent:#8e9cff;--ni-secondary:#ff72cc}
+#workspace:has(.nav-item[data-page="team-requests"].active){--ni-accent:#58f5d1;--ni-secondary:#758cff}
+body:has(#workspace:not(.hidden)) #workspace:has(.nav-item.active) .workspace-main{background-image:radial-gradient(ellipse at 85% 0%,#50228635,transparent 42%),radial-gradient(ellipse at 0% 75%,#073c8033,transparent 48%),linear-gradient(135deg,#07091bd9,#090b20aa 55%,#100a25d9)!important}
+body #workspace .page-head h1{color:#f5f2ff;text-shadow:0 0 24px color-mix(in srgb,var(--ni-accent) 35%,transparent)}
+body #workspace .nexus-section-marker{color:var(--ni-accent)}
+body #workspace :is(.content-panel,.record-form,.bc-agent-directory,.bc-agent-profile,.bc-coaching-schedule,.bc-coaching-resources,.bc-coaching-guidelines,.bc-ic-table-panel,.bc-ic-detail,.bc-overview-panel,.bc-ai-comments,.bc-work-form){background:radial-gradient(ellipse at 100% 0%,color-mix(in srgb,var(--ni-accent) 12%,transparent),transparent 55%),linear-gradient(145deg,#14152ef5,#090e21ed);border:1px solid color-mix(in srgb,var(--ni-accent) 35%,transparent);border-radius:18px;box-shadow:inset 0 1px #ffffff12,0 12px 30px #02041255,0 0 18px color-mix(in srgb,var(--ni-accent) 8%,transparent)}
+body #workspace :is(.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-ic-stat,.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-ai-photo-card,.request-row){--tile-neon:var(--ni-accent);background:radial-gradient(ellipse at 96% 0%,color-mix(in srgb,var(--tile-neon) 19%,transparent),transparent 65%),linear-gradient(150deg,#15162ff5,#0a1025f5);border:1px solid color-mix(in srgb,var(--tile-neon) 42%,transparent);border-radius:15px;box-shadow:inset 0 1px color-mix(in srgb,var(--tile-neon) 24%,transparent),0 7px 20px #02041355}
+body #workspace :is(.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-ic-stat,.bc-quicklink-card,.bc-template-card,.bc-ai-photo-card,.request-row):nth-child(3n+2){--tile-neon:var(--ni-secondary)}
+body #workspace :is(.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-ic-stat,.bc-quicklink-card,.bc-template-card,.bc-ai-photo-card,.request-row):nth-child(3n+3){--tile-neon:#69a8ff}
+body #workspace :is(.bc-agent-avatar,.bc-agent-avatar-large,.bc-coaching-resource-icon,.bc-quicklink-icon,.bc-ic-agent-avatar,.bc-team-emblem){background:linear-gradient(145deg,color-mix(in srgb,var(--ni-accent) 28%,#11152d),#12132b);border:1px solid color-mix(in srgb,var(--ni-accent) 60%,transparent);color:#f2f6ff;box-shadow:0 0 15px color-mix(in srgb,var(--ni-accent) 25%,transparent)}
+body #workspace :is(.bc-agent-search,.bc-ic-search,.bc-ic-date-range,.bc-quicklinks-search){background:#0a1025;border-color:#7275b766;box-shadow:inset 0 1px 8px #0003}
+body #workspace :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]),select,textarea){color:#edf1ff;accent-color:var(--ni-accent);border-color:#7773b777}
+body #workspace :is(.record-form,.bc-template-toolbar,.bc-work-form,.bc-work-filters,.bc-agents-toolbar,.bc-ic-date-range,.bc-ai-comment-form) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]),select,textarea){background:#0b1025;border-radius:9px}
+body #workspace :is(input,textarea)::placeholder{color:#a4acc7}
+body #workspace select option{background:#151a32;color:#f0f3ff}
+body #workspace :is(button,a,input,select,textarea):focus-visible{outline:2px solid #a6caff;outline-offset:3px}
+body #workspace :is(.primary,.bc-coaching-schedule-button,.bc-quicklinks-add,.bc-work-add,.bc-ic-export,.bc-coaching-join,.bc-ai-comment-form button[type="submit"]){background:linear-gradient(105deg,#3158cf,#8741c7 55%,#c52d85);color:#fff;border:1px solid #c5a5ff99;border-radius:10px;box-shadow:inset 0 1px #ffffff35,0 0 15px #a24cf34a;font-weight:650}
+body #workspace :is(.small-button,.bc-coaching-bulk-button,.bc-quicklinks-filters button,.bc-work-filters button,.bc-ic-detail-actions button,.bc-quicklink-card-actions a,.bc-quicklink-card-actions button,.bc-ai-controls button,.bc-ai-gallery-heading button,.bc-ai-photo-actions button,.bc-agent-card-action,.bc-coaching-resource-open,.bc-ic-view){background:linear-gradient(135deg,#222449,#11172e);border:1px solid #8b8bd36b;color:#e5eaff;border-radius:9px;box-shadow:inset 0 1px #ffffff14}
+body #workspace :is(.bc-quicklinks-filters button.is-active,.bc-work-filters button.is-active,.bc-agent-card.is-selected){border-color:var(--ni-accent);background:linear-gradient(135deg,#343067,#182b4b);box-shadow:0 0 15px color-mix(in srgb,var(--ni-accent) 24%,transparent)}
+body #workspace :is(.bc-work-delete,.bc-coaching-delete,[data-decision="rejected"]){color:#ffb0c9;border-color:#ff709966;background:#35162d}
+body #workspace :is(button:disabled,input:disabled,select:disabled){opacity:.55;cursor:not-allowed}
+body #workspace .bc-ic-table th{background:#191b38;color:#c2d7ff;border-color:#7778ba44}
+body #workspace .bc-ic-table td{border-color:#7778ba30;color:#e3e9fc}
+body #workspace .bc-ic-table tbody tr:is(:hover,.is-selected){background:#34306488}
+body #workspace .bc-work-column{background:linear-gradient(155deg,color-mix(in srgb,var(--lane,#a3afff) 12%,#14152c),#0b1024);border-color:color-mix(in srgb,var(--lane,#a3afff) 42%,transparent);box-shadow:0 0 18px color-mix(in srgb,var(--lane,#a3afff) 10%,transparent)}
+body #workspace .bc-ai-panel .bc-ai-gallery-heading h3{color:#ffb5eb;text-shadow:0 0 15px #ff65c855}
+body #workspace .bc-ai-panel .bc-ai-court{box-shadow:0 0 22px #a35cff38,inset 0 0 25px #477bff22}
+body #workspace .bc-ai-panel .bc-ai-photo-card{border-color:#b18aff66}
+body #workspace .request-row{margin-block:12px;padding:16px}
+body #workspace .nav-item.active{background:linear-gradient(100deg,#46236c,#1a3470);box-shadow:inset 3px 0 #ff77d0,0 0 18px #a34aff33}
+body #workspace .nexus-tool[aria-pressed="true"]{background:linear-gradient(110deg,#48257a,#233c7d);border-color:#bda2ff;color:#f4eaff}
+@media(hover:hover) and (pointer:fine){
+body #workspace :is(.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-ic-stat,.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-ai-photo-card,.request-row):hover{border-color:var(--tile-neon);box-shadow:0 0 22px color-mix(in srgb,var(--tile-neon) 25%,transparent),inset 0 1px #ffffff25}
+body #workspace :is(.primary,.bc-coaching-schedule-button,.bc-quicklinks-add,.bc-work-add,.bc-ic-export):not(:disabled):hover{filter:brightness(1.15);box-shadow:0 0 24px #b568ff66}
+}
+@media(prefers-reduced-motion:no-preference) and (hover:hover) and (pointer:fine){
+html:not([data-bc-motion="off"]):not([data-nexus-focus="on"]) #workspace :is(.bc-agent-card,.bc-coaching-session-card,.bc-coaching-resource-card,.bc-quicklink-card,.bc-template-card,.bc-work-card,.bc-ai-photo-card,.request-row){transition:border-color .2s,box-shadow .2s,background-color .2s}
+}
+html[data-nexus-focus="on"] body:has(#workspace:not(.hidden)) #workspace:has(.nav-item.active) .workspace-main{background:#0a1425!important}
