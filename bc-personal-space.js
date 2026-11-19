@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const ws=document.querySelector("#workspace"),tools=document.querySelector("#nexus-tools"),content=document.querySelector("#content");if(!ws||!tools||!content)return;
+const ws=document.querySelector("#workspace"),tools=document.querySelector("#nexus-tools"),content=document.querySelector("#page-content");if(!ws||!tools||!content)return;
 const E=(tag,text)=>{const n=document.createElement(tag);if(text!=null)n.textContent=text;return n};
 const identity=()=>!ws.classList.contains("hidden")&&ws.style.display!=="none"&&typeof activeUser!=="undefined"&&activeUser?.id&&typeof activeTeamKey!=="undefined"&&activeTeamKey?activeUser.id+":"+activeTeamKey:"";
 const defaults=()=>({note:"",tasks:[],skin:"violet",motion:true,widgets:{},order:["kpis","activity","quote","welcome","launchpad"],best:0,focusCount:0,focusEnd:0,seen:[],badges:[]});
@@ -32,5 +32,5 @@ if(t==="Arcade"){title("Basketball Arcade","A separate practice challenge. No ph
 }
 let gameMeter=null;function power(){return game?50+50*Math.sin((performance.now()-game.start)/380):0}
 function tick(){sync();if(!owner)return;if(s.focusEnd&&Date.now()>=s.focusEnd){s.focusEnd=0;s.focusCount++;badge("Focus finisher");save()}const c=q("#bc4-clock");if(c){const sec=Math.max(0,Math.ceil((s.focusEnd-Date.now())/1000));c.textContent=s.focusEnd?Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0"):"Ready"}}
-for(const t of tabs)button(t,()=>render(t),nav);q("[data-close]").onclick=close;launch.onclick=()=>{sync();if(!owner)return;if(!panel.hidden){close();return}panel.hidden=false;launch.setAttribute("aria-expanded","true");render("Briefing")};panel.addEventListener("keydown",e=>{if(e.key==="Escape")close()});new MutationObserver(()=>{sync();if(owner)apply()}).observe(content,{childList:true,subtree:true});setInterval(tick,1000);setInterval(()=>{if(game&&gameMeter&&!panel.hidden&&identity()===owner)gameMeter.value=power()},40);sync();
+for(const t of tabs)button(t,()=>render(t),nav);q("[data-close]").onclick=close;launch.onclick=()=>{sync();if(!owner)return;if(!panel.hidden){close();return}const assistant=document.querySelector("#bc-assistant");if(assistant&&!assistant.hidden)assistant.querySelector("[data-close]")?.click();panel.hidden=false;launch.setAttribute("aria-expanded","true");render("Briefing")};panel.addEventListener("keydown",e=>{if(e.key==="Escape")close()});new MutationObserver(()=>{sync();if(owner)apply()}).observe(content,{childList:true,subtree:true});setInterval(tick,1000);setInterval(()=>{if(game&&gameMeter&&!panel.hidden&&identity()===owner)gameMeter.value=power()},40);sync();
 })();
